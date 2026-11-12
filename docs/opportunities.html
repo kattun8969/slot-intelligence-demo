@@ -32,7 +32,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v0.3 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
+<header><div><small>試用版 v0.4 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
 <p>候補一覧 → 機種ごとの確認 → 実戦した期待値を記録</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
@@ -46,7 +46,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <section class="card" id="list-panel"><h2>狙い目候補一覧</h2>
 <div class="group">
 <div><label for="search">機種を検索</label><input id="search" type="search" placeholder="機種名から探す"></div>
-<div><label for="tier-filter">優先順位</label><select id="tier-filter"><option value="all">すべて</option><option value="1">新台</option><option value="2">稼働重点</option><option value="3">その他重点</option></select></div>
+<div><label for="tier-filter">優先順位</label><select id="tier-filter"><option value="all">すべて</option><option value="1">新台</option><option value="2">稼働重点</option><option value="3">その他重点</option></select></div><div><label for="kind-filter">調べたい狙い目の種類</label><select id="kind-filter"><option value="all">すべて</option><option value="ceiling">天井</option><option value="zone">ゾーン</option><option value="through">スルー</option><option value="reset">リセット</option><option value="state">状態・示唆</option><option value="other">その他</option></select></div>
 </div>
 <p class="help" id="list-summary" role="status"></p><div id="target-list" class="group"></div>
 </section>
@@ -56,7 +56,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <div id="detail-status" class="notice"></div>
 <h3>まず調べる条件</h3><ul id="detail-checkpoints"></ul>
 <p class="help">以下は確認する項目の説明であり、この状態なら必ず有利という意味ではありません。機種名が未確定なら別機種の解析値を流用しないでください。</p>
-<div id="detail-sources"></div>
+<div id="detail-sources"></div><div class="card" id="reviewed-rules-box"><h3>出典を確認した参考条件</h3><p class="help">ここは人が掲載元・適用条件・更新日を照合した参考条件のみを表示します。「狙える」という判定や期待値の自動算出ではありません。</p><div id="reviewed-rules"></div></div>
 <hr>
 <h3>台の状況を記録する</h3>
 <div class="group">
@@ -76,6 +76,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <div><label for="manual-ev">自分で見積もった期待値（円・任意）</label><input id="manual-ev" type="text" inputmode="decimal" placeholder="例：1500 ／ -500"></div>
 <div><label for="actual-result">実際の収支（円・任意）</label><input id="actual-result" type="text" inputmode="decimal" placeholder="例：-3000 ／ 7000"></div>
 </div>
+<input type="hidden" id="linked-rule" value="">
 <label for="ev-basis">期待値の出典・算出条件（任意）</label>
 <textarea id="ev-basis" placeholder="例：参照した記事URL・条件、計算方法、自分の見積もりの前提など"></textarea>
 <label for="play-note">実戦メモ（任意）</label>
@@ -116,7 +117,9 @@ const MACHINES=[
  {id:"mahoako",name:"まほあこ",tier:3,uncertain:false,topics:["CZ・ATのスルー履歴","設定変更条件"],units:["games"],sources:[]},
  {id:"juoh",name:"獣王",tier:3,uncertain:true,topics:["スマスロと他機種の区別","機種バージョンと状態"],units:["games"],sources:[]}
 ];
-const UNIT_LABELS={games:"表示G数",cycles:"周期数",points:"ポイント数",throughs:"スルー回数"};
+const PUBLISHED_RULES=[];
+const KIND_LABELS={ceiling:"天井",zone:"ゾーン",through:"スルー",reset:"リセット",state:"状態・示唆",other:"その他"};
+const UNIT_LABELS={games:"表示G数",cycles:"周期数",points:"ポイント数",throughs:"スルー回数",abeshi:"あべし",count:"回数"};
 const LEDGER_KEY="slotintel-play-ev-ledger-v1";
 const $=id=>document.getElementById(id);
 const formatter=new Intl.NumberFormat("ja-JP");
@@ -149,9 +152,14 @@ function navigate(){
 }
 function showList(){
  const term=$("search").value.trim().toLowerCase(),tier=$("tier-filter").value;
- const items=MACHINES.filter(m=>(tier==="all"||String(m.tier)===tier)&&m.name.toLowerCase().includes(term));
+ const kind=$("kind-filter").value;
+ const items=MACHINES.filter(m=>(tier==="all"||String(m.tier)===tier)&&
+   m.name.toLowerCase().includes(term)&&
+   (kind==="all"||PUBLISHED_RULES.some(rule=>rule.machine_id===m.id&&rule.kind===kind)));
+
  const list=$("target-list");list.replaceChildren();
- $("list-summary").textContent=items.length+"機種を表示。狙い目数値は未確認のため、機種別の調査テーマを掲載しています。";
+ $("list-summary").textContent=items.length+"機種表示 ／ 出典確認済み参考条件 "+
+   PUBLISHED_RULES.length+"件。種類別フィルターは確認済みの条件がある機種のみを表示します。未確認の狙い目数値は掲載しません。";
  for(const m of items){
   const card=document.createElement("article");card.className="mini-card";
   const h=document.createElement("h3");h.textContent=m.name;
@@ -159,10 +167,13 @@ function showList(){
   flag.textContent=m.tier===1?"最優先の新台":m.tier===2?"稼働重点":"その他重点";
   const status=document.createElement("span");status.className="pill warn";
   status.textContent=m.uncertain?"機種の同定待ち":"狙い目条件の確認待ち";
+  const verified=PUBLISHED_RULES.filter(rule=>rule.machine_id===m.id);
+  const ref=document.createElement("span");ref.className="pill";
+  ref.textContent=verified.length?"出典確認済み参考条件 "+verified.length+"件":"参考条件の公開待ち";
   const p=document.createElement("p");p.textContent="調査項目："+m.topics.join("／");
   const a=document.createElement("a");a.href="#machine="+m.id;a.className="btn";
   a.textContent="機種の確認ページへ";
-  card.append(h,flag,status,p,a);list.append(card);
+  card.append(h,flag,status,ref,p,a);list.append(card);
  }
 }
 function showDetail(m){
@@ -182,6 +193,40 @@ function showDetail(m){
    p.append(link);sources.append(p);
   }
  }else{const p=document.createElement("p");p.className="help";p.textContent="出典の対応付けが未完了です。特定の狙い目数値は掲載していません。";sources.append(p)}
+ const container=$("reviewed-rules");container.replaceChildren();
+ const rules=PUBLISHED_RULES.filter(x=>x.machine_id===m.id);
+ if(!rules.length){
+   const p=document.createElement("p");p.className="help";
+   p.textContent="公開できる確認済みの条件はまだありません。台の情報のメモは記録できます。";
+   container.append(p);
+ }
+ for(const rule of rules){
+   const article=document.createElement("article");article.className="mini-card";
+   const title=document.createElement("h3");title.textContent=rule.title;
+   const condition=document.createElement("p");condition.textContent="適用条件："+rule.condition_text;
+   const status=document.createElement("p");status.className="help";
+   status.textContent="分類："+(KIND_LABELS[rule.kind]||"その他")+
+     " ／ 単位："+(UNIT_LABELS[rule.unit]||rule.unit)+
+     " ／ カウンター起点："+rule.counter_basis+
+     " ／ 出典確認："+rule.source_checked_at+
+     " ／ 版："+rule.version;
+   const link=document.createElement("a");link.href=rule.source_url;
+   link.target="_blank";link.rel="noopener noreferrer";
+   link.textContent="根拠掲載ページを見る（"+rule.source_section+"）";
+   const warning=document.createElement("p");warning.className="notice";
+   warning.textContent=rule.review_notice;
+   const choose=document.createElement("button");choose.type="button";
+   choose.className="secondary";choose.textContent="この参考条件を実戦メモへ紐付け";
+   choose.addEventListener("click",()=>{
+      $("linked-rule").value=rule.id;
+      $("opportunity-kind").value=rule.kind==="state"?"hint":rule.kind;
+      $("ev-basis").value="参考条件："+rule.id+" v"+rule.version+" ／ "+rule.source_url+
+        " ／ "+rule.condition_text+" ／ 期待値は未算定";
+      $("save-feedback").textContent="参考条件を紐付けました。現地の適用条件と期待値を自分で確認してください。";
+   });
+   article.append(title,condition,status,link,warning,choose);container.append(article);
+ }
+ $("linked-rule").value="";
  const units=$("detail-counter-type"),prev=units.value;units.replaceChildren();
  for(const unit of m.units)units.add(new Option(UNIT_LABELS[unit],unit));
  if(m.units.includes(prev))units.value=prev;
@@ -203,12 +248,14 @@ function collect(){
                conditions:$("detail-conditions").value.trim()},
   estimated_ev_yen:estimated,actual_result_yen:result,
   estimate_basis:$("ev-basis").value.trim(),memo:$("play-note").value.trim(),
+  linked_reference_rule_id:$("linked-rule").value||null,
   estimate_status:"user_entered_unverified",calculated_by_site:false
  };
 }
 function clearForm(){
  for(const id of ["detail-counter-value","detail-conditions","manual-ev","actual-result","ev-basis","play-note"])$(id).value="";
  $("played-status").value="played";$("opportunity-kind").value="ceiling";
+ $("linked-rule").value="";
 }
 function updateLedger(){
  const all=readLedger(),filter=$("ledger-machine").value;
@@ -231,7 +278,8 @@ function updateLedger(){
    " ／ 期待値 "+(row.estimated_ev_yen===null||row.estimated_ev_yen===undefined?"未入力":money(row.estimated_ev_yen))+
    " ／ 実収支 "+(row.actual_result_yen===null||row.actual_result_yen===undefined?"未入力":money(row.actual_result_yen));
   const note=document.createElement("p");note.className="help";
-  note.textContent="台情報："+(row.observation?.raw||"なし")+
+  note.textContent=(row.linked_reference_rule_id?"参考条件："+row.linked_reference_rule_id+" ／ ":"")+
+   "台情報："+(row.observation?.raw||"なし")+
    " ／ 根拠："+(row.estimate_basis||"未記入")+" ／ "+(row.memo||"");
   const btn=document.createElement("button");btn.className="secondary";btn.type="button";btn.textContent="この記録を削除";
   btn.addEventListener("click",()=>{
@@ -251,6 +299,7 @@ function exportJSON(data,file){
 for(const m of MACHINES){$("ledger-machine").add(new Option(m.name,m.id))}
 $("search").addEventListener("input",showList);
 $("tier-filter").addEventListener("change",showList);
+$("kind-filter").addEventListener("change",showList);
 $("ledger-machine").addEventListener("change",updateLedger);
 window.addEventListener("hashchange",navigate);
 $("load-hall-note").addEventListener("click",()=>{
