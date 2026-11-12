@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' https://platform.twitter.com; connect-src https://platform.twitter.com https://syndication.twitter.com https://api.x.com https://x.com; frame-src https://platform.twitter.com https://syndication.twitter.com https://x.com https://twitter.com; img-src https://pbs.twimg.com https://abs.twimg.com https://ton.twimg.com data:; base-uri 'none'; form-action 'none'">
+<title>Xの最新実戦投稿 | Slot Intelligence</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fa;color:#1b344a;font:15px/1.65 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{background:#152f48;color:white;padding:21px 15px}header>div,main,footer{max-width:810px;margin:auto}
+h1{font-size:24px;margin:5px 0}h2{font-size:20px;margin:0 0 12px}
+main{padding:13px}.card{background:white;border:1px solid #d9e4ee;border-radius:12px;padding:18px;margin:12px 0}
+.notice{background:#fff6e4;border-left:4px solid #b88d39;padding:12px;border-radius:8px}
+label{display:block;font-weight:650;margin:10px 0 6px}
+input,select{width:100%;padding:12px;border:1px solid #a3b4c4;border-radius:8px;font:inherit}
+button,.btn{font:inherit;font-weight:650;display:inline-block;border:0;border-radius:8px;background:#195c92;color:white;padding:12px;text-decoration:none;cursor:pointer}
+.secondary{background:#e4edf5;color:#21435d}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.actions>*{flex:1}p,li{line-height:1.65}.muted,small{color:#546b7d;font-size:13px}
+a{color:#125b92}.feed{border:1px solid #dce4eb;border-radius:10px;padding:12px;min-height:90px;overflow:hidden}
+a:focus-visible,input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #83b9de;outline-offset:2px}
+footer{max-width:810px;margin:auto;padding:15px;font-size:12px;color:#64798a}
+</style></head><body><header><div><small style="color:#cfe2f2">試用版 v0.5 / Xの最新投稿へのアクセス</small><h1>現場の声をXで確認</h1><p>機種別の最新ポスト検索・公開タイムラインの埋め込み</p></div></header>
+<main>
+<section class="card"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧に戻る</a>
+<p class="notice"><strong>注意：</strong>Xの検索結果・タイムラインは利用者の投稿です。具体的な数値・狙い目条件・差枚数・期待値の正しさは保証されません。表示順や最新性はX側で決まります。埋め込みが利用できない場合は直接Xで確認してください。</p>
+<h2>① 機種名で最新の投稿を探す</h2>
+<label for="machine">機種を選ぶ</label><select id="machine"></select>
+<label for="search-words">検索する語句（編集可能）</label><input id="search-words" maxlength="120" placeholder="例：ガンゲイル スマスロ">
+<div class="actions"><a id="open-latest" class="btn" target="_blank" rel="noopener noreferrer" href="https://x.com/search">Xの最新投稿を見る</a>
+<a id="open-relevant" class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://x.com/search">Xの話題順で見る</a></div>
+<p class="muted">検索はX側の画面で実行します。Xのログインが必要な場合があります。このサイトは投稿データを自動収集せず、検索結果を保存しません。</p>
+</section>
+<section class="card"><h2>② 公開プロフィール／公開リストを埋め込む</h2>
+<p>よく参考にする実戦者の公開アカウント、または複数アカウントを集めた公開XリストのURLを指定できます。新しい投稿が届くと、X側のタイムライン表示に反映されます。</p>
+<label for="timeline-url">Xの公開プロフィール・リストURL</label>
+<input id="timeline-url" type="url" maxlength="240" placeholder="https://x.com/ACCOUNT または https://x.com/i/lists/数字">
+<div class="actions"><button type="button" id="show-timeline">Xのタイムラインを表示する</button>
+<button type="button" id="clear-timeline" class="secondary">埋め込みを閉じる</button></div>
+<p id="timeline-status" role="status" class="muted"></p>
+<div id="timeline" class="feed"><p class="muted">プライバシー保護のため、操作するまでXの埋め込み通信は行いません。</p></div>
+<p class="muted">公開プロフィール・リスト以外のURLは受け付けません。表示はXの外部スクリプトに依存し、広告やログイン要求が出る可能性があります。ブロックされる場合は下のリンクで直接閲覧してください。</p>
+<p><a id="timeline-fallback" target="_blank" rel="noopener noreferrer" href="https://x.com/">Xで直接開く</a></p>
+</section>
+<section class="card"><h2>実戦の情報として参考にする際のポイント</h2>
+<ul><li><strong>実戦画像や履歴：</strong>投稿者の交換率・有利区間・設定変更の有無が分からない場合は、期待値の条件と直結させない。</li>
+<li><strong>賛成・反対の両方：</strong>一部の強い成功体験だけを収集しない。狙い目否定の投稿も確認する。</li>
+<li><strong>情報の更新：</strong>新しい実戦報告と古い解析を比較するときは、投稿日時・機種名・型式・解析更新日を確認する。</li>
+<li><strong>出典の照合：</strong>同じスクリーンショットの転載やリポストは独立したデータとして二重に数えない。</li></ul>
+<p><a href="./research.html">一般解析と過去の実戦コメント比較へ</a></p>
+</section></main>
+<footer>最新投稿はX側のサービス内容・埋め込み仕様・投稿設定によって変化します。検索結果を解析して勝率や期待値を推定する機能ではありません。</footer>
+<script>
+"use strict";
+const MACHINES=[
+["seiya","聖闘士星矢 黄金十二宮","スマスロ 星矢 黄金十二宮"],
+["ggo","ガンゲイル・オンライン","スマスロ ガンゲイル オンライン"],
+["kabaneri","カバネリ 海門決戦","カバネリ 海門決戦"],
+["sao2","SAO2","スマスロ SAO2"],["monhun","モンハンサンライズ","モンハン サンライズ"],
+["otome5","戦国乙女5","戦国乙女5"],["yoshimune","吉宗","スマスロ 吉宗"],
+["god","GOD","スマスロ GOD"],["tokyoghoul","東京喰種","スマスロ 東京喰種"],
+["aobuta","青ブタ","スマスロ 青ブタ"],["world","ワールドダイスター","ワールドダイスター スロット"],
+["lycoris","リコリコ","スマスロ リコリコ"],["mahoako","まほあこ","スマスロ まほあこ"],
+["juoh","獣王","スマスロ 獣王"]
+];
+const $=id=>document.getElementById(id);
+function searchLink(query,sort){
+ return "https://x.com/search?q="+encodeURIComponent(query+" lang:ja -is:retweet")+
+   "&src=typed_query&f="+sort;
+}
+function updateSearch(){
+ const words=$("search-words").value.trim();
+ $("open-latest").href=searchLink(words||"スマスロ","live");
+ $("open-relevant").href=searchLink(words||"スマスロ","top");
+}
+for(const [id,label] of MACHINES)$("machine").add(new Option(label,id));
+function updateMachine(){
+ const item=MACHINES.find(x=>x[0]===$("machine").value);
+ if(item)$("search-words").value=item[2];
+ updateSearch();
+}
+function parseTimelineURL(raw){
+ let url;
+ try{url=new URL(raw.trim())}catch(_){return null}
+ if(url.protocol!=="https:"||!["x.com","www.x.com","twitter.com","www.twitter.com"].includes(url.hostname)||
+    url.username||url.password||url.search||url.hash)return null;
+ const path=url.pathname.replace(/\/$/,"");
+ if(/^\/[A-Za-z0-9_]{1,15}$/.test(path)&&!["i","search","home","explore","settings","messages","notifications"].includes(path.slice(1).toLowerCase())){
+  return "https://x.com"+path;
+ }
+ if(/^\/i\/lists\/[0-9]{1,25}$/.test(path))return "https://x.com"+path;
+ if(/^\/[A-Za-z0-9_]{1,15}\/lists\/[0-9]{1,25}$/.test(path))return "https://x.com"+path;
+ return null;
+}
+let requested=false;
+$("show-timeline").addEventListener("click",()=>{
+ const url=parseTimelineURL($("timeline-url").value);
+ if(!url){$("timeline-status").textContent="公開プロフィールまたは公開リストのURLを指定してください";return}
+ const container=$("timeline");container.replaceChildren();
+ const a=document.createElement("a");a.className="twitter-timeline";a.href=url;
+ a.textContent="Xの公開タイムラインを表示する";
+ a.dataset.height="520";a.dataset.theme="light";
+ container.append(a);
+ $("timeline-fallback").href=url;
+ $("timeline-status").textContent="Xから投稿を読み込んでいます。表示されない場合は「Xで直接開く」を利用してください。";
+ const load=()=>{
+  if(window.twttr?.widgets?.load){window.twttr.widgets.load(container)}
+ };
+ if(window.twttr?.widgets?.load){load();return}
+ if(!requested){
+  requested=true;
+  const script=document.createElement("script");script.async=true;script.src="https://platform.twitter.com/widgets.js";
+  script.onload=load;script.onerror=()=>$("timeline-status").textContent="Xの埋め込みを読み込めません。直接Xで確認してください。";
+  document.head.append(script);
+ }
+});
+$("clear-timeline").addEventListener("click",()=>{
+ $("timeline").replaceChildren();
+ $("timeline-status").textContent="埋め込みを閉じました。X側の既存の通信・ブラウザキャッシュは削除されません。";
+});
+$("search-words").addEventListener("input",updateSearch);
+$("machine").addEventListener("change",updateMachine);
+const target=location.hash.match(/^#machine=([a-z0-9]+)$/);
+if(target&&MACHINES.some(x=>x[0]===target[1]))$("machine").value=target[1];
+updateMachine();
+</script></body></html>
