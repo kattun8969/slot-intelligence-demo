@@ -15,12 +15,12 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 .pills{display:flex;gap:7px;flex-wrap:wrap}.pill{font-size:12px;color:#395b75;background:#e8f0f9;padding:3px 9px;border-radius:999px}.tier1{background:#dceefb}.tier9{background:#e9e9e9}.result{padding:15px;border:1px solid #d6b77a;background:#fff9ef;border-radius:10px}.result.ok{background:#eef6ff;border-color:#9ebfdb}.result strong{font-size:17px}.list{padding-left:20px}.list li{margin:4px 0}.record{border-bottom:1px solid var(--border);padding:13px 0}.record:last-child{border-bottom:0}.hidden{display:none}.counter{font-weight:700;color:#244b6a}footer{color:var(--muted);padding:15px;font-size:12px}code{overflow-wrap:anywhere}a{color:#124f88}@media(max-width:580px){.card{padding:15px}button{flex:1;min-width:130px}}
 </style>
 </head><body>
-<header><div><div class="pills"><span class="pill tier1">試用版 v0.1</span><span class="pill">スマホ対応</span><span class="pill">通信なし</span></div>
+<header><div><div class="pills"><span class="pill tier1">試用版 v0.2</span><span class="pill">スマホ対応</span><span class="pill">通信なし</span></div>
 <h1>Slot Intelligence</h1>
 <p>現地で見た情報を整理する、機種別の確認メモ</p></div></header>
 <main>
 <section class="card"><h2>このデモでできること</h2>
-<div class="grid"><div><strong>1. 重点機種を選ぶ</strong><p class="meta">優先14機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 現地の事実を記録</strong><p class="meta">G数・あべし・周期・リセット・ST状況を混同しない。</p></div><div><strong>3. 確認漏れを見つける</strong><p class="meta">条件不足や矛盾を警告。メモは端末内のみ保存。</p></div></div>
+<div class="grid"><div><strong>1. 重点機種を選ぶ</strong><p class="meta">優先14機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 現地の事実を記録</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 確認漏れを見つける</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
 <p class="note"><strong>仮公開デモ：</strong>機種名と入力項目の操作を試すためのものです。天井・期待値・設定推測・「打てる／打てない」は未提供です。登録データが足りない機種について判断を作りません。メーカー・解析サイトの正式な確認を経た運用版とは異なります。</p>
 </section>
 <section class="card" id="entry"><h2>現地の入力</h2>
@@ -30,20 +30,23 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 </div>
 <div id="machine-description" class="note" aria-live="polite" style="margin-top:13px"></div>
 <div class="grid-small">
-<div><label for="counter-kind">表示された数値の種類</label><select id="counter-kind"><option value="">未確認</option><option value="games">G数</option><option value="abeshi">あべし</option><option value="cycles">周期</option></select></div>
-<div><label for="counter-value">現地の表示数値</label><input id="counter-value" inputmode="numeric" type="number" min="0" max="100000" step="1" placeholder="例：450"></div>
-<div><label for="basis">カウンターの起点</label><select id="basis"><option value="">不明</option><option value="displayed_games">データ表示機の表示G数</option><option value="st_interval">ST間のG数を確認</option><option value="abeshi">あべしカウンター</option><option value="cycle_counter">周期数の起点を確認</option></select></div>
+<div><label for="counter-kind">表示数値の種類</label><select id="counter-kind"><option value="games">表示G数</option></select><p class="meta" id="unit-note"></p></div>
+<div><label for="counter-value">表示数値（未入力でも保存できます）</label><input id="counter-value" inputmode="decimal" type="text" maxlength="30" placeholder="例：450"></div>
+<div><label for="unit-extra">その他の単位・補足（任意）</label><input id="unit-extra" type="text" maxlength="60" placeholder="例：液晶ポイント、差枚、スルーなど"></div>
 </div>
-<p class="check"><label class="check"><input type="checkbox" id="basis-confirmed">表示数値の起点と単位を直接確認した</label></p>
+<details style="margin-top:13px"><summary><strong>詳細な状態・履歴（任意）</strong></summary><p class="meta">分からない項目はそのままで大丈夫です。</p>
 <div class="grid">
+<div id="basis-group"><label for="basis">カウンターの起点</label><select id="basis"><option value="">不明・未確認</option></select>
+<label class="check" id="basis-confirmed-group"><input type="checkbox" id="basis-confirmed">起点を確認済み</label></div>
 <div><label for="reset">設定変更・リセット</label><select id="reset"><option value="unknown">不明</option><option value="yes">確認できた</option><option value="no">変更なしを確認</option></select></div>
-<div><label for="st">直前のST状況</label><select id="st"><option value="unknown">不明</option><option value="runthrough">駆け抜けを確認</option><option value="upper_end">上位ST終了を確認</option><option value="other">その他・通常当選</option></select></div>
+<div id="st-group"><label for="st">直前のST状況</label><select id="st"><option value="unknown">不明</option><option value="runthrough">駆け抜けを確認</option><option value="upper_end">上位ST終了を確認</option><option value="other">その他・通常当選</option></select></div>
+<div id="context-group"><label for="context">確認できた状態</label><select id="context"><option value="unknown">不明・未確認</option></select></div>
 </div>
-<label for="context">モード／状態（自分で確認した情報）</label><select id="context"><option value="unknown">不明・推定のみ</option><option value="mode_a">モードAを確認</option><option value="mode_b">モードBを確認</option><option value="mode_c">モードCを確認</option><option value="heaven">天国を確認</option><option value="after_reset">設定変更後を確認</option><option value="after_st">ST駆け抜け後を確認</option><option value="after_upper">上位ST終了後を確認</option></select>
-<label class="check"><input type="checkbox" id="context-confirmed">モード・状態を示す直接の根拠を確認した</label>
-<label for="evidence">その根拠（何を見て確認したか）</label><textarea id="evidence" placeholder="例：ST終了の表示を確認した／店員による変更告知を確認した。憶測は確認済みにしない"></textarea>
-<label for="memo">メモ（任意）</label><textarea id="memo" placeholder="据え置き不明、最終当選履歴、前任者の遊技状況など"></textarea>
-<div class="actions"><button type="button" id="evaluate">確認不足をチェック</button><button type="button" class="secondary" id="save">端末内にメモ保存</button><button type="button" class="secondary" id="export">この入力をJSON出力</button></div>
+<div id="evidence-group"><label class="check"><input type="checkbox" id="context-confirmed">状態を直接確認した</label>
+<label for="evidence">確認根拠（任意）</label><textarea id="evidence" placeholder="例：ST終了の表示を確認。推測の場合はチェックしない"></textarea></div>
+</details>
+<label for="memo">自由メモ（これだけでも保存できます）</label><textarea id="memo" placeholder="据え置き不明、最終当選履歴、前任者の遊技状況など"></textarea>
+<div class="actions"><button type="button" id="evaluate">入力内容を確認</button><button type="button" class="secondary" id="save">端末内にメモ保存</button><button type="button" class="secondary" id="export">この入力をJSON出力</button></div>
 <p class="meta" role="status" id="status"></p>
 <div id="result" class="result hidden" role="status" aria-live="polite"></div>
 </section>
@@ -56,7 +59,7 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <div class="pills"><span class="pill">実機解析の条件付き照合</span><span class="pill">機種別の入力項目</span><span class="pill">出典と更新履歴</span><span class="pill">調査候補の承認</span></div>
 <p>確認済みの解析数値が揃うまで、天井からの残りゲーム数、勝率、期待値などは表示しません。新しい解析で条件が変更された場合は、出典を比較し、差分を確認してから反映する予定です。</p></section>
 </main>
-<footer>試用版 2026-11-12 / 公開デモに運用DBや未承認の実機スペックは含めていません。作者・利用者いずれの現地状況も外部送信しません。</footer>
+<footer>試用版 v0.2 / 2026-11-12 / 公開デモに運用DBや未承認の実機スペックは含めていません。作者・利用者いずれの現地状況も外部送信しません。</footer>
 <script>
 "use strict";
 const machines=[
@@ -75,6 +78,24 @@ const machines=[
  {id:"mahoako",name:"まほあこ",tier:3,note:"CZ/ATの履歴条件を確認待ち",uncertain:false},
  {id:"juoh",name:"獣王",tier:3,note:"対象のパチスロ機・世代の正式特定待ち",uncertain:true}
 ];
+const FIELDS={
+ seiya:{units:["games"],st:false,contexts:["after_reset"]},
+ ggo:{units:["games","throughs"],st:true,contexts:["after_reset"]},
+ kabaneri:{units:["games","cycles"],st:true,contexts:["after_reset","after_st","after_upper"]},
+ sao2:{units:["games"],st:false,contexts:[]},
+ monhun:{units:["games"],st:false,contexts:[]},
+ otome5:{units:["games"],st:false,contexts:[]},
+ yoshimune:{units:["games"],st:false,contexts:[]},
+ god:{units:["games"],st:false,contexts:[]},
+ tokyoghoul:{units:["games"],st:false,contexts:[]},
+ aobuta:{units:["games"],st:false,contexts:[]},
+ world:{units:["games","cycles","points"],st:false,contexts:[]},
+ lycoris:{units:["games"],st:false,contexts:[]},
+ mahoako:{units:["games"],st:false,contexts:[]},
+ juoh:{units:["games"],st:false,contexts:[]}
+};
+const UNIT_NAMES={games:"表示G数",cycles:"周期数",throughs:"スルー回数",points:"ポイント数"};
+const CONTEXT_NAMES={after_reset:"設定変更後",after_st:"ST駆け抜け後",after_upper:"上位ST終了後"};
 const $=id=>document.getElementById(id);
 const STORAGE_KEY="slotintel-preview-notes-v1";
 const choice=(id)=>$(id).value;
@@ -87,6 +108,40 @@ function rebuild(){
  if([...$("machine").options].some(o=>o.value===selected))$("machine").value=selected;
  explain();
 }
+function updateFields(){
+ const m=machine();if(!m)return;
+ const f=FIELDS[m.id]||{units:["games"],st:false,contexts:[]};
+ const oldUnit=choice("counter-kind");
+ $("counter-kind").replaceChildren();
+ for(const unit of f.units)$("counter-kind").add(new Option(UNIT_NAMES[unit],unit));
+ if(f.units.includes(oldUnit))$("counter-kind").value=oldUnit;
+ $("unit-note").textContent=f.units.length>1?
+ "必要な単位だけを表示します。数値の意味を自動推定しません。":
+ "この機種は表示G数のみ。その他の情報は自由メモで記録できます。";
+ $("st-group").classList.toggle("hidden",!f.st);
+ if(!f.st)$("st").value="unknown";
+ const oldContext=choice("context");$("context").replaceChildren();
+ $("context").add(new Option("不明・未確認","unknown"));
+ for(const context of f.contexts)$("context").add(new Option(CONTEXT_NAMES[context],context));
+ if(f.contexts.includes(oldContext))$("context").value=oldContext;
+ $("context-group").classList.toggle("hidden",!f.contexts.length);
+ $("evidence-group").classList.toggle("hidden",!f.contexts.length);
+ if(!f.contexts.length){$("context").value="unknown";$("context-confirmed").checked=false;
+   $("evidence").value="";}
+ updateBasis();
+}
+function updateBasis(){
+ const kind=choice("counter-kind"),old=choice("basis"),sel=$("basis");
+ const bases=kind==="cycles"?["cycle_counter"]:
+   kind==="games"?["displayed_games","st_interval"]:[];
+ sel.replaceChildren();sel.add(new Option("不明・未確認",""));
+ if(bases.includes("displayed_games"))sel.add(new Option("データ表示機の表示G数","displayed_games"));
+ if(bases.includes("st_interval"))sel.add(new Option("ST間のG数を確認","st_interval"));
+ if(bases.includes("cycle_counter"))sel.add(new Option("周期の起点を確認","cycle_counter"));
+ if(bases.includes(old))sel.value=old;
+ $("basis-group").classList.toggle("hidden",!bases.length);
+ if(!bases.length)$("basis-confirmed").checked=false;
+}
 function explain(){
  const m=machine();const info=$("machine-description");info.replaceChildren();
  if(!m)return;
@@ -96,18 +151,19 @@ function explain(){
  const p=document.createElement("p");
  p.textContent=m.note+"。このデモは数値を自動登録しません。";
  info.append(p);
+ updateFields();
 }
 function build(){
  const m=machine();if(!m)throw Error("機種を選択してください");
  const raw=choice("counter-value").trim();let n=null;
- if(raw!==""){
-  n=Number(raw);
-  if(!Number.isSafeInteger(n)||n<0||n>100000)throw Error("数値は0〜100000の整数で入力してください");
-  if(!choice("counter-kind"))throw Error("数値を入力した場合は単位を選択してください");
+ if(raw!==""&&/^\d+(?:\.\d+)?$/.test(raw)){
+  const parsed=Number(raw);
+  if(Number.isFinite(parsed)&&parsed<=100000)n=parsed;
  }
  return {schema:1,kind:"unverified_hall_observation",machine_id:m.id,
   machine_name:m.name,observed_at:new Date().toISOString(),
-  observation:{counter_kind:choice("counter-kind")||null,counter_value:n,
+  observation:{counter_kind:choice("counter-kind")||"games",counter_value:n,
+   counter_raw:raw,additional_unit_note:choice("unit-extra").trim(),
    counter_basis:choice("basis")||"unknown",
    basis_confirmed:$("basis-confirmed").checked,
    reset:choice("reset"),st_outcome:choice("st"),
@@ -118,14 +174,14 @@ function build(){
 function assess(doc){
  const m=machine(),x=doc.observation,issues=[];
  if(m.uncertain)issues.push("機種の正式名称・対象バージョンが未確認です");
- if(x.counter_value===null)issues.push("ゲーム数・あべし・周期の表示数値が未入力です");
- if(x.counter_value!==null&&x.counter_basis==="unknown")issues.push("カウンターの起点が不明です");
- if(x.counter_value!==null&&!x.basis_confirmed)issues.push("カウンターの起点・単位が未確認です");
- if(x.counter_kind==="games"&&x.counter_basis==="abeshi" ||
-    x.counter_kind==="abeshi"&&x.counter_basis!=="abeshi"&&x.basis_confirmed ||
-    x.counter_kind==="cycles"&&x.counter_basis!=="cycle_counter"&&x.basis_confirmed)
+ if(x.counter_raw!==""&&x.counter_value===null)issues.push("数値形式を確認してください。入力した文字はそのまま保存されます");
+
+
+ if(x.basis_confirmed&&
+     ((x.counter_kind==="games"&&!["displayed_games","st_interval"].includes(x.counter_basis))||
+     (x.counter_kind==="cycles"&&x.counter_basis!=="cycle_counter")))
    issues.push("選択した単位とカウンターの起点が一致しません");
- if(x.context!=="unknown"&&(!x.context_confirmed||!x.context_evidence))issues.push("選択した状態の根拠を確認してください");
+ if(x.context!=="unknown"&&(!x.context_confirmed||!x.context_evidence))issues.push("選択した状態の根拠は未確認です（保存できます）");
  if(x.context==="after_reset"&&x.reset!=="yes")issues.push("設定変更後なのにリセット確認がありません");
  if(x.context==="after_st"&&x.st_outcome!=="runthrough")issues.push("ST駆け抜け後の状態と直前STの結果が一致しません");
  if(x.context==="after_upper"&&x.st_outcome!=="upper_end")issues.push("上位ST終了後の状態と直前STの結果が一致しません");
@@ -133,7 +189,7 @@ function assess(doc){
  if(x.st_outcome==="runthrough"&&x.context==="after_upper"||x.st_outcome==="upper_end"&&x.context==="after_st")issues.push("ST終了の種類に矛盾があります");
  const output=$("result");output.replaceChildren();output.classList.remove("hidden");
  output.classList.toggle("ok",issues.length===0);
- const heading=document.createElement("strong");heading.textContent=issues.length?"追加確認が必要です":"入力内容は整理できました";
+ const heading=document.createElement("strong");heading.textContent=issues.length?"確認メモがあります（保存できます）":"入力内容は整理できました";
  output.append(heading);
  const message=document.createElement("p");
  message.textContent="遊技判断：保留。実機の解析数値が承認されていないため、期待値や打つ・打たないの結論は表示しません。";
@@ -143,7 +199,7 @@ function assess(doc){
   for(const item of [...new Set(issues)]){const li=document.createElement("li");li.textContent=item;ul.append(li)}
   output.append(ul);
  }else{
-  const p=document.createElement("p");p.textContent="事実の入力はできています。条件付きの正式解析情報との照合は今後実装します。";output.append(p);
+  const p=document.createElement("p");p.textContent="不明な項目は空欄のまま保存して構いません。正式解析との照合は今後実装します。";output.append(p);
  }
  return issues;
 }
@@ -170,7 +226,8 @@ function renderNotes(){
   const div=document.createElement("div");div.className="record";
   const strong=document.createElement("strong");strong.textContent=record.machine_name||"名称不明";
   const p=document.createElement("p");p.className="meta";const o=record.observation||{};
-  p.textContent=(record.observed_at||"")+" ／ "+(o.counter_value===null?"数値未入力":o.counter_value)+" "+(o.counter_kind||"単位未確認");
+  p.textContent=(record.observed_at||"")+" ／ "+(o.counter_raw!==undefined&&o.counter_raw!==""?o.counter_raw:
+    o.counter_value!==null&&o.counter_value!==undefined?o.counter_value:"数値未入力")+" "+(UNIT_NAMES[o.counter_kind]||"単位未確認");
   const b=document.createElement("button");b.type="button";b.className="secondary";b.textContent="JSONを書き出し";
   b.addEventListener("click",()=>download(record,"hall-observation-"+String(i+1)+".json"));
   div.append(strong,p,b);list.append(div);
@@ -178,6 +235,7 @@ function renderNotes(){
 }
 $("tier").addEventListener("change",rebuild);
 $("machine").addEventListener("change",explain);
+$("counter-kind").addEventListener("change",updateBasis);
 $("evaluate").addEventListener("click",()=>{try{const doc=build();assess(doc);$("status").textContent="";}catch(e){$("status").textContent=e.message}});
 $("save").addEventListener("click",()=>{try{const doc=build();assess(doc);const notes=readNotes();
  notes.unshift(doc);if(writeNotes(notes.slice(0,100))){renderNotes();$("status").textContent="端末内に保存しました。解析値の承認は行っていません。"}}
