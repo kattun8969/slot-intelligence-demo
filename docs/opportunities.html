@@ -32,7 +32,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v0.4 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
+<header><div><small>試用版 v0.5 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
 <p>候補一覧 → 機種ごとの確認 → 実戦した期待値を記録</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
@@ -43,6 +43,11 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <div><strong>③ 打った台を記録</strong><p class="help">自分で確認・算出した期待値を保存し、累計を確認します。</p></div>
 </div>
 <p class="notice"><strong>重要：</strong>現在の一覧は「狙い目の調査候補」です。実際の推奨条件や期待値を確定した一覧ではありません。正式な条件・数値が確認できるまで、自動計算や「打てる」の判定は行いません。期待値合計は自分で入力した見積額の合計であり、実収支や保証される利益ではありません。</p></section>
+<section class="card"><h2>一般解析と最新のX投稿を確認する</h2>
+<p>重点3機種の解析サイト比較と実戦報告を確認できます。SNSは個別の体験談であり、期待値の数値には自動換算しません。</p>
+<a class="btn" href="./research.html">星矢・ガンゲイル・カバネリの解析比較を見る</a>
+<a class="btn secondary" href="./x-live.html">Xの最新投稿・リストを開く</a>
+</section>
 <section class="card" id="list-panel"><h2>狙い目候補一覧</h2>
 <div class="group">
 <div><label for="search">機種を検索</label><input id="search" type="search" placeholder="機種名から探す"></div>
@@ -184,6 +189,19 @@ function showDetail(m){
   "狙い目の条件・期待値の検証が完了していません。確認する項目と掲載元への参照だけを提供しています。";
  const ul=$("detail-checkpoints");ul.replaceChildren();
  for(const t of m.topics){const li=document.createElement("li");li.textContent=t;ul.append(li)}
+ document.getElementById("research-shortcut")?.remove();
+ if(["seiya","ggo","kabaneri"].includes(m.id)){
+  const p=document.createElement("p");p.id="research-shortcut";
+  const a=document.createElement("a");a.href="./research.html#"+m.id;
+  a.textContent="一般解析と実戦コメントの比較を見る";
+  p.append(a);$("detail-checkpoints").after(p);
+ }
+ const xsearch=document.createElement("p");xsearch.id="x-search-shortcut";
+ document.getElementById("x-search-shortcut")?.remove();
+ const xlink=document.createElement("a");
+ xlink.href="./x-live.html#machine="+m.id;
+ xlink.textContent="Xでこの機種の最新投稿を見る";
+ xsearch.append(xlink);$("detail-checkpoints").after(xsearch);
  const sources=$("detail-sources");sources.replaceChildren();
  if(m.sources.length){
   const h=document.createElement("h3");h.textContent="情報の掲載元（内容・更新日を要確認）";sources.append(h);
