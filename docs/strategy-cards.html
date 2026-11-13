@@ -26,7 +26,7 @@ details.source-detail summary{font-size:14px;font-weight:650;color:#195e93}
 summary{cursor:pointer;padding:5px 0}.row-state{font-size:13px;font-weight:650;margin:8px 0}.row-state.warn{color:#815a21}.row-state.no{color:#9b3e3e}.row-state.yes{color:#195d50}
 footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 </style></head><body>
-<header><div><small style="color:#d7e6f4">試用版 v1.4 ・ 2026年11月13日時点の掲載例</small>
+<header><div><small style="color:#d7e6f4">試用版 v1.5 ・ 2026年11月13日時点の掲載例</small>
 <h1>この台、何Gから狙える？</h1><p>機種と交換率を選んで、解析サイトの目安をチェック</p></div></header>
 <main>
 <section class="card">
@@ -58,6 +58,12 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 <p class="muted" id="quick-count">機種・状態・交換率を選ぶと、サイト別の目安が出ます。</p>
 <div id="quick-cards" class="quick-stack"></div>
 <p class="muted">数字は解析サイトの掲載例です。実際の台が該当するかは、各条件と履歴を確認してください。期待値は計算しません。</p>
+</section>
+<section class="card" id="machine-guide">
+<h2>天井・ゾーン・やめどき早見表</h2>
+<p class="muted">機種によって確認ポイントは違います。一般解析の掲載例なので、最新情報と台の状態を合わせて確認してください。</p>
+<div id="guide-items" class="quick-stack"></div>
+<div class="actions"><a class="btn secondary" id="quick-x-feed" href="./x-live.html">この機種のX投稿をチェック</a></div>
 </section>
 <section class="card"><h2>解析サイトでは何Gから？</h2>
 <p class="muted">詳しい条件・根拠を見たい場合は、下のカードを開いてください。</p>
@@ -216,6 +222,73 @@ const INFO_CONDITIONS={
   url:"https://nana-press.com/kaiseki/machine/1160/37315/"
  }
 };
+// Short, independently attributed gameplay context. This is not an EV model.
+const FIELD_GUIDES={
+ tokyoghoul:{
+  source:"ちょんぼりすた／なな徹（2026-11-13確認）",
+  url:"https://chonborista.com/slot/spiky/226073/",
+  items:[
+   ["天井","CZ間は液晶600G+α、AT間は実G1200G+α。リセット後はCZ間200G+α。CZとATで数える場所が違います。"],
+   ["注目ポイント","有馬貴将ジャッジメント失敗後はCZ当選までのフォローが掲載されています。"],
+   ["やめどき","AT終了後は引き戻し前兆を確認。CZ後はPUSHカード・示唆も原記事で確認。"]
+  ]},
+ otome5:{
+  source:"なな徹（2026-11-13確認）",
+  url:"https://nana-press.com/kaiseki/machine/1160/",
+  items:[
+   ["天井","通常は実G999G+αまたは最大6周期。設定変更後は実G650G+αまたは最大4周期。"],
+   ["周期狙い","掲載例では通常5周期目以降、変更後3周期目以降を暫定の確認候補としています。"],
+   ["やめどき","AT終了後は引き戻しが期待される1周期目までフォローする掲載例。終了画面も確認。"]
+  ]},
+ kabaneri:{
+  source:"スロベース（2026-11-09〜11-13確認）",
+  url:"https://slobase.jp/machines/kabaneri-unato",
+  items:[
+   ["天井","通常996G+αまたは6周期。設定変更・ST駆け抜けなどの短縮状態は596G+αまたは4周期。"],
+   ["周期・示唆","ST後のCZアイコン、サブ液晶背景、現在周期を確認。通常時のG数だけで判断しない。"],
+   ["やめどき","ST後の約20Gや高確・前兆、アイコンを確認する掲載例。景之ST後などは別条件。"]
+  ]},
+ monhun:{
+  source:"なな徹（初代ライズ2024年版の掲載例）",
+  url:"https://nana-press.com/kaiseki/machine/837/25431/",
+  items:[
+   ["天井","初代ライズはAT間999G+αとクエスト6スルー後の7回目を別々に確認。"],
+   ["設定変更","ゲーム数天井が短くなるとは限りません。リセット後の状態優遇は元記事の条件を確認。"],
+   ["やめどき","AT終了画面や示唆・クエスト履歴を見てから元記事で確認。2026年版サンブレイクとは別。"]
+  ]},
+ seiya:{
+  source:"ちょんぼりすた（黄金十二宮）",
+  url:"https://chonborista.com/slot/sanyo-slot/260304/",
+  items:[
+   ["天井","AT間とCZ間は別カウンター。確認できた方の数値だけを比較。"],
+   ["周期","火時計ポイント、CZスルー、現在周期を確認。G数だけで一律判断しない。"],
+   ["やめどき","CZ・AT終了後の示唆や状態を元記事で確認。未確認のやめどきを固定しません。"]
+  ]},
+ ggo:{
+  source:"一撃（ガンゲイル・オンライン）",
+  url:"https://1geki.jp/slot/l_sao_ggo/3/",
+  items:[
+   ["天井","ボーナス間とSJ間スルーを別に数える。設定変更後は短縮条件あり。"],
+   ["スルー","SJのスルーや駆け抜け後の条件は、前回履歴まで確認。"],
+   ["やめどき","SJ後・CZ後の状態や示唆を元記事で確認。数値だけでは決めません。"]
+  ]}
+};
+function renderFieldGuide(mid){
+ const root=$("guide-items");root.replaceChildren();
+ const data=FIELD_GUIDES[mid];if(!data)return;
+ for(const [heading,description] of data.items){
+  const card=document.createElement("article");card.className="quick-card";
+  const h=document.createElement("h3");h.textContent=heading;
+  const p=document.createElement("p");p.textContent=description;
+  card.append(h,p);root.append(card);
+ }
+ const note=document.createElement("p");note.className="muted";
+ const a=document.createElement("a");a.href=data.url;
+ a.target="_blank";a.rel="noopener noreferrer";
+ a.textContent="掲載元で確認する";
+ note.textContent="参考："+data.source+" ／ ";note.append(a);root.append(note);
+ $("quick-x-feed").href="./x-live.html#machine="+encodeURIComponent(mid);
+}
 const $=id=>document.getElementById(id);
 function showRelevantFields(){
  const machine=$("machine").value,condition=$("condition").value;
@@ -330,6 +403,7 @@ function render(){
  const rows=matches(mid,condition,exchange);
  showRelevantFields();
  renderQuickSummary(mid,condition,exchange);
+ renderFieldGuide(mid);
  const out=$("published-examples");out.replaceChildren();
  $("result-count").textContent=rows.length+"件の掲載例を表示。交換条件に対応する出典のみ掲載しています。";
  if(!rows.length){
