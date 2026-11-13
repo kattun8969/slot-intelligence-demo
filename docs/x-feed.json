@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "status": "not_configured",
+  "generated_at": null,
+  "machines": {
+    "seiya": {
+      "fetched_at": null,
+      "posts": []
+    },
+    "ggo": {
+      "fetched_at": null,
+      "posts": []
+    },
+    "kabaneri": {
+      "fetched_at": null,
+      "posts": []
+    },
+    "tokyoghoul": {
+      "fetched_at": null,
+      "posts": []
+    },
+    "otome5": {
+      "fetched_at": null,
+      "posts": []
+    },
+    "monhun": {
+      "fetched_at": null,
+      "posts": []
+    }
+  }
+}
