@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>狙い目の出典別比較 | Slot Intelligence</title>
+<style>
+*{box-sizing:border-box}body{font:15px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif;background:#f2f6fa;color:#18334b;margin:0}
+header{background:#12304c;color:white;padding:22px 15px}header>div,main,footer{max-width:950px;margin:auto}h1{font-size:24px;margin:3px 0}
+main{padding:14px}.card{border:1px solid #d8e3ed;border-radius:13px;background:white;padding:17px;margin:14px 0}
+.notice{background:#fff5e5;border-left:4px solid #c38b33;padding:11px;border-radius:7px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}label{display:block;font-weight:650;margin:8px 0 5px}
+select,input{font:inherit;width:100%;padding:11px;border:1px solid #9bb0c0;border-radius:9px;background:white;color:inherit}
+button,.btn{font:inherit;display:inline-block;border:0;border-radius:9px;background:#195e93;color:white;padding:11px 14px;cursor:pointer;text-decoration:none;font-weight:650}.secondary{background:#e6eef5;color:#193c59}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.actions>*{flex:1 1 145px}
+.row{border-top:1px solid #d8e3eb;padding:14px 0}.row:first-child{border:0}.tag{display:inline-block;font-size:12px;padding:3px 9px;background:#e7f0fa;color:#245477;border-radius:20px;margin-right:4px}
+.muted,small{color:#516a80;font-size:13px}h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:5px 0}
+a{color:#155d95}a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #83b7df;outline-offset:2px}
+.result{padding:14px;border-radius:10px;background:#eaf2fa;border:1px solid #b5cadb}.result.warn{background:#fff6e8;border-color:#dbbe93}
+footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
+</style></head><body>
+<header><div><small style="color:#d7e6f4">試用版 v0.9 ・ 2026年11月13日時点の掲載例</small>
+<h1>狙い目を出典別に比較</h1><p>交換率・状態・カウンター起点による違いを確認してから現地判断へ</p></div></header>
+<main>
+<section class="card">
+<div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧へ</a><a class="btn secondary" href="./research.html">解析と現場の声</a></div>
+<p class="notice"><strong>注意：</strong>この画面は一般解析サイトに掲載されている開始目安の<strong>比較資料</strong>です。「この台を打つべき」という自動判定ではありません。数値は掲載元の独自条件・期待値の目標・交換率に依存します。現在の台にその条件が当てはまるかを先に確認してください。SNSの情報も独立した実測検証ではありません。</p>
+<div class="grid">
+<div><label for="machine">機種</label><select id="machine"></select></div>
+<div><label for="condition">状態・狙いの種類</label><select id="condition"></select></div>
+<div><label for="exchange">交換条件</label><select id="exchange"><option value="equal">等価</option><option value="medals">5.6枚・持ちメダル</option><option value="cash">5.6枚・現金投資</option></select></div>
+<div><label for="counter">現在の表示G数（任意）</label><input id="counter" inputmode="numeric" type="text" maxlength="8" placeholder="例：320"></div>
+</div>
+<div class="actions"><button type="button" id="compare">掲載目安と見比べる</button>
+<a id="notes-link" class="btn secondary" href="./community-notes.html">この条件の実戦報告を見る</a></div>
+<p id="compare-feedback" class="result" role="status">状態・交換率を選ぶと、掲載元ごとの目安を比較できます。</p>
+</section>
+<section class="card"><h2>一般解析サイトの掲載例</h2>
+<p class="muted" id="result-count" role="status"></p>
+<div id="published-examples"></div>
+<p class="notice">出典間で基準が異なっても、平均・多数決で一つの数値には統合しません。数値が近いからといって独立した複数データとは限りません。未確認の状態で別条件の数値を流用しないでください。</p>
+</section>
+<section class="card"><h2>現地で確認する項目</h2>
+<ul id="checks"></ul>
+<div class="actions"><a id="machine-page" class="btn" href="./opportunities.html#list">機種の詳細・期待値記録へ</a>
+<a id="x-page" class="btn secondary" href="./x-live.html">Xで最新の反例を探す</a></div>
+<p class="muted">この画面に載っている目安は現時点で調査した3機種のみ。ほかの機種は、検証できる出典を増やしてから追加します。</p>
+</section>
+</main>
+<footer>掲載数値の正確性・適用条件・実際の収支を保証するものではありません。入力情報は外部送信されず、期待値記録にも自動入力しません。リンク先の記述・更新日は後から変わることがあります。</footer>
+<script>
+"use strict";
+const MACHINES=[
+ ["seiya","聖闘士星矢 黄金十二宮"],
+ ["ggo","ガンゲイル・オンライン"],
+ ["kabaneri","カバネリ 海門決戦"]
+];
+const CONDITIONS={
+ seiya:[
+  ["at_gap","AT間G数・通常"],
+  ["cz_gap","CZ間G数・AT後"],
+  ["cz_after_fail","CZ間G数・CZ失敗後"],
+  ["reset_cz","設定変更後CZ間"],
+  ["fire_clock","火時計・周期（数値は条件次第）"]
+ ],
+ ggo:[
+  ["normal_ceiling","通常時・G数天井"],
+  ["reset_ceiling","設定変更後・短縮天井"],
+  ["sj_through","SJ間ボーナススルー"]
+ ],
+ kabaneri:[
+  ["normal_ceiling","通常時・ST後のG数天井"],
+  ["shortened_ceiling","短縮天井・リセット等"],
+  ["cycle","周期ゾーン"]
+ ]
+};
+const CHECKS={
+ seiya:[
+ "AT間G数とCZ間G数は別物。液晶とデータ表示機でカウンターの起点を確認",
+ "通常AT終了後・CZ失敗後・設定変更後・上位AT後を混同しない",
+ "交換率と目標（時給・機械割など）により掲載元の開始目安が違う",
+ "火時計ポイント・周期示唆・やめどきの前提も確認"
+ ],
+ ggo:[
+ "ボーナス間とSJ間の履歴を区別し、設定変更・駆け抜け時の短縮を確認",
+ "SJスルー回数は定義に注意。単にボーナスが連続した回数ではない",
+ "データ表示機のG数と液晶G数に差があることがある",
+ "掲載表は『期待値プラス』と『期待値1000円以上』の閾値が異なる"
+ ],
+ kabaneri:[
+ "表示G数と周期数を両方確認し、2周期目の抽選前かどうかを見る",
+ "通常・リセット・ST駆け抜け・上位ST後の違いを確認",
+ "狙い始めの基準はサイトごとに時給・目標期待値が異なる",
+ "やめどきと示唆を確認。周期を無視してG数だけで判断しない"
+ ]
+};
+// Every threshold below is a published author's illustrative starting line,
+// not a validated recommendation or site's computed expected value.
+const EXAMPLES=[
+ {id:"seiya-at-toolbox",machine:"seiya",condition:"at_gap",source:"スロッターの道具箱",url:"https://slot-toolbox.com/seiya-ougon-tenjo/",asof:"2026-11-11",thresholds:{equal:550},basis:"AT間G数",goal:"サイト掲載の天井狙い目",warning:"CZ間の数値と別。途中のCZ消化をまたぐAT間の履歴が必要"},
+ {id:"seiya-at-chon",machine:"seiya",condition:"at_gap",source:"ちょんぼりすた",url:"https://chonborista.com/slot/sanyo-slot/260304/",asof:"2026-11-12",thresholds:{equal:620,medals:650,cash:690},basis:"AT間G数",goal:"実戦値の出玉率106%目安",warning:"AT間はCZ間0〜99Gの場合の掲載目安。条件が違う場合に流用しない"},
+ {id:"seiya-cz-toolbox",machine:"seiya",condition:"cz_gap",source:"スロッターの道具箱",url:"https://slot-toolbox.com/seiya-ougon-tenjo/",asof:"2026-11-11",thresholds:{equal:250},basis:"CZ間G数",goal:"サイト掲載の天井狙い目",warning:"通常時の目安。CZ失敗後の扱いは別表を確認"},
+ {id:"seiya-cz-chon",machine:"seiya",condition:"cz_gap",source:"ちょんぼりすた",url:"https://chonborista.com/slot/sanyo-slot/260304/",asof:"2026-11-12",thresholds:{equal:220,medals:240,cash:290},basis:"CZ間G数",goal:"AT後・次のCZまで。出玉率106%目安",warning:"CZ失敗後のCZ間には別の閾値を使用"},
+ {id:"seiya-czfail-chon",machine:"seiya",condition:"cz_after_fail",source:"ちょんぼりすた",url:"https://chonborista.com/slot/sanyo-slot/260304/",asof:"2026-11-12",thresholds:{equal:250,medals:270,cash:320},basis:"CZ間G数",goal:"CZ失敗後、次のCZまで",warning:"天井CZに負けた後など、別の特殊条件はこの記事内の別表で確認"},
+ {id:"seiya-reset-chon",machine:"seiya",condition:"reset_cz",source:"ちょんぼりすた",url:"https://chonborista.com/slot/sanyo-slot/260304/",asof:"2026-11-12",thresholds:{equal:140,medals:150,cash:170},basis:"リセット後のCZ間G数",goal:"設定変更時・初回CZまで",warning:"当日の0G表示だけでは変更の有無は判定できない"},
+ {id:"seiya-reset-slobase",machine:"seiya",condition:"reset_cz",source:"スロベース",url:"https://slobase.jp/articles/saint-seiya-golden-reset",asof:"2026-11-11",thresholds:{equal:140,medals:150,cash:170},basis:"リセット後のCZ間G数",goal:"CZまでの打ち出し目安",warning:"設定変更を確定できない状態で使わない"},
+ {id:"ggo-normal-slobase",machine:"ggo",condition:"normal_ceiling",source:"スロベース",url:"https://slobase.jp/articles/sao-alternative-ggo-yamedoki",asof:"2026-11-12",thresholds:{equal:700,cash:800},basis:"データ表示機のボーナス間G数",goal:"期待値+1000円超えとする掲載例",warning:"0〜4スルーを想定。5.6枚交換は現金条件。スルー数が深い場合は別条件"},
+ {id:"ggo-reset-slobase",machine:"ggo",condition:"reset_ceiling",source:"スロベース",url:"https://slobase.jp/articles/sao-alternative-ggo-yamedoki",asof:"2026-11-12",thresholds:{equal:150,cash:200},basis:"設定変更後のボーナス間G数",goal:"期待値+1000円超えとする掲載例",warning:"変更後である根拠が必要。液晶とデータ表示のG数差に注意"},
+ {id:"ggo-through-slobase",machine:"ggo",condition:"sj_through",source:"スロベース",url:"https://slobase.jp/articles/sao-alternative-ggo-yamedoki",asof:"2026-11-12",thresholds:{equal:50},basis:"5スルー以上・または駆け抜け後2スルーのデータ表示G数",goal:"SJまで打つ場合の掲載目安",warning:"5スルー以上等の前提を満たしたときのみ。回数が不明なら比較不可"},
+ {id:"kabaneri-normal-toolbox",machine:"kabaneri",condition:"normal_ceiling",source:"スロッターの道具箱",url:"https://slot-toolbox.com/kabaneri-unato-tenjo/",asof:"2026-10-12",thresholds:{equal:270,medals:280,cash:430},basis:"非短縮のST間G数",goal:"時給1000円以上を目指す掲載例",warning:"等価270G付近は2周期目抽選前を優先。3周期目なら同じ数値を使わない"},
+ {id:"kabaneri-normal-slobase",machine:"kabaneri",condition:"normal_ceiling",source:"スロベース",url:"https://slobase.jp/machines/kabaneri-unato",asof:"2026-11-09",thresholds:{equal:570},basis:"通常ST連後のST間G数",goal:"同サイトの立ち回り狙い目例",warning:"570Gの根拠・目標は道具箱と異なる。単純平均しない"},
+ {id:"kabaneri-reset-toolbox",machine:"kabaneri",condition:"shortened_ceiling",source:"スロッターの道具箱",url:"https://slot-toolbox.com/kabaneri-unato-tenjo/",asof:"2026-10-12",thresholds:{equal:0,medals:0,cash:30},basis:"短縮天井状態のST間G数",goal:"時給1000円以上を目指す掲載例",warning:"設定変更・ST駆け抜け・上位ST後など短縮状態である根拠が必要"},
+ {id:"kabaneri-reset-slobase",machine:"kabaneri",condition:"shortened_ceiling",source:"スロベース",url:"https://slobase.jp/machines/kabaneri-unato",asof:"2026-11-09",thresholds:{equal:60},basis:"リセット確認後のST間G数",goal:"リセット時の立ち回り目安",warning:"ST駆け抜け後は90G、上位ST後は80Gとして別の開始目安が掲載"},
+ {id:"kabaneri-cycle-slobase",machine:"kabaneri",condition:"cycle",source:"スロベース",url:"https://slobase.jp/articles/kabaneri-unato-reset",asof:"2026-11-09",thresholds:{equal:130},basis:"1周期目手前の表示G数",goal:"周期到達前のゾーン例",warning:"130Gは1周期目の例。2周期手前270Gは別の条件で、どちらも現在周期確認が必要"}
+];
+const $=id=>document.getElementById(id);
+function options(){
+ const mid=$("machine").value,old=$("condition").value;
+ const selected=CONDITIONS[mid]||[];
+ $("condition").replaceChildren();
+ for(const [id,label] of selected)$("condition").add(new Option(label,id));
+ if(selected.some(c=>c[0]===old))$("condition").value=old;
+ refreshLinks();
+}
+function matches(mid,condition,exchange){
+ return EXAMPLES.filter(row=>row.machine===mid&&row.condition===condition&&
+   Object.hasOwn(row.thresholds,exchange));
+}
+function refreshLinks(){
+ const mid=$("machine").value,condition=$("condition").value;
+ const map={seiya:{at_gap:"at_gap",cz_gap:"cz_gap",cz_after_fail:"cz_gap",reset_cz:"cz_gap",fire_clock:"fire_clock"},
+ ggo:{normal_ceiling:"normal_ceiling",reset_ceiling:"reset_ceiling",sj_through:"sj_through"},
+ kabaneri:{normal_ceiling:"normal_ceiling",shortened_ceiling:"shortened_ceiling",cycle:"cycle"}};
+ const noteCondition=map[mid]?.[condition]||"general";
+ $("notes-link").href="./community-notes.html#machine="+mid+"&condition="+noteCondition;
+ $("machine-page").href="./opportunities.html#machine="+mid;
+ $("x-page").href="./x-live.html#machine="+mid;
+}
+function render(){
+ const mid=$("machine").value,condition=$("condition").value,exchange=$("exchange").value;
+ refreshLinks();
+ const rows=matches(mid,condition,exchange);
+ const out=$("published-examples");out.replaceChildren();
+ $("result-count").textContent=rows.length+"件の掲載例を表示。交換条件に対応する出典のみ掲載しています。";
+ if(!rows.length){
+  const p=document.createElement("p");p.className="muted";
+  p.textContent="この条件・交換率に対応する掲載例はまだ記録されていません。別の交換条件の数値を流用しません。";
+  out.append(p);
+ }
+ for(const row of rows){
+  const item=document.createElement("article");item.className="row";
+  const h=document.createElement("h3");h.textContent=row.source+"："+row.thresholds[exchange]+"G付近から";
+  const p=document.createElement("p");
+  p.textContent="掲載時の目標："+row.goal+" ／ カウンター："+row.basis+" ／ 確認時点："+row.asof;
+  const caution=document.createElement("p");caution.className="muted";caution.textContent="注意："+row.warning;
+  const a=document.createElement("a");a.href=row.url;a.target="_blank";a.rel="noopener noreferrer";
+  a.textContent="元の掲載内容・更新日・条件を確認";
+  item.append(h,p,caution,a);out.append(item);
+ }
+ const list=$("checks");list.replaceChildren();
+ for(const t of CHECKS[mid]||[]){const li=document.createElement("li");li.textContent=t;list.append(li)}
+}
+function compare(){
+ render();
+ const raw=$("counter").value.trim(),num=Number(raw);
+ if(!raw){$("compare-feedback").textContent="数値は未入力です。出典と前提条件を確認できます。";return}
+ if(!/^\d{1,6}$/.test(raw)||!Number.isSafeInteger(num)||num>99999){
+  $("compare-feedback").textContent="表示G数は0〜99999の整数にしてください。入力エラーでも出典比較は利用できます。";return;
+ }
+ const rows=matches($("machine").value,$("condition").value,$("exchange").value);
+ const above=rows.filter(x=>num>=x.thresholds[$("exchange").value]);
+ const below=rows.filter(x=>num<x.thresholds[$("exchange").value]);
+ $("compare-feedback").textContent=
+  "表示"+num+"G：掲載目安を超える例 "+above.length+"件、未到達の例 "+below.length+
+  "件。これはG数の単純比較であり、設定変更・履歴・周期・やめどき等の適用条件を確認していません。打つ判定・期待値の算出ではありません。";
+}
+for(const [id,label] of MACHINES)$("machine").add(new Option(label,id));
+const request=location.hash.match(/^#machine=([a-z0-9]+)(?:&condition=([a-z0-9_]+))?$/);
+if(request&&MACHINES.some(m=>m[0]===request[1]))$("machine").value=request[1];
+options();
+if(request?.[2]&&(CONDITIONS[$("machine").value]||[]).some(x=>x[0]===request[2]))$("condition").value=request[2];
+$("machine").addEventListener("change",()=>{options();render()});
+$("condition").addEventListener("change",render);
+$("exchange").addEventListener("change",render);
+$("compare").addEventListener("click",compare);
+render();
+</script></body></html>
