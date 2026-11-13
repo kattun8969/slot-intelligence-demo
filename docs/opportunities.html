@@ -32,7 +32,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v0.7 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
+<header><div><small>試用版 v0.8 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
 <p>候補一覧 → 機種ごとの確認 → 実戦した期待値を記録</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
@@ -62,6 +62,13 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <div id="detail-status" class="notice"></div>
 <h3>まず調べる条件</h3><ul id="detail-checkpoints"></ul>
 <p class="help">以下は確認する項目の説明であり、この状態なら必ず有利という意味ではありません。機種名が未確定なら別機種の解析値を流用しないでください。</p>
+<div class="card" id="condition-community">
+<h3>条件別：解析と現場の報告を照合</h3>
+<p class="help">条件を指定して保存した報告だけを照合します。旧メモ・未分類の記録を自動で当てはめません。</p>
+<label for="condition-check">確認する条件</label><select id="condition-check"></select>
+<p id="condition-evidence-summary" class="help" role="status"></p>
+<div id="condition-evidence"></div>
+<div class="actions"><a id="condition-evidence-add" class="btn secondary" href="./community-notes.html">この条件に報告を追加</a></div></div>
 <div class="card" id="community-snapshot"><h3>この機種の現場メモ（自分の保存分）</h3>
 <p class="help">Xや解析サイトを自分で読んで保存した報告です。SNS全体の評価ではありません。反例・矛盾を先に表示し、期待値には加算しません。</p>
 <p id="community-summary" class="help" role="status"></p>
@@ -138,6 +145,56 @@ const LEDGER_KEY="slotintel-play-ev-ledger-v1";
 const COMMUNITY_KEY="slotintel-community-observations-v1";
 const COMMUNITY_LABELS={support:"整合する報告",caution:"反例・慎重意見",conflict:"解析との食い違い",neutral:"判断保留"};
 const COMMUNITY_KINDS={x_post:"X実戦投稿",community:"SNS・コメント",analysis:"解析記事",field:"自分の実戦"};
+const CONDITION_TARGETS={
+ seiya:[["at_gap","AT間ゲーム数"],["cz_gap","CZ間ゲーム数"],["fire_clock","火時計・周期ポイント"]],
+ ggo:[["normal_ceiling","通常時のG数天井"],["reset_ceiling","設定変更後の短縮天井"],["sj_through","SJ間のスルー回数"]],
+ kabaneri:[["normal_ceiling","通常時のゲーム数天井"],["shortened_ceiling","短縮条件・リセット／ST後"],["cycle","周期・前兆／示唆"]]
+};
+const DEFAULT_CONDITION=[["general","その他・機種全般"]];
+function conditionsFor(id){return [...(CONDITION_TARGETS[id]||[]),...DEFAULT_CONDITION]}
+function applicableConditionNotes(machineId,conditionId,notes){
+ return notes.filter(x=>x.machine_id===machineId&&x.condition_id===conditionId&&
+ x.status==="user_observation_not_verified");
+}
+function renderConditionEvidence(m){
+ const select=$("condition-check");
+ const old=select.dataset.machine===m.id?select.value:null;
+ select.replaceChildren();
+ for(const [id,label] of conditionsFor(m.id))select.add(new Option(label,id));
+ if(old&&conditionsFor(m.id).some(x=>x[0]===old))select.value=old;
+ select.dataset.machine=m.id;
+ updateConditionEvidence(m);
+}
+function updateConditionEvidence(m){
+ const id=$("condition-check").value,notes=readCommunityNotes();
+ const records=communityRows(m.id,applicableConditionNotes(m.id,id,notes));
+ const legacy=notes.filter(x=>x.machine_id===m.id&&!x.condition_id);
+ const contrad=records.filter(x=>x.stance==="conflict"||x.stance==="caution");
+ $("condition-evidence-summary").textContent=records.length+"件の自分の報告／注意・反例 "+
+ contrad.length+"件。未分類の旧メモ "+legacy.length+
+ "件は集計外。これはSNS全体の統計ではなく、狙い目の成立判定でもありません。";
+ $("condition-evidence-add").href="./community-notes.html#machine="+m.id+"&condition="+id;
+ const root=$("condition-evidence");root.replaceChildren();
+ if(!records.length){root.textContent="この条件に関連付けた報告はありません。";return}
+ for(const x of records.slice(0,6)){
+  const item=document.createElement("article");item.className="mini-card";
+  const h=document.createElement("strong");h.textContent=(COMMUNITY_LABELS[x.stance]||"判断保留")+
+   "／"+(x.posted_date||"日付不明");
+  const p=document.createElement("p");p.textContent=String(x.summary||"").slice(0,1000);
+  const sub=document.createElement("p");sub.className="help";sub.textContent="現地条件："+(x.conditions||"不明")+
+   " ／ 未確認："+(x.limits||"不明");
+  item.append(h,p,sub);
+  const url=communitySourceUrl(x.source_url);
+  if(url){const a=document.createElement("a");a.href=url;a.rel="noopener noreferrer";
+   a.target="_blank";a.textContent="出典を確認";item.append(a)}
+  root.append(item);
+ }
+ if(records.length>6){
+  const p=document.createElement("p");p.className="help";
+  p.textContent="残り"+(records.length-6)+"件は検証ノートに保存されています。";root.append(p);
+ }
+}
+
 function readCommunityNotes(){
  try{
   const data=JSON.parse(localStorage.getItem(COMMUNITY_KEY)||"[]");
@@ -263,6 +320,7 @@ function showList(){
 }
 function showDetail(m){
  renderCommunity(m);
+ renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
  $("detail-description").textContent="調査優先度："+m.tier+" ／ 機種の状態を確認するためのページです。";
  $("detail-status").textContent=m.uncertain?
@@ -405,6 +463,7 @@ for(const m of MACHINES){$("ledger-machine").add(new Option(m.name,m.id))}
 $("search").addEventListener("input",showList);
 $("tier-filter").addEventListener("change",showList);
 $("kind-filter").addEventListener("change",showList);
+$("condition-check").addEventListener("change",()=>{const m=selected();if(m)updateConditionEvidence(m)});
 $("ledger-machine").addEventListener("change",updateLedger);
 window.addEventListener("hashchange",navigate);
 $("load-hall-note").addEventListener("click",()=>{
@@ -511,7 +570,7 @@ $("clear-ledger").addEventListener("click",()=>{
 });
 showList();updateLedger();navigate();
 window.addEventListener("pageshow",()=>{
- const m=selected();if(m)renderCommunity(m);
+ const m=selected();if(m){renderCommunity(m);updateConditionEvidence(m);}
 });
 document.addEventListener("visibilitychange",()=>{
  if(!document.hidden){const m=selected();if(m)renderCommunity(m)}
