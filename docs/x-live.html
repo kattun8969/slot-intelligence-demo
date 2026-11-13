@@ -17,26 +17,26 @@ button,.btn{font:inherit;font-weight:650;display:inline-block;border:0;border-ra
 a{color:#125b92}.feed{border:1px solid #dce4eb;border-radius:10px;padding:12px;min-height:90px;overflow:hidden}
 a:focus-visible,input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #83b9de;outline-offset:2px}
 footer{max-width:810px;margin:auto;padding:15px;font-size:12px;color:#64798a}
-</style></head><body><header><div><small style="color:#cfe2f2">試用版 v0.5 / Xの最新投稿へのアクセス</small><h1>現場の声をXで確認</h1><p>機種別の最新ポスト検索・公開タイムラインの埋め込み</p></div></header>
+</style></head><body><header><div><small style="color:#cfe2f2">試用版 v0.5 / Xの最新投稿へのアクセス</small><h1>Xで実戦の声をチェック</h1><p>機種を選んで、みんなの最新投稿を見よう</p></div></header>
 <main>
 <section class="card"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧に戻る</a>
-<p class="notice"><strong>注意：</strong>Xの検索結果・タイムラインは利用者の投稿です。具体的な数値・狙い目条件・差枚数・期待値の正しさは保証されません。表示順や最新性はX側で決まります。埋め込みが利用できない場合は直接Xで確認してください。</p>
-<h2>① 機種名で最新の投稿を探す</h2>
+<p class="notice"><strong>注意：</strong>Xの投稿は実戦者の体験談です。勝った・負けたという声だけで期待値は分かりません。解析サイトの条件と一緒に確認してください。</p>
+<h2>① 機種の最新ポストを見る</h2>
 <label for="machine">機種を選ぶ</label><select id="machine"></select>
-<label for="search-words">検索する語句（編集可能）</label><input id="search-words" maxlength="120" placeholder="例：ガンゲイル スマスロ">
+<label for="search-words">検索ワード（変更OK）</label><input id="search-words" maxlength="120" placeholder="例：ガンゲイル スマスロ">
 <div class="actions"><a id="open-latest" class="btn" target="_blank" rel="noopener noreferrer" href="https://x.com/search">Xの最新投稿を見る</a>
-<a id="open-relevant" class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://x.com/search">Xの話題順で見る</a></div>
-<p class="muted">検索はX側の画面で実行します。Xのログインが必要な場合があります。このサイトは投稿データを自動収集せず、検索結果を保存しません。</p>
+<a id="open-relevant" class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://x.com/search">Xの話題の投稿を見る</a></div>
+<p class="muted">Xの検索画面が開きます。ログインが必要な場合があります。</p>
 </section>
-<section class="card"><h2>② 公開プロフィール／公開リストを埋め込む</h2>
-<p>よく参考にする実戦者の公開アカウント、または複数アカウントを集めた公開XリストのURLを指定できます。新しい投稿が届くと、X側のタイムライン表示に反映されます。</p>
-<label for="timeline-url">Xの公開プロフィール・リストURL</label>
+<section class="card"><h2>② よく見る人の投稿を表示</h2>
+<p>参考にしている実戦者のアカウントやXリストのURLを貼ると、新しい投稿をここに表示できます。</p>
+<label for="timeline-url">Xのアカウント・リストURL</label>
 <input id="timeline-url" type="url" maxlength="240" placeholder="https://x.com/ACCOUNT または https://x.com/i/lists/数字">
-<div class="actions"><button type="button" id="show-timeline">Xのタイムラインを表示する</button>
+<div class="actions"><button type="button" id="show-timeline">投稿を表示</button>
 <button type="button" id="clear-timeline" class="secondary">埋め込みを閉じる</button></div>
 <p id="timeline-status" role="status" class="muted"></p>
-<div id="timeline" class="feed"><p class="muted">プライバシー保護のため、操作するまでXの埋め込み通信は行いません。</p></div>
-<p class="muted">公開プロフィール・リスト以外のURLは受け付けません。表示はXの外部スクリプトに依存し、広告やログイン要求が出る可能性があります。ブロックされる場合は下のリンクで直接閲覧してください。</p>
+<div id="timeline" class="feed"><p class="muted">「投稿を表示」を押すまではXに接続しません。</p></div>
+<p class="muted">Xの仕様によっては表示されないことがあります。そのときは「Xで直接開く」を使ってください。</p>
 <p><a id="timeline-fallback" target="_blank" rel="noopener noreferrer" href="https://x.com/">Xで直接開く</a></p>
 </section>
 <section class="card"><h2>実戦の情報として参考にする際のポイント</h2>
