@@ -128,7 +128,7 @@ const MACHINES=[
  {id:"ggo",name:"ガンゲイル・オンライン",tier:1,uncertain:false,topics:["ST・ボーナスのスルー履歴","直近当選の区切り","設定変更時の条件"],units:["games","throughs"],sources:[["機種解析の掲載情報","https://1geki.jp/slot/l_sao_ggo/"]]},
  {id:"kabaneri",name:"カバネリ 海門決戦",tier:2,uncertain:false,topics:["ST間ゲーム数と表示機の起点","周期数・引継ぎ条件","設定変更後とST終了後の条件"],units:["games","cycles"],sources:[["機種解析の掲載情報","https://1geki.jp/slot/l_kabaneri2/"]]},
  {id:"sao2",name:"SAO2",tier:2,uncertain:true,topics:["正式な機種バージョン","天井・ゾーンの適用条件"],units:["games"],sources:[]},
- {id:"monhun",name:"モンハンサンライズ",tier:2,uncertain:true,topics:["ライズ／サンブレイク等の機種特定","該当機種のカウンター起点"],units:["games"],sources:[]},
+ {id:"monhun",name:"モンスターハンターライズ（2024年版・初代）",tier:2,uncertain:true,topics:["ライズ／サンブレイク等の機種特定","該当機種のカウンター起点"],units:["games"],sources:[]},
  {id:"otome5",name:"戦国乙女5",tier:2,uncertain:false,topics:["天井・ゾーンの適用条件","設定変更後と通常時の違い"],units:["games"],sources:[]},
  {id:"yoshimune",name:"吉宗",tier:2,uncertain:true,topics:["機種の世代・型式","規定ゲーム数・状態の条件"],units:["games"],sources:[]},
  {id:"god",name:"GOD",tier:2,uncertain:true,topics:["GODの対象バージョン","ゲーム数と抽選条件"],units:["games"],sources:[]},
@@ -335,14 +335,15 @@ function showDetail(m){
   const p=document.createElement("p");p.id="research-shortcut";
   const a=document.createElement("a");a.href="./research.html#"+m.id;
   a.textContent="一般解析と実戦コメントの比較を見る";
-  const strategy=document.createElement("p");strategy.id="strategy-shortcut";
-  const strategyLink=document.createElement("a");
-  const conditionHint=m.id==="seiya"?"at_gap":m.id==="ggo"?"normal_ceiling":"normal_ceiling";
-  strategyLink.href="./strategy-cards.html#machine="+m.id+"&condition="+conditionHint;
-  strategyLink.textContent="出典別の狙い目G数と交換率の違いを確認する";
-  strategy.append(strategyLink);$("detail-checkpoints").after(strategy);
-
   p.append(a);$("detail-checkpoints").after(p);
+ }
+ if(["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun"].includes(m.id)){
+  const conditionHint=m.id==="seiya"?"at_gap":m.id==="tokyoghoul"?"at_ceiling":"normal_ceiling";
+  const strategy=document.createElement("p");strategy.id="strategy-shortcut";
+  const a=document.createElement("a");
+  a.href="./strategy-cards.html#machine="+m.id+"&condition="+conditionHint;
+  a.textContent="出典別の狙い目G数・交換率を比較する";
+  strategy.append(a);$("detail-checkpoints").after(strategy);
  }
  const xsearch=document.createElement("p");xsearch.id="x-search-shortcut";
  document.getElementById("x-search-shortcut")?.remove();
