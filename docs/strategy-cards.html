@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>狙い目の出典別比較 | Slot Intelligence</title>
 <style>
-*{box-sizing:border-box}body{font:15px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif;background:#f2f6fa;color:#18334b;margin:0}
+*{box-sizing:border-box}body{font:16px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif;background:#f2f6fa;color:#18334b;margin:0}
 header{background:#12304c;color:white;padding:22px 15px}header>div,main,footer{max-width:950px;margin:auto}h1{font-size:24px;margin:3px 0}
 main{padding:14px}.card{border:1px solid #d8e3ed;border-radius:13px;background:white;padding:17px;margin:14px 0}
 .notice{background:#fff5e5;border-left:4px solid #c38b33;padding:11px;border-radius:7px}
@@ -12,49 +12,49 @@ select,input{font:inherit;width:100%;padding:11px;border:1px solid #9bb0c0;borde
 button,.btn{font:inherit;display:inline-block;border:0;border-radius:9px;background:#195e93;color:white;padding:11px 14px;cursor:pointer;text-decoration:none;font-weight:650}.secondary{background:#e6eef5;color:#193c59}
 .actions{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.actions>*{flex:1 1 145px}
 .row{border-top:1px solid #d8e3eb;padding:14px 0}.row:first-child{border:0}.tag{display:inline-block;font-size:12px;padding:3px 9px;background:#e7f0fa;color:#245477;border-radius:20px;margin-right:4px}
-.muted,small{color:#516a80;font-size:13px}h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:5px 0}
+.muted,small{color:#516a80;font-size:14px}h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:5px 0}
 a{color:#155d95}a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #83b7df;outline-offset:2px}
 .result{padding:14px;border-radius:10px;background:#eaf2fa;border:1px solid #b5cadb}.result.warn{background:#fff6e8;border-color:#dbbe93}
 summary{cursor:pointer;padding:5px 0}.row-state{font-size:13px;font-weight:650;margin:8px 0}.row-state.warn{color:#815a21}.row-state.no{color:#9b3e3e}.row-state.yes{color:#195d50}
 footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 </style></head><body>
 <header><div><small style="color:#d7e6f4">試用版 v1.2 ・ 2026年11月13日時点の掲載例</small>
-<h1>狙い目を出典別に比較</h1><p>交換率・状態・カウンター起点による違いを確認してから現地判断へ</p></div></header>
+<h1>この台、何Gから狙える？</h1><p>機種と交換率を選んで、解析サイトの目安をチェック</p></div></header>
 <main>
 <section class="card">
-<div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧へ</a><a id="switch-alternatives" class="btn" href="./alternatives.html">この台を見送り、別の候補を探す</a><a class="btn secondary" href="./research.html">解析と現場の声</a></div>
-<p class="notice"><strong>注意：</strong>この画面は一般解析サイトに掲載されている開始目安の<strong>比較資料</strong>です。「この台を打つべき」という自動判定ではありません。数値は掲載元の独自条件・期待値の目標・交換率に依存します。現在の台にその条件が当てはまるかを先に確認してください。SNSの情報も独立した実測検証ではありません。</p>
+<div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧へ</a><a id="switch-alternatives" class="btn" href="./alternatives.html">この台はパス！ 次の候補へ</a><a class="btn secondary" href="./research.html">解析と現場の声</a></div>
+<p class="notice"><strong>注意：</strong>解析サイトによって狙い始めのG数は違います。<strong>通常時かリセット後か、今の台の状態</strong>を確認してください。この画面の数字だけでは打てるか判断できません。</p>
 <div class="grid">
 <div><label for="machine">機種</label><select id="machine"></select></div>
-<div><label for="condition">状態・狙いの種類</label><select id="condition"></select></div>
+<div><label for="condition">今の台はどんな状態？</label><select id="condition"></select></div>
 <div><label for="exchange">交換条件</label><select id="exchange"><option value="equal">等価</option><option value="medals">5.6枚・持ちメダル</option><option value="cash">5.6枚・現金投資</option></select></div>
-<div><label for="counter">現在の表示G数（任意）</label><input id="counter" inputmode="numeric" type="text" maxlength="8" placeholder="例：320"></div>
+<div><label for="counter">今のG数（分かれば入力）</label><input id="counter" inputmode="numeric" type="text" maxlength="8" placeholder="例：320"></div>
 </div>
-<details class="card" open><summary><strong>現地の適用条件を確認（すべて任意）</strong></summary>
-<p class="muted">情報が不足している場合は「未確認」のままにしてください。選択肢は自分の確認状況の記録であり、台の内部状態を自動推測しません。</p>
+<details class="card" open><summary><strong>打つ前にチェック（分からない項目はそのままでOK）</strong></summary>
+<p class="muted">分からないところはそのままでOK。今の台が記事の条件と同じか、分かる範囲でチェック。</p>
 <div class="grid">
-<div><label for="basis-check">表示数値の起点は出典と一致する？</label><select id="basis-check"><option value="unknown">未確認</option><option value="yes">一致すると自分で確認</option><option value="no">一致しない</option></select></div>
-<div><label for="state-check">現在の台の状態・リセット条件は一致する？</label><select id="state-check"><option value="unknown">未確認</option><option value="yes">一致すると自分で確認</option><option value="no">一致しない</option></select></div>
-<div><label for="stop-check">出典に書かれたやめどきを確認した？</label><select id="stop-check"><option value="unknown">未確認</option><option value="yes">確認した</option><option value="no">確認できていない</option></select></div>
-<div id="through-group"><label for="through-count">スルー回数（任意・不明なら空欄）</label><input id="through-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：5"></div>
-<div id="cycle-group"><label for="cycle-count">現在の周期数（任意・不明なら空欄）</label><input id="cycle-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：2"></div>
+<div><label for="basis-check">今のG数はAT間？ CZ間？</label><select id="basis-check"><option value="unknown">未確認</option><option value="yes">合っている</option><option value="no">違う</option></select></div>
+<div><label for="state-check">通常時？ リセット後？ 条件は合ってる？</label><select id="state-check"><option value="unknown">未確認</option><option value="yes">合っている</option><option value="no">違う</option></select></div>
+<div><label for="stop-check">やめどきは確認した？</label><select id="stop-check"><option value="unknown">未確認</option><option value="yes">確認した</option><option value="no">まだ見てない</option></select></div>
+<div id="through-group"><label for="through-count">何回スルーしてる？（任意）</label><input id="through-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：5"></div>
+<div id="cycle-group"><label for="cycle-count">今は何周期目？（任意）</label><input id="cycle-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：2"></div>
 </div>
-<p class="muted">出典ごとに必要な追加条件が異なる場合は、下の掲載例カードに追加確認欄を表示します。スルー回数・周期数は入力しただけで判定に使わず、該当条件を出典で照合してください。</p>
+<p class="muted">機種によっては下に追加チェックがあります。数字を入れるだけでは「狙える」とは判断しません。</p>
 </details>
-<div class="actions"><button type="button" id="compare">掲載目安と見比べる</button>
-<a id="notes-link" class="btn secondary" href="./community-notes.html">この条件の実戦報告を見る</a></div>
-<p id="compare-feedback" class="result" role="status">状態・交換率を選ぶと、掲載元ごとの目安を比較できます。</p>
+<div class="actions"><button type="button" id="compare">今のG数でチェック</button>
+<a id="notes-link" class="btn secondary" href="./community-notes.html">X・実戦の声を見る</a></div>
+<p id="compare-feedback" class="result" role="status">機種・状態・交換率を選んでください。G数を入れると、各サイトの目安と比べられます。</p>
 </section>
-<section class="card"><h2>一般解析サイトの掲載例</h2>
+<section class="card"><h2>解析サイトでは何Gから？</h2>
 <p class="muted" id="result-count" role="status"></p>
 <div id="published-examples"></div>
-<p class="notice">出典間で基準が異なっても、平均・多数決で一つの数値には統合しません。数値が近いからといって独立した複数データとは限りません。未確認の状態で別条件の数値を流用しないでください。</p>
+<p class="notice">サイトごとに数字が違ってもそのまま載せています。<strong>AT間とCZ間、通常時とリセット後</strong>を混ぜないでください。</p>
 </section>
-<section class="card"><h2>現地で確認する項目</h2>
+<section class="card"><h2>見落としやすいポイント</h2>
 <ul id="checks"></ul>
-<div class="actions"><a id="machine-page" class="btn" href="./opportunities.html#list">機種の詳細・期待値記録へ</a>
-<a id="x-page" class="btn secondary" href="./x-live.html">Xで最新の反例を探す</a></div>
-<p class="muted">この画面に載っている目安は現時点で調査した6機種のみ。ほかの機種は、検証できる出典を増やしてから追加します。</p>
+<div class="actions"><a id="machine-page" class="btn" href="./opportunities.html#list">台のメモ・期待値記録へ</a>
+<a id="x-page" class="btn secondary" href="./x-live.html">Xの最新投稿を見る</a></div>
+<p class="muted">今は6機種に対応。ほかの機種も順次追加します。</p>
 </section>
 </main>
 <footer>掲載数値の正確性・適用条件・実際の収支を保証するものではありません。入力情報は外部送信されず、期待値記録にも自動入力しません。リンク先の記述・更新日は後から変わることがあります。</footer>
@@ -231,9 +231,9 @@ function resetChecks(){
  SOURCE_CHECKS.clear();
 }
 function statusText(status){
- return status==="condition_mismatch"?"確認した適用条件が一致しません":
-   status==="self_checked"?"掲載条件は自己確認済み（正の期待値を保証しません）":
-   "適用条件に未確認項目があります";
+ return status==="condition_mismatch"?"この台には条件が合いません":
+   status==="self_checked"?"条件は確認OK（期待値プラスとは限りません）":
+   "まだ確認したいことがあります";
 }
 function options(){
  const mid=$("machine").value,old=$("condition").value;
@@ -274,7 +274,7 @@ function render(){
  $("result-count").textContent=rows.length+"件の掲載例を表示。交換条件に対応する出典のみ掲載しています。";
  if(!rows.length){
   const p=document.createElement("p");p.className="muted";
-  p.textContent="この条件・交換率に対応する掲載例はまだ記録されていません。別の交換条件の数値を流用しません。";
+  p.textContent="この交換率の目安はまだありません。条件を変えてみてください。";
   out.append(p);
  }
  const info=INFO_CONDITIONS[mid+":"+condition];
@@ -290,16 +290,16 @@ function render(){
   const item=document.createElement("article");item.className="row";
   const h=document.createElement("h3");h.textContent=row.source+"："+row.thresholds[exchange]+"G付近から";
   const p=document.createElement("p");
-  p.textContent="掲載時の目標："+row.goal+" ／ カウンター："+row.basis+" ／ 確認時点："+row.asof;
+  p.textContent="目安の基準："+row.goal+" ／ 見るG数："+row.basis+" ／ 情報確認："+row.asof;
   const caution=document.createElement("p");caution.className="muted";caution.textContent="注意："+row.warning;
   const requirement=SOURCE_REQUIREMENTS[row.id];
   let extra="yes";
   if(requirement){
-   const label=document.createElement("label");label.textContent="追加条件："+requirement;
+   const label=document.createElement("label");label.textContent="このサイトの条件："+requirement;
    const select=document.createElement("select");select.dataset.sourceId=row.id;
    select.add(new Option("未確認","unknown"));
-   select.add(new Option("自分で条件一致を確認","yes"));
-   select.add(new Option("条件が一致しない","no"));
+   select.add(new Option("条件は合ってる","yes"));
+   select.add(new Option("条件が違う","no"));
    select.value=SOURCE_CHECKS.get(row.id)||"unknown";
    if(!SUPPORTED_CHECKS.includes(select.value))select.value="unknown";
    select.addEventListener("change",()=>{
@@ -322,7 +322,7 @@ function render(){
   }
   updateSourceState(row);
   const a=document.createElement("a");a.href=row.url;a.target="_blank";a.rel="noopener noreferrer";
-  a.textContent="元の掲載内容・更新日・条件を確認";
+  a.textContent="元記事を見る";
   item.prepend(h,p,caution);
   item.append(a);out.append(item);
  }
@@ -332,13 +332,13 @@ function render(){
 function compare(){
  render();
  const raw=$("counter").value.trim(),num=Number(raw);
- if(!raw){$("compare-feedback").textContent="数値は未入力です。出典と前提条件を確認できます。";return}
+ if(!raw){$("compare-feedback").textContent="G数を入れると各サイトの目安と比べられます。";return}
  if(!/^\d{1,6}$/.test(raw)||!Number.isSafeInteger(num)||num>99999){
-  $("compare-feedback").textContent="表示G数は0〜99999の整数にしてください。入力エラーでも出典比較は利用できます。";return;
+  $("compare-feedback").textContent="G数は0〜99999の数字で入力してください。";return;
  }
  if(!validOptionalCount($("through-count").value.trim())||
      !validOptionalCount($("cycle-count").value.trim())){
-   $("compare-feedback").textContent="スルー回数・周期数は0〜999の整数または空欄にしてください。掲載目安の閲覧は可能です。";return;
+   $("compare-feedback").textContent="スルー回数・周期は0〜999で入力するか、空欄にしてください。";return;
  }
  const rows=matches($("machine").value,$("condition").value,$("exchange").value);
  const above=rows.filter(x=>num>=x.thresholds[$("exchange").value]);
@@ -349,9 +349,9 @@ function compare(){
  const mismatch=above.filter(x=>statusFor(x,flags,
   SOURCE_REQUIREMENTS[x.id]?SOURCE_CHECKS.get(x.id)||"unknown":"yes")==="condition_mismatch");
  $("compare-feedback").textContent=
-  "表示"+num+"G：掲載目安への数値到達 "+above.length+"件／未到達 "+below.length+
-  "件。うち自己申告で掲載条件を照合済み "+eligible.length+"件、条件不一致 "+
-  mismatch.length+"件、残りは確認不足。数値比較・自己申告による照合であり、打つ判定・期待値の算出ではありません。";
+  "表示"+num+"G：G数だけなら目安以上 "+above.length+"件／目安未満 "+below.length+
+  "件。うち自分で条件を確認できたもの "+eligible.length+"件、条件が違うもの "+
+  mismatch.length+"件。残りは確認が必要です。<strong>これはG数の比較だけ</strong>。期待値は計算していません。";
 }
 for(const [id,label] of MACHINES)$("machine").add(new Option(label,id));
 const requestParams=new URLSearchParams(location.hash.startsWith("#")?location.hash.slice(1):"");
