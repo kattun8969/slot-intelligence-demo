@@ -32,7 +32,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v0.5 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
+<header><div><small>試用版 v0.6 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
 <p>候補一覧 → 機種ごとの確認 → 実戦した期待値を記録</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
@@ -47,6 +47,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <p>重点3機種の解析サイト比較と実戦報告を確認できます。SNSは個別の体験談であり、期待値の数値には自動換算しません。</p>
 <a class="btn" href="./research.html">星矢・ガンゲイル・カバネリの解析比較を見る</a>
 <a class="btn secondary" href="./x-live.html">Xの最新投稿・リストを開く</a>
+<a class="btn secondary" href="./community-notes.html">実戦報告・反論を整理する</a>
 </section>
 <section class="card" id="list-panel"><h2>狙い目候補一覧</h2>
 <div class="group">
@@ -202,6 +203,12 @@ function showDetail(m){
  xlink.href="./x-live.html#machine="+m.id;
  xlink.textContent="Xでこの機種の最新投稿を見る";
  xsearch.append(xlink);$("detail-checkpoints").after(xsearch);
+ document.getElementById("community-notes-shortcut")?.remove();
+ const community=document.createElement("p");community.id="community-notes-shortcut";
+ const communityLink=document.createElement("a");
+ communityLink.href="./community-notes.html#machine="+m.id;
+ communityLink.textContent="この機種のX・実戦報告・反論を整理する";
+ community.append(communityLink);$("detail-checkpoints").after(community);
  const sources=$("detail-sources");sources.replaceChildren();
  if(m.sources.length){
   const h=document.createElement("h3");h.textContent="情報の掲載元（内容・更新日を要確認）";sources.append(h);
