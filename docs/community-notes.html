@@ -19,7 +19,7 @@ textarea{min-height:78px}button,.btn{font:inherit;font-weight:650;background:var
 a{color:#165f96}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #83bce8;outline-offset:2px}
 footer{padding:12px 15px 25px;color:var(--muted);font-size:12px}code{overflow-wrap:anywhere}
 </style></head><body>
-<header><div><small>試用版 v0.6 / 端末内だけの整理ノート</small><h1>実戦報告の検証ノート</h1><p>解析サイトの説明とX・SNSの声を、混同せずに並べて整理する</p></div></header>
+<header><div><small>試用版 v0.8 / 端末内だけの整理ノート</small><h1>実戦報告の検証ノート</h1><p>解析サイトの説明とX・SNSの声を、混同せずに並べて整理する</p></div></header>
 <main>
 <section class="card"><div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目候補一覧へ</a><a class="btn secondary" href="./x-live.html">Xの最新投稿へ</a><a class="btn secondary" href="./research.html">一般解析比較へ</a></div>
 <p class="notice">これは**投稿・記事を自分で確認して記録するノート**です。投稿内容の自動収集はせず、登録内容は未検証の観測・意見として扱います。件数や賛否は母数が偏っているため、勝率・設定配分・期待値へ自動換算しません。</p>
@@ -31,6 +31,9 @@ footer{padding:12px 15px 25px;color:var(--muted);font-size:12px}code{overflow-wr
 <div><label for="stance">条件への評価</label><select id="stance"><option value="neutral">判断できない・中立</option><option value="support">整合する報告</option><option value="caution">反例・慎重な意見</option><option value="conflict">解析と食い違う報告</option></select></div>
 <div><label for="evidence-level">資料の内容</label><select id="evidence-level"><option value="opinion">感想・体感</option><option value="image">履歴画像あり（内容は未照合）</option><option value="numbers">数値・集計の説明あり（未照合）</option><option value="primary">一次発表・メーカー情報</option></select></div>
 </div>
+<label for="condition-target">対応する狙い目・確認条件</label>
+<select id="condition-target"></select>
+<p class="small">解析の条件と報告を関連付ける分類です。選択しただけで、その条件が成立したことにはなりません。</p>
 <label for="source-url">出典URL（任意・URLは必ず開いて確認）</label><input id="source-url" inputmode="url" type="url" placeholder="https://x.com/.../status/... または解析記事URL">
 <div class="grid">
 <div><label for="posted-date">投稿日・発見日（任意）</label><input id="posted-date" type="date"></div>
@@ -62,11 +65,25 @@ const MACHINES=[
 ];
 const LABELS={support:"整合する報告",caution:"反例・慎重意見",conflict:"解析との食い違い",neutral:"判断保留"};
 const KEY="slotintel-community-observations-v1";
+const CONDITION_TARGETS={
+ seiya:[["at_gap","AT間ゲーム数"],["cz_gap","CZ間ゲーム数"],["fire_clock","火時計・周期ポイント"]],
+ ggo:[["normal_ceiling","通常時のG数天井"],["reset_ceiling","設定変更後の短縮天井"],["sj_through","SJ間のスルー回数"]],
+ kabaneri:[["normal_ceiling","通常時のゲーム数天井"],["shortened_ceiling","短縮条件・リセット／ST後"],["cycle","周期・前兆／示唆"]],
+};
+const DEFAULT_CONDITION=[["general","その他・機種全般"]];
+function conditionsFor(machineId){return [...(CONDITION_TARGETS[machineId]||[]),...DEFAULT_CONDITION]}
+function syncConditionOptions(){
+ const previous=$("condition-target").value,machineId=$("machine").value;
+ const select=$("condition-target");select.replaceChildren();
+ for(const [id,label] of conditionsFor(machineId))select.add(new Option(label,id));
+ if(conditionsFor(machineId).some(x=>x[0]===previous))select.value=previous;
+}
+
 const $=id=>document.getElementById(id);
 for(const [id,name] of MACHINES){
  $("machine").add(new Option(name,id));$("filter-machine").add(new Option(name,id));
 }
-const target=location.hash.match(/^#machine=([a-z0-9]+)$/);
+const target=location.hash.match(/^#machine=([a-z0-9]+)(?:&condition=([a-z0-9_]+))?$/);
 if(target&&MACHINES.some(m=>m[0]===target[1])){
  $("machine").value=target[1];$("filter-machine").value=target[1];
 }
@@ -110,6 +127,7 @@ function collect(){
  return {schema:1,id:Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,10),
   machine_id:$("machine").value,machine_name:$("machine").selectedOptions[0].text,
   source_type:kind,source_url:source,normalized_source_url:normalized,
+  condition_id:$("condition-target").value,
   stance:$("stance").value,evidence_level:$("evidence-level").value,
   posted_date:$("posted-date").value,conditions:$("counter-info").value.trim(),
   summary,limits:$("limits").value.trim(),captured_at:new Date().toISOString(),
@@ -129,6 +147,9 @@ function render(){
   const div=document.createElement("article");div.className="item";
   const h=document.createElement("h3");h.textContent=row.machine_name||"名称未確認";
   const meta=document.createElement("p");meta.className="small";
+  const tag=document.createElement("p");tag.className="small";
+  tag.textContent="関連条件："+(conditionsFor(row.machine_id).find(x=>x[0]===row.condition_id)?.[1]||"条件未分類・旧メモ");
+  div.append(tag);
   meta.textContent=(LABELS[row.stance]||"判断保留")+" ／ "+(row.posted_date||"投稿日不明")+" ／ "+
     (row.source_type||"出典不明")+" ／ "+(row.evidence_level||"資料不明");
   const summary=document.createElement("p");summary.textContent=row.summary||"";
@@ -160,6 +181,8 @@ function validRow(r){
   typeof r.source_url==="string"&&r.source_url.length<=1500&&
   parseSourceUrl(r.source_url)!==null&&
   (r.source_type!=="x_post"||!r.source_url||parseSourceUrl(r.source_url).startsWith("https://x.com/i/status/"))&&
+  (r.condition_id===undefined||r.condition_id===null||
+   conditionsFor(r.machine_id).some(x=>x[0]===r.condition_id))&&
   typeof r.summary==="string"&&r.summary.trim().length>=8&&r.summary.length<=1000&&
   typeof r.conditions==="string"&&r.conditions.length<=240&&
   typeof r.limits==="string"&&r.limits.length<=1000&&
@@ -178,6 +201,7 @@ $("save").addEventListener("click",()=>{
  }
 });
 $("clear-input").addEventListener("click",()=>{clearInputs();$("feedback").textContent="入力をリセットしました"});
+$("machine").addEventListener("change",syncConditionOptions);
 $("filter-machine").addEventListener("change",render);
 $("filter-stance").addEventListener("change",render);
 $("export").addEventListener("click",()=>{download({schema:1,kind:"community_note_backup",rows:read()});
@@ -208,5 +232,8 @@ $("delete-all").addEventListener("click",()=>{
  if(!confirm("この端末の実戦報告ノートを全削除しますか？"))return;
  if(write([])){render();$("backup-feedback").textContent="全件削除しました"}
 });
+syncConditionOptions();
+if(target&&target[2]&&conditionsFor($("machine").value).some(x=>x[0]===target[2]))
+ $("condition-target").value=target[2];
 render();
 </script></body></html>
