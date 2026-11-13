@@ -19,34 +19,34 @@ textarea{min-height:78px}button,.btn{font:inherit;font-weight:650;background:var
 a{color:#165f96}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #83bce8;outline-offset:2px}
 footer{padding:12px 15px 25px;color:var(--muted);font-size:12px}code{overflow-wrap:anywhere}
 </style></head><body>
-<header><div><small>試用版 v0.8 / 端末内だけの整理ノート</small><h1>実戦報告の検証ノート</h1><p>解析サイトの説明とX・SNSの声を、混同せずに並べて整理する</p></div></header>
+<header><div><small>試用版 v0.8 / 端末内だけの整理ノート</small><h1>気になる実戦報告をメモ</h1><p>Xで見た話や自分の実戦を機種ごとに残そう</p></div></header>
 <main>
 <section class="card"><div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目候補一覧へ</a><a class="btn secondary" href="./x-live.html">Xの最新投稿へ</a><a class="btn secondary" href="./research.html">一般解析比較へ</a></div>
-<p class="notice">これは**投稿・記事を自分で確認して記録するノート**です。投稿内容の自動収集はせず、登録内容は未検証の観測・意見として扱います。件数や賛否は母数が偏っているため、勝率・設定配分・期待値へ自動換算しません。</p>
+<p class="notice"><strong>自分で見つけた投稿を残すメモです。</strong> Xの投稿を自動で集める機能ではありません。件数が増えても、勝率や期待値へは換算しません。</p>
 </section>
-<section class="card"><h2>出典付きで報告を追加</h2>
+<section class="card"><h2>見つけた投稿を追加</h2>
 <div class="grid">
 <div><label for="machine">機種</label><select id="machine"></select></div>
-<div><label for="source-type">情報の種類</label><select id="source-type"><option value="x_post">Xの実戦投稿</option><option value="community">SNS・コメント欄</option><option value="analysis">解析記事</option><option value="field">自分の実戦観測</option></select></div>
-<div><label for="stance">条件への評価</label><select id="stance"><option value="neutral">判断できない・中立</option><option value="support">整合する報告</option><option value="caution">反例・慎重な意見</option><option value="conflict">解析と食い違う報告</option></select></div>
-<div><label for="evidence-level">資料の内容</label><select id="evidence-level"><option value="opinion">感想・体感</option><option value="image">履歴画像あり（内容は未照合）</option><option value="numbers">数値・集計の説明あり（未照合）</option><option value="primary">一次発表・メーカー情報</option></select></div>
+<div><label for="source-type">どこで見た？</label><select id="source-type"><option value="x_post">Xの実戦投稿</option><option value="community">SNS・コメント欄</option><option value="analysis">解析記事</option><option value="field">自分の実戦観測</option></select></div>
+<div><label for="stance">どんな内容？</label><select id="stance"><option value="neutral">まだ分からない</option><option value="support">解析と合っていた</option><option value="caution">注意が必要な報告</option><option value="conflict">解析と違う動き</option></select></div>
+<div><label for="evidence-level">どんな根拠がある？</label><select id="evidence-level"><option value="opinion">感想だけ</option><option value="image">台データの画像あり（未確認）</option><option value="numbers">数字の記録あり（未確認）</option><option value="primary">一次発表・メーカー情報</option></select></div>
 </div>
-<label for="condition-target">対応する狙い目・確認条件</label>
+<label for="condition-target">どの狙い方の話？</label>
 <select id="condition-target"></select>
 <p class="small">解析の条件と報告を関連付ける分類です。選択しただけで、その条件が成立したことにはなりません。</p>
-<label for="source-url">出典URL（任意・URLは必ず開いて確認）</label><input id="source-url" inputmode="url" type="url" placeholder="https://x.com/.../status/... または解析記事URL">
+<label for="source-url">投稿・記事のURL（任意）</label><input id="source-url" inputmode="url" type="url" placeholder="https://x.com/.../status/... または解析記事URL">
 <div class="grid">
-<div><label for="posted-date">投稿日・発見日（任意）</label><input id="posted-date" type="date"></div>
-<div><label for="counter-info">対象の条件・状況</label><input id="counter-info" maxlength="240" placeholder="例：リセット台、ST後、設定不明、600G台"></div>
+<div><label for="posted-date">投稿の日付（任意）</label><input id="posted-date" type="date"></div>
+<div><label for="counter-info">どんな台の話？</label><input id="counter-info" maxlength="240" placeholder="例：リセット台、ST後、設定不明、600G台"></div>
 </div>
-<label for="summary">報告内容（自分の要約・必須）</label><textarea id="summary" maxlength="1000" placeholder="どんな台で何が起こったかを簡潔に。投稿の長文全文は転載しない"></textarea>
-<label for="limits">不明な条件・反論・留意点</label><textarea id="limits" maxlength="1000" placeholder="例：交換率不明、カウンター起点不明、画像内の台が別バージョンの可能性"></textarea>
-<div class="actions"><button type="button" id="save">検証メモを保存</button><button type="button" class="secondary" id="clear-input">入力欄をリセット</button></div>
+<label for="summary">どんな投稿だった？（必須）</label><textarea id="summary" maxlength="1000" placeholder="どんな台で何が起こったかを簡潔に。投稿の長文全文は転載しない"></textarea>
+<label for="limits">気になる点・分からないこと</label><textarea id="limits" maxlength="1000" placeholder="例：交換率不明、カウンター起点不明、画像内の台が別バージョンの可能性"></textarea>
+<div class="actions"><button type="button" id="save">このメモを保存</button><button type="button" class="secondary" id="clear-input">入力欄をリセット</button></div>
 <p id="feedback" class="small" role="status"></p>
 </section>
-<section class="card"><h2>機種別の報告・反論を比較</h2>
+<section class="card"><h2>保存した投稿を見る</h2>
 <div class="grid"><div><label for="filter-machine">機種</label><select id="filter-machine"><option value="all">すべて</option></select></div>
-<div><label for="filter-stance">見たい内容</label><select id="filter-stance"><option value="all">すべて</option><option value="support">整合する報告</option><option value="caution">反例・慎重意見</option><option value="conflict">解析との食い違い</option><option value="neutral">判断保留</option></select></div></div>
+<div><label for="filter-stance">どんな投稿を見る？</label><select id="filter-stance"><option value="all">すべて</option><option value="support">解析と合っていた</option><option value="caution">反例・慎重意見</option><option value="conflict">解析との食い違い</option><option value="neutral">判断保留</option></select></div></div>
 <p class="small" id="counts"></p>
 <div id="records"></div>
 <div class="actions"><button id="export" type="button" class="secondary">JSONをバックアップ</button><label class="btn secondary" for="import-file">バックアップを読み込む</label><input id="import-file" type="file" accept=".json,application/json" hidden><button id="delete-all" class="danger" type="button">全記録を削除</button></div>
@@ -63,7 +63,7 @@ const MACHINES=[
  ["aobuta","青ブタ"],["world","ワールドダイスター"],["lycoris","リコリコ"],
  ["mahoako","まほあこ"],["juoh","獣王"]
 ];
-const LABELS={support:"整合する報告",caution:"反例・慎重意見",conflict:"解析との食い違い",neutral:"判断保留"};
+const LABELS={support:"解析と合っていた",caution:"反例・慎重意見",conflict:"解析との食い違い",neutral:"判断保留"};
 const KEY="slotintel-community-observations-v1";
 const CONDITION_TARGETS={
  seiya:[["at_gap","AT間ゲーム数"],["cz_gap","CZ間ゲーム数"],["fire_clock","火時計・周期ポイント"]],
