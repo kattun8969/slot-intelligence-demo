@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>実戦報告ノート | Slot Intelligence</title>
+<style>
+:root{--bg:#f1f5f9;--ink:#19334a;--muted:#586e81;--blue:#195e93;--edge:#d9e3ec}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{background:#122f4b;color:white;padding:21px 15px}header>div,main,footer{max-width:930px;margin:auto}h1{font-size:24px;margin:3px 0}h2{font-size:20px;margin:0 0 10px}h3{font-size:16px;margin:8px 0}
+main{padding:14px}.card{background:white;border:1px solid var(--edge);border-radius:14px;padding:17px;margin:12px 0}
+.notice{background:#fff6e3;border-left:4px solid #bd8a34;padding:11px;border-radius:7px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}
+label{display:block;font-weight:650;margin:10px 0 5px}
+input,select,textarea{font:inherit;width:100%;padding:11px;border:1px solid #9eb2c4;border-radius:8px;color:var(--ink);background:white}
+textarea{min-height:78px}button,.btn{font:inherit;font-weight:650;background:var(--blue);border:0;border-radius:9px;color:#fff;padding:11px 14px;cursor:pointer;text-decoration:none;display:inline-block}
+.secondary{background:#e5edf4;color:var(--ink)}.danger{background:#8d4d52}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}.actions>*{flex:1 1 140px}
+.small{font-size:13px;color:var(--muted)}.item{border-top:1px solid var(--edge);padding:13px 0}
+.item:first-child{border-top:0}.pill{display:inline-block;font-size:12px;background:#e7f0f8;color:#31556e;border-radius:20px;padding:3px 9px;margin:2px}
+a{color:#165f96}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #83bce8;outline-offset:2px}
+footer{padding:12px 15px 25px;color:var(--muted);font-size:12px}code{overflow-wrap:anywhere}
+</style></head><body>
+<header><div><small>試用版 v0.6 / 端末内だけの整理ノート</small><h1>実戦報告の検証ノート</h1><p>解析サイトの説明とX・SNSの声を、混同せずに並べて整理する</p></div></header>
+<main>
+<section class="card"><div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目候補一覧へ</a><a class="btn secondary" href="./x-live.html">Xの最新投稿へ</a><a class="btn secondary" href="./research.html">一般解析比較へ</a></div>
+<p class="notice">これは**投稿・記事を自分で確認して記録するノート**です。投稿内容の自動収集はせず、登録内容は未検証の観測・意見として扱います。件数や賛否は母数が偏っているため、勝率・設定配分・期待値へ自動換算しません。</p>
+</section>
+<section class="card"><h2>出典付きで報告を追加</h2>
+<div class="grid">
+<div><label for="machine">機種</label><select id="machine"></select></div>
+<div><label for="source-type">情報の種類</label><select id="source-type"><option value="x_post">Xの実戦投稿</option><option value="community">SNS・コメント欄</option><option value="analysis">解析記事</option><option value="field">自分の実戦観測</option></select></div>
+<div><label for="stance">条件への評価</label><select id="stance"><option value="neutral">判断できない・中立</option><option value="support">整合する報告</option><option value="caution">反例・慎重な意見</option><option value="conflict">解析と食い違う報告</option></select></div>
+<div><label for="evidence-level">資料の内容</label><select id="evidence-level"><option value="opinion">感想・体感</option><option value="image">履歴画像あり（内容は未照合）</option><option value="numbers">数値・集計の説明あり（未照合）</option><option value="primary">一次発表・メーカー情報</option></select></div>
+</div>
+<label for="source-url">出典URL（任意・URLは必ず開いて確認）</label><input id="source-url" inputmode="url" type="url" placeholder="https://x.com/.../status/... または解析記事URL">
+<div class="grid">
+<div><label for="posted-date">投稿日・発見日（任意）</label><input id="posted-date" type="date"></div>
+<div><label for="counter-info">対象の条件・状況</label><input id="counter-info" maxlength="240" placeholder="例：リセット台、ST後、設定不明、600G台"></div>
+</div>
+<label for="summary">報告内容（自分の要約・必須）</label><textarea id="summary" maxlength="1000" placeholder="どんな台で何が起こったかを簡潔に。投稿の長文全文は転載しない"></textarea>
+<label for="limits">不明な条件・反論・留意点</label><textarea id="limits" maxlength="1000" placeholder="例：交換率不明、カウンター起点不明、画像内の台が別バージョンの可能性"></textarea>
+<div class="actions"><button type="button" id="save">検証メモを保存</button><button type="button" class="secondary" id="clear-input">入力欄をリセット</button></div>
+<p id="feedback" class="small" role="status"></p>
+</section>
+<section class="card"><h2>機種別の報告・反論を比較</h2>
+<div class="grid"><div><label for="filter-machine">機種</label><select id="filter-machine"><option value="all">すべて</option></select></div>
+<div><label for="filter-stance">見たい内容</label><select id="filter-stance"><option value="all">すべて</option><option value="support">整合する報告</option><option value="caution">反例・慎重意見</option><option value="conflict">解析との食い違い</option><option value="neutral">判断保留</option></select></div></div>
+<p class="small" id="counts"></p>
+<div id="records"></div>
+<div class="actions"><button id="export" type="button" class="secondary">JSONをバックアップ</button><label class="btn secondary" for="import-file">バックアップを読み込む</label><input id="import-file" type="file" accept=".json,application/json" hidden><button id="delete-all" class="danger" type="button">全記録を削除</button></div>
+<p class="small" id="backup-feedback" role="status"></p>
+<p class="notice">同じ投稿の転載・リポストを複数件として数えないよう、出典URLの重複は保存時に検出します。ただし転載元が別URLなら自動判定できません。確認できない部分は「不明」と記録してください。</p>
+</section>
+</main><footer>端末ローカル保存のみ、最大200件。iPhoneのSafariでデータを消した場合に消失する可能性があります。Xは別画面で開き、閲覧はX側の利用規約・プライバシー仕様に従います。</footer>
+<script>
+"use strict";
+const MACHINES=[
+ ["seiya","聖闘士星矢 黄金十二宮"],["ggo","ガンゲイル・オンライン"],
+ ["kabaneri","カバネリ 海門決戦"],["sao2","SAO2"],["monhun","モンハンサンライズ"],
+ ["otome5","戦国乙女5"],["yoshimune","吉宗"],["god","GOD"],["tokyoghoul","東京喰種"],
+ ["aobuta","青ブタ"],["world","ワールドダイスター"],["lycoris","リコリコ"],
+ ["mahoako","まほあこ"],["juoh","獣王"]
+];
+const LABELS={support:"整合する報告",caution:"反例・慎重意見",conflict:"解析との食い違い",neutral:"判断保留"};
+const KEY="slotintel-community-observations-v1";
+const $=id=>document.getElementById(id);
+for(const [id,name] of MACHINES){
+ $("machine").add(new Option(name,id));$("filter-machine").add(new Option(name,id));
+}
+const target=location.hash.match(/^#machine=([a-z0-9]+)$/);
+if(target&&MACHINES.some(m=>m[0]===target[1])){
+ $("machine").value=target[1];$("filter-machine").value=target[1];
+}
+function parseSourceUrl(raw){
+ const trimmed=raw.trim();if(!trimmed)return "";
+ let uri;try{uri=new URL(trimmed)}catch(_){return null}
+ if(uri.protocol!=="https:"||!uri.hostname||uri.username||uri.password||trimmed.length>1500)return null;
+ if(uri.hostname==="localhost"||uri.hostname.endsWith(".local")||
+    uri.hostname.match(/^(?:127\.|10\.|192\.168\.|169\.254\.)/)||
+    uri.hostname==="0.0.0.0")return null;
+ if(["x.com","www.x.com","twitter.com","www.twitter.com"].includes(uri.hostname)){
+   const match=uri.pathname.match(/^\/[A-Za-z0-9_]{1,15}\/status\/(\d{10,25})\/?$/);
+   if(!match||uri.search||uri.hash)return null;
+   return "https://x.com/i/status/"+match[1];
+ }
+ if(uri.hash)return null;
+ return uri.href;
+}
+function read(){
+ try{const rows=JSON.parse(localStorage.getItem(KEY)||"[]");
+   return Array.isArray(rows)?rows.filter(x=>x&&typeof x==="object").slice(0,200):[]}
+ catch(_){return []}
+}
+function write(rows){
+ try{localStorage.setItem(KEY,JSON.stringify(rows.slice(0,200)));return true}
+ catch(_){$("feedback").textContent="端末に保存できませんでした。JSONでの保存環境を確認してください";return false}
+}
+function clearInputs(){
+ for(const id of ["source-url","posted-date","counter-info","summary","limits"])$(id).value="";
+ $("stance").value="neutral";$("evidence-level").value="opinion";$("source-type").value="x_post";
+}
+function collect(){
+ const summary=$("summary").value.trim();
+ if(summary.length<8){$("feedback").textContent="報告内容を8文字以上で要約してください";return null}
+ const source=$("source-url").value.trim(),normalized=parseSourceUrl(source);
+ if(normalized===null){$("feedback").textContent="有効な公開HTTPS URLを入力してください。Xは個別投稿URLのみ対応します";return null}
+ const kind=$("source-type").value;
+ if(kind==="x_post"&&normalized&&!normalized.startsWith("https://x.com/i/status/")){
+   $("feedback").textContent="Xの実戦投稿には、個別の投稿URLを指定してください";return null;
+ }
+ return {schema:1,id:Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,10),
+  machine_id:$("machine").value,machine_name:$("machine").selectedOptions[0].text,
+  source_type:kind,source_url:source,normalized_source_url:normalized,
+  stance:$("stance").value,evidence_level:$("evidence-level").value,
+  posted_date:$("posted-date").value,conditions:$("counter-info").value.trim(),
+  summary,limits:$("limits").value.trim(),captured_at:new Date().toISOString(),
+  status:"user_observation_not_verified",effect_on_expected_value:"none"};
+}
+function render(){
+ const rows=read(),machine=$("filter-machine").value,stance=$("filter-stance").value;
+ const filtered=rows.filter(x=>(machine==="all"||x.machine_id===machine)&&
+   (stance==="all"||x.stance===stance));
+ const distribution={support:0,caution:0,conflict:0,neutral:0};
+ for(const row of filtered)if(Object.hasOwn(distribution,row.stance))distribution[row.stance]++;
+ $("counts").textContent=filtered.length+"件 ／ "+Object.keys(distribution).map(k=>LABELS[k]+"："+distribution[k]).join(" ／ ")+
+  "。自分が記録した件数であり、SNS全体の投稿傾向ではありません。";
+ const root=$("records");root.replaceChildren();
+ if(!filtered.length){root.textContent="該当する保存メモはありません";return}
+ for(const row of filtered){
+  const div=document.createElement("article");div.className="item";
+  const h=document.createElement("h3");h.textContent=row.machine_name||"名称未確認";
+  const meta=document.createElement("p");meta.className="small";
+  meta.textContent=(LABELS[row.stance]||"判断保留")+" ／ "+(row.posted_date||"投稿日不明")+" ／ "+
+    (row.source_type||"出典不明")+" ／ "+(row.evidence_level||"資料不明");
+  const summary=document.createElement("p");summary.textContent=row.summary||"";
+  const conditions=document.createElement("p");conditions.className="small";
+  conditions.textContent="条件："+(row.conditions||"不明")+" ／ 不明点："+(row.limits||"記載なし");
+  div.append(h,meta,summary,conditions);
+  if(row.source_url){
+   const link=document.createElement("a");link.href=row.source_url;
+   link.target="_blank";link.rel="noopener noreferrer";
+   link.textContent="元の投稿・記事を確認する";div.append(link);
+  }
+  const btn=document.createElement("button");btn.type="button";btn.className="secondary";
+  btn.textContent="このメモを削除";btn.addEventListener("click",()=>{
+   if(!confirm("この記録を削除しますか？"))return;
+   if(write(read().filter(x=>x.id!==row.id)))render();
+  });div.append(document.createElement("p"),btn);root.append(div);
+ }
+}
+function download(data){
+ const blob=new Blob([JSON.stringify(data,null,2)+"\n"],{type:"application/json"});
+ const href=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=href;a.download="slotintel-community-notes.json";document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(href),1000);
+}
+function validRow(r){
+ return r&&typeof r==="object"&&r.schema===1&&typeof r.id==="string"&&r.id.length<=100&&
+  MACHINES.some(m=>m[0]===r.machine_id)&&["x_post","community","analysis","field"].includes(r.source_type)&&
+  Object.hasOwn(LABELS,r.stance)&&["opinion","image","numbers","primary"].includes(r.evidence_level)&&
+  typeof r.source_url==="string"&&r.source_url.length<=1500&&
+  parseSourceUrl(r.source_url)!==null&&
+  (r.source_type!=="x_post"||!r.source_url||parseSourceUrl(r.source_url).startsWith("https://x.com/i/status/"))&&
+  typeof r.summary==="string"&&r.summary.trim().length>=8&&r.summary.length<=1000&&
+  typeof r.conditions==="string"&&r.conditions.length<=240&&
+  typeof r.limits==="string"&&r.limits.length<=1000&&
+  typeof r.captured_at==="string"&&r.captured_at.length<=100&&
+  r.status==="user_observation_not_verified"&&r.effect_on_expected_value==="none";
+}
+$("save").addEventListener("click",()=>{
+ const row=collect();if(!row)return;
+ const rows=read();
+ if(row.normalized_source_url&&rows.some(x=>x.machine_id===row.machine_id&&
+      parseSourceUrl(x.source_url||"")===row.normalized_source_url)){
+   $("feedback").textContent="同じ機種で既にこの出典URLの記録があります。重複保存はしません。";return;
+ }
+ if(write([row,...rows])){
+  clearInputs();render();$("feedback").textContent="未検証の実戦報告ノートとして保存しました。";
+ }
+});
+$("clear-input").addEventListener("click",()=>{clearInputs();$("feedback").textContent="入力をリセットしました"});
+$("filter-machine").addEventListener("change",render);
+$("filter-stance").addEventListener("change",render);
+$("export").addEventListener("click",()=>{download({schema:1,kind:"community_note_backup",rows:read()});
+ $("backup-feedback").textContent="JSONを出力しました"});
+$("import-file").addEventListener("change",async event=>{
+ const file=event.target.files?.[0];if(!file)return;
+ try{
+  if(file.size>500000)throw Error("上限500KBを超えています");
+  const parsed=JSON.parse(await file.text());
+  if(parsed?.schema!==1||parsed.kind!=="community_note_backup"||!Array.isArray(parsed.rows)||
+    parsed.rows.length>200||!parsed.rows.every(validRow))throw Error("バックアップ形式が不正です");
+  const original=read(),ids=new Set(original.map(x=>x.id));
+  const urls=new Set(original.filter(x=>x.source_url).map(x=>x.machine_id+"|"+parseSourceUrl(x.source_url)));
+  const incoming=[];
+  for(const row of parsed.rows){
+    const normalized=parseSourceUrl(row.source_url);
+    const uniqueKey=row.machine_id+"|"+normalized;
+    if(ids.has(row.id)||(normalized&&urls.has(uniqueKey)))continue;
+    ids.add(row.id);if(normalized)urls.add(uniqueKey);incoming.push(row);
+  }
+  if(original.length+incoming.length>200)throw Error("200件の上限を超えています");
+  if(!write([...original,...incoming]))throw Error("端末への保存に失敗しました");
+  render();$("backup-feedback").textContent=incoming.length+"件を復元しました";
+ }catch(error){$("backup-feedback").textContent="読み込めません："+error.message}
+ event.target.value="";
+});
+$("delete-all").addEventListener("click",()=>{
+ if(!confirm("この端末の実戦報告ノートを全削除しますか？"))return;
+ if(write([])){render();$("backup-feedback").textContent="全件削除しました"}
+});
+render();
+</script></body></html>
