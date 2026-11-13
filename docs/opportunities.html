@@ -32,7 +32,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v0.9 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
+<header><div><small>試用版 v1.2 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
 <p>候補一覧 → 機種ごとの確認 → 実戦した期待値を記録</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
@@ -44,7 +44,8 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </div>
 <p class="notice"><strong>重要：</strong>現在の一覧は「狙い目の調査候補」です。実際の推奨条件や期待値を確定した一覧ではありません。正式な条件・数値が確認できるまで、自動計算や「打てる」の判定は行いません。期待値合計は自分で入力した見積額の合計であり、実収支や保証される利益ではありません。</p></section>
 <section class="card"><h2>一般解析と最新のX投稿を確認する</h2>
-<p>重点3機種の解析サイト比較と実戦報告を確認できます。SNSは個別の体験談であり、期待値の数値には自動換算しません。</p>
+<p>6機種の出典別狙い目比較と、重点3機種の詳しい解析・実戦報告を確認できます。SNSの体感を期待値へ自動換算しません。</p>
+<a class="btn" href="./alternatives.html">他の狙い目候補を探す</a>
 <a class="btn" href="./strategy-cards.html">出典別の狙い目G数・交換率を比較する</a>
 <a class="btn" href="./research.html">星矢・ガンゲイル・カバネリの解析比較を見る</a>
 <a class="btn secondary" href="./x-live.html">Xの最新投稿・リストを開く</a>
@@ -58,7 +59,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <p class="help" id="list-summary" role="status"></p><div id="target-list" class="group"></div>
 </section>
 <section id="detail-panel" class="card" hidden>
-<div class="actions"><a class="btn secondary" href="#list">← 狙い目一覧へ戻る</a><a class="btn secondary" href="./index.html">現地メモへ</a></div>
+<div class="actions"><a class="btn secondary" href="#list">← 狙い目一覧へ戻る</a><a id="detail-alternative-link" class="btn" href="./alternatives.html">この台を見送り、別の候補を探す</a><a class="btn secondary" href="./index.html">現地メモへ</a></div>
 <h2 id="detail-name"></h2><p id="detail-description"></p>
 <div id="detail-status" class="notice"></div>
 <h3>まず調べる条件</h3><ul id="detail-checkpoints"></ul>
@@ -120,7 +121,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <p class="notice">端末内のブラウザ保存のみです。iPhoneのSafariでサイトデータを消すと失われる場合があります。別の端末とは自動同期されません。バックアップをおすすめします。</p>
 </section>
 </main>
-<footer>Slot Intelligence 試用版 v0.3。新台・既存機種の解析数値は未掲載。期待値は利用者の見積もりであり、投資・収益・遊技結果を保証するものではありません。</footer>
+<footer>Slot Intelligence 試用版 v1.2。掲載例は出典別比較で提供し、未確認の機種は調査中として表示。期待値は利用者の見積もりであり、投資・収益・遊技結果を保証するものではありません。</footer>
 <script>
 "use strict";
 const MACHINES=[
@@ -320,6 +321,7 @@ function showList(){
  }
 }
 function showDetail(m){
+ $("detail-alternative-link").href="./alternatives.html#skip="+encodeURIComponent(m.id);
  renderCommunity(m);
  renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
