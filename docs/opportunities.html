@@ -32,7 +32,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v0.8 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
+<header><div><small>試用版 v0.9 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
 <p>候補一覧 → 機種ごとの確認 → 実戦した期待値を記録</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
@@ -45,6 +45,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <p class="notice"><strong>重要：</strong>現在の一覧は「狙い目の調査候補」です。実際の推奨条件や期待値を確定した一覧ではありません。正式な条件・数値が確認できるまで、自動計算や「打てる」の判定は行いません。期待値合計は自分で入力した見積額の合計であり、実収支や保証される利益ではありません。</p></section>
 <section class="card"><h2>一般解析と最新のX投稿を確認する</h2>
 <p>重点3機種の解析サイト比較と実戦報告を確認できます。SNSは個別の体験談であり、期待値の数値には自動換算しません。</p>
+<a class="btn" href="./strategy-cards.html">出典別の狙い目G数・交換率を比較する</a>
 <a class="btn" href="./research.html">星矢・ガンゲイル・カバネリの解析比較を見る</a>
 <a class="btn secondary" href="./x-live.html">Xの最新投稿・リストを開く</a>
 <a class="btn secondary" href="./community-notes.html">実戦報告・反論を整理する</a>
@@ -329,10 +330,18 @@ function showDetail(m){
  const ul=$("detail-checkpoints");ul.replaceChildren();
  for(const t of m.topics){const li=document.createElement("li");li.textContent=t;ul.append(li)}
  document.getElementById("research-shortcut")?.remove();
+ document.getElementById("strategy-shortcut")?.remove();
  if(["seiya","ggo","kabaneri"].includes(m.id)){
   const p=document.createElement("p");p.id="research-shortcut";
   const a=document.createElement("a");a.href="./research.html#"+m.id;
   a.textContent="一般解析と実戦コメントの比較を見る";
+  const strategy=document.createElement("p");strategy.id="strategy-shortcut";
+  const strategyLink=document.createElement("a");
+  const conditionHint=m.id==="seiya"?"at_gap":m.id==="ggo"?"normal_ceiling":"normal_ceiling";
+  strategyLink.href="./strategy-cards.html#machine="+m.id+"&condition="+conditionHint;
+  strategyLink.textContent="出典別の狙い目G数と交換率の違いを確認する";
+  strategy.append(strategyLink);$("detail-checkpoints").after(strategy);
+
   p.append(a);$("detail-checkpoints").after(p);
  }
  const xsearch=document.createElement("p");xsearch.id="x-search-shortcut";
