@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' https://platform.twitter.com; connect-src https://platform.twitter.com https://syndication.twitter.com https://api.x.com https://x.com; frame-src https://platform.twitter.com https://syndication.twitter.com https://x.com https://twitter.com; img-src https://pbs.twimg.com https://abs.twimg.com https://ton.twimg.com data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' https://platform.twitter.com; connect-src 'self' https://platform.twitter.com https://syndication.twitter.com https://api.x.com https://x.com; frame-src https://platform.twitter.com https://syndication.twitter.com https://x.com https://twitter.com; img-src https://pbs.twimg.com https://abs.twimg.com https://ton.twimg.com data:; base-uri 'none'; form-action 'none'">
 <title>Xの最新実戦投稿 | Slot Intelligence</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f2f6fa;color:#1b344a;font:15px/1.65 system-ui,-apple-system,"Noto Sans JP",sans-serif}
@@ -17,7 +17,7 @@ button,.btn{font:inherit;font-weight:650;display:inline-block;border:0;border-ra
 a{color:#125b92}.feed{border:1px solid #dce4eb;border-radius:10px;padding:12px;min-height:90px;overflow:hidden}
 a:focus-visible,input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #83b9de;outline-offset:2px}
 footer{max-width:810px;margin:auto;padding:15px;font-size:12px;color:#64798a}
-</style></head><body><header><div><small style="color:#cfe2f2">試用版 v0.5 / Xの最新投稿へのアクセス</small><h1>Xで実戦の声をチェック</h1><p>機種を選んで、みんなの最新投稿を見よう</p></div></header>
+</style></head><body><header><div><small style="color:#cfe2f2">試用版 v1.5 / Xの最新投稿へのアクセス</small><h1>Xで実戦の声をチェック</h1><p>機種を選んで、みんなの最新投稿を見よう</p></div></header>
 <main>
 <section class="card"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧に戻る</a>
 <p class="notice"><strong>注意：</strong>Xの投稿は実戦者の体験談です。勝った・負けたという声だけで期待値は分かりません。解析サイトの条件と一緒に確認してください。</p>
@@ -28,7 +28,17 @@ footer{max-width:810px;margin:auto;padding:15px;font-size:12px;color:#64798a}
 <a id="open-relevant" class="btn secondary" target="_blank" rel="noopener noreferrer" href="https://x.com/search">Xの話題の投稿を見る</a></div>
 <p class="muted">Xの検索画面が開きます。ログインが必要な場合があります。</p>
 </section>
-<section class="card"><h2>② よく見る人の投稿を表示</h2>
+<section class="card" id="auto-feed-section">
+<h2>② 自動で集めたX投稿</h2>
+<p>機種ごとにXの新着投稿を自動で探して、元の投稿へのリンクを表示します。本文の転載や、口コミからの勝率計算はしません。</p>
+<p id="auto-feed-status" role="status" class="muted">収集状況を確認中です。</p>
+<div id="auto-feed-posts" class="feed"></div>
+<button type="button" class="secondary" id="refresh-auto-feed">表示を更新</button>
+<button type="button" id="embed-auto-posts" class="secondary">収集した投稿をページ内に表示</button>
+<div id="auto-embeds"></div>
+<p class="muted">自動収集はX APIの接続設定が必要です。未設定の場合は何も表示しません。投稿の削除・非公開化はリンク先で確認してください。</p>
+</section>
+<section class="card"><h2>③ よく見る人の投稿を表示</h2>
 <p>参考にしている実戦者のアカウントやXリストのURLを貼ると、新しい投稿をここに表示できます。</p>
 <label for="timeline-url">Xのアカウント・リストURL</label>
 <input id="timeline-url" type="url" maxlength="240" placeholder="https://x.com/ACCOUNT または https://x.com/i/lists/数字">
@@ -75,7 +85,79 @@ function updateMachine(){
  const item=MACHINES.find(x=>x[0]===$("machine").value);
  if(item)$("search-words").value=item[2];
  updateSearch();
+ renderAutoFeed();
 }
+const AUTO_FEED_PATH="./x-feed.json";
+let autoSnapshot=null;
+const AUTO_MACHINE_IDS=new Set(["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun"]);
+function validAutoPost(post){
+ return post&&typeof post==="object"&&typeof post.id==="string"&&
+  /^[0-9]{10,25}$/.test(post.id)&&
+  typeof post.posted_at==="string"&&/^20[0-9]{2}-[01][0-9]-[0-3][0-9]T/.test(post.posted_at)&&
+  post.url==="https://x.com/i/status/"+post.id;
+}
+function renderAutoFeed(){
+ const root=$("auto-feed-posts");if(!root)return;
+ root.replaceChildren();
+ const machine=$("machine").value;
+ if(!AUTO_MACHINE_IDS.has(machine)){
+  $("auto-feed-status").textContent="この機種は自動収集の対象にまだ入っていません。Xで最新投稿を検索できます。";return;
+ }
+ if(!autoSnapshot||autoSnapshot.status!=="active"){
+  $("auto-feed-status").textContent="自動収集はまだ未接続です。上の「Xの最新投稿を見る」を使えます。";return;
+ }
+ const details=autoSnapshot.machines?.[machine];
+ const posts=Array.isArray(details?.posts)?details.posts.filter(validAutoPost).slice(0,12):[];
+ const refreshed=details?.fetched_at;
+ $("auto-feed-status").textContent="この機種の収集済み投稿："+posts.length+"件。最終取得："+
+  (typeof refreshed==="string"&&refreshed?refreshed.replace("T"," ").slice(0,16)+" UTC":"まだ取得していません")+
+  "。投稿の内容や正確性は未確認です。";
+ if(!posts.length){root.textContent="まだ投稿がありません。Xの最新検索から確認できます。";return}
+ for(const post of posts){
+  const entry=document.createElement("p");
+  const a=document.createElement("a");
+  a.href=post.url;a.target="_blank";a.rel="noopener noreferrer";
+  a.textContent="Xで元の投稿を見る";
+  const time=document.createElement("span");time.className="muted";
+  time.textContent=" 投稿日："+post.posted_at.replace("T"," ").slice(0,16)+" UTC";
+  entry.append(a,time);root.append(entry);
+ }
+}
+async function loadAutoFeed(){
+ try{
+  const response=await fetch(AUTO_FEED_PATH,{cache:"no-store",credentials:"omit"});
+  if(!response.ok)throw Error("http_error");
+  const json=await response.json();
+  if(!json||json.schema!==1||!["active","not_configured"].includes(json.status)||
+     !json.machines||typeof json.machines!=="object")throw Error("invalid_feed");
+  autoSnapshot=json;
+ }catch(_){autoSnapshot=null}
+ renderAutoFeed();
+}
+$("refresh-auto-feed").addEventListener("click",loadAutoFeed);
+$("embed-auto-posts").addEventListener("click",()=>{
+ const machine=$("machine").value;
+ const posts=autoSnapshot?.status==="active"?autoSnapshot.machines?.[machine]?.posts:[];
+ const valid=Array.isArray(posts)?posts.filter(validAutoPost).slice(0,4):[];
+ if(!valid.length){
+  $("auto-feed-status").textContent="埋め込める投稿はまだありません。Xの最新検索を利用してください。";return;
+ }
+ const root=$("auto-embeds");root.replaceChildren();
+ for(const post of valid){
+  const quote=document.createElement("blockquote");quote.className="twitter-tweet";
+  const a=document.createElement("a");a.href=post.url;
+  a.textContent="Xの元投稿を開く";quote.append(a);root.append(quote);
+ }
+ const load=()=>{if(window.twttr?.widgets?.load)window.twttr.widgets.load(root)};
+ if(window.twttr?.widgets?.load){load();return}
+ const existing=document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
+ if(existing){existing.addEventListener("load",load,{once:true});return}
+ const tag=document.createElement("script");tag.src="https://platform.twitter.com/widgets.js";tag.async=true;
+ tag.onload=load;
+ tag.onerror=()=>{$("auto-feed-status").textContent="X埋め込みを表示できません。上の元投稿リンクをご利用ください。"};
+ document.head.append(tag);
+});
+
 function parseTimelineURL(raw){
  let url;
  try{url=new URL(raw.trim())}catch(_){return null}
@@ -120,4 +202,5 @@ $("machine").addEventListener("change",updateMachine);
 const target=location.hash.match(/^#machine=([a-z0-9]+)$/);
 if(target&&MACHINES.some(x=>x[0]===target[1]))$("machine").value=target[1];
 updateMachine();
+loadAutoFeed();
 </script></body></html>
