@@ -32,7 +32,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v1.2 · オフライン動作 · スマホ対応</small><h1>次に狙う台を探そう</h1>
+<header><div><small>試用版 v1.6 · オフライン動作 · スマホ対応</small><h1>次に狙う台を探そう</h1>
 <p>気になる台を選ぶ → 条件を確認 → 打ったら期待値をメモ</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
@@ -44,7 +44,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </div>
 <p class="notice"><strong>注意：</strong>ここにあるのは狙い目の候補です。G数やリセット条件は自分で確認してください。期待値の合計は入力した金額で、実際の収支とは別です。</p></section>
 <section class="card"><h2>解析とXをチェック</h2>
-<p>6機種の狙い目G数をサイト別に比較。Xの実戦報告もチェックできます。</p>
+<p>10機種の狙い目G数・コレ数をサイト別に比較。Xの実戦報告もチェックできます。</p>
 <a class="btn" href="./alternatives.html">他の狙い目候補を探す</a>
 <a class="btn" href="./strategy-cards.html">何Gから？ 解析サイトを比べる</a>
 <a class="btn" href="./research.html">星矢・ガンゲイル・カバネリの解析比較を見る</a>
@@ -121,7 +121,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <p class="notice">記録はこの端末だけに保存。スマホのデータを消すと戻らないことがあるので、バックアップがおすすめです。</p>
 </section>
 </main>
-<footer>Slot Intelligence 試用版 v1.2。掲載例は出典別比較で提供し、未確認の機種は調査中として表示。期待値は利用者の見積もりであり、投資・収益・遊技結果を保証するものではありません。</footer>
+<footer>Slot Intelligence 試用版 v1.6。掲載例は出典別比較で提供し、未確認の機種は調査中として表示。期待値は利用者の見積もりであり、投資・収益・遊技結果を保証するものではありません。</footer>
 <script>
 "use strict";
 const MACHINES=[
@@ -138,7 +138,11 @@ const MACHINES=[
  {id:"world",name:"ワールドダイスター",tier:3,uncertain:false,topics:["周期の起点","液晶ポイントとの違い","状態ごとの適用条件"],units:["games","cycles","points"],sources:[]},
  {id:"lycoris",name:"リコリコ",tier:3,uncertain:false,topics:["カウンター起点と天井条件","ST/CZ後の状態"],units:["games"],sources:[]},
  {id:"mahoako",name:"まほあこ",tier:3,uncertain:false,topics:["CZ・ATのスルー履歴","設定変更条件"],units:["games"],sources:[]},
- {id:"juoh",name:"獣王",tier:3,uncertain:true,topics:["スマスロと他機種の区別","機種バージョンと状態"],units:["games"],sources:[]}
+ {id:"juoh",name:"獣王",tier:3,uncertain:true,topics:["スマスロと他機種の区別","機種バージョンと状態"],units:["games"],sources:[]},
+ {"id":"sunbreak","name":"モンスターハンターライズ：サンブレイク（2026年）","tier":2,"uncertain":false,"topics":["AT間999GとCZ間333Gは別","CZスルーとオトモ潜水艇の周期","AT後1Gのエンタチャンス"],"units":["games","cycles","throughs"],"sources":[["なな徹","https://nana-press.com/kaiseki/machine/1216/39263/"]]},
+ {"id":"monkey5","name":"モンキーターンV","tier":2,"uncertain":false,"topics":["通常795G／6周期","変更・青島VS波多野敗北後495G／4周期","ヘルメット・優出前兆"],"units":["games","cycles","points"],"sources":[["なな徹","https://nana-press.com/kaiseki/machine/644/18016/"]]},
+ {"id":"sencolle5","name":"戦国コレクション5","tier":2,"uncertain":false,"topics":["最大1280コレ（G数ではない）","液晶コレ数のモード・天国128コレ","AT後のやめどき"],"units":["points"],"sources":[["なな徹","https://nana-press.com/kaiseki/machine/506/13930/"]]},
+ {"id":"kanokari","name":"彼女、お借りします（かのかり）","tier":2,"uncertain":false,"topics":["BIG後1000G／REG後800G／変更後600G","REG単発連続回数","1Gレンチャンスと66G引き戻し"],"units":["games","throughs"],"sources":[["必勝本","https://hisshobon.com/machineinfo/143129/"]]}
 ];
 const PUBLISHED_RULES=[];
 const KIND_LABELS={ceiling:"天井",zone:"ゾーン",through:"スルー",reset:"リセット",state:"状態・示唆",other:"その他"};
@@ -339,8 +343,8 @@ function showDetail(m){
   a.textContent="一般解析と実戦コメントの比較を見る";
   p.append(a);$("detail-checkpoints").after(p);
  }
- if(["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun"].includes(m.id)){
-  const conditionHint=m.id==="seiya"?"at_gap":m.id==="tokyoghoul"?"at_ceiling":"normal_ceiling";
+ if(["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun","sunbreak","monkey5","sencolle5","kanokari"].includes(m.id)){
+  const conditionHint=m.id==="seiya"?"at_gap":m.id==="tokyoghoul"||m.id==="sunbreak"?"at_ceiling":m.id==="sencolle5"?"normal_collection":m.id==="kanokari"?"bonus_after":"normal_ceiling";
   const strategy=document.createElement("p");strategy.id="strategy-shortcut";
   const a=document.createElement("a");
   a.href="./strategy-cards.html#machine="+m.id+"&condition="+conditionHint;
