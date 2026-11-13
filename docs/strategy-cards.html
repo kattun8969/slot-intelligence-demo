@@ -18,7 +18,7 @@ a{color:#155d95}a:focus-visible,button:focus-visible,select:focus-visible,input:
 summary{cursor:pointer;padding:5px 0}.row-state{font-size:13px;font-weight:650;margin:8px 0}.row-state.warn{color:#815a21}.row-state.no{color:#9b3e3e}.row-state.yes{color:#195d50}
 footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 </style></head><body>
-<header><div><small style="color:#d7e6f4">試用版 v1.0 ・ 2026年11月13日時点の掲載例</small>
+<header><div><small style="color:#d7e6f4">試用版 v1.1 ・ 2026年11月13日時点の掲載例</small>
 <h1>狙い目を出典別に比較</h1><p>交換率・状態・カウンター起点による違いを確認してから現地判断へ</p></div></header>
 <main>
 <section class="card">
@@ -36,8 +36,8 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 <div><label for="basis-check">表示数値の起点は出典と一致する？</label><select id="basis-check"><option value="unknown">未確認</option><option value="yes">一致すると自分で確認</option><option value="no">一致しない</option></select></div>
 <div><label for="state-check">現在の台の状態・リセット条件は一致する？</label><select id="state-check"><option value="unknown">未確認</option><option value="yes">一致すると自分で確認</option><option value="no">一致しない</option></select></div>
 <div><label for="stop-check">出典に書かれたやめどきを確認した？</label><select id="stop-check"><option value="unknown">未確認</option><option value="yes">確認した</option><option value="no">確認できていない</option></select></div>
-<div><label for="through-count">スルー回数（任意・不明なら空欄）</label><input id="through-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：5"></div>
-<div><label for="cycle-count">現在の周期数（任意・不明なら空欄）</label><input id="cycle-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：2"></div>
+<div id="through-group"><label for="through-count">スルー回数（任意・不明なら空欄）</label><input id="through-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：5"></div>
+<div id="cycle-group"><label for="cycle-count">現在の周期数（任意・不明なら空欄）</label><input id="cycle-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：2"></div>
 </div>
 <p class="muted">出典ごとに必要な追加条件が異なる場合は、下の掲載例カードに追加確認欄を表示します。スルー回数・周期数は入力しただけで判定に使わず、該当条件を出典で照合してください。</p>
 </details>
@@ -54,7 +54,7 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 <ul id="checks"></ul>
 <div class="actions"><a id="machine-page" class="btn" href="./opportunities.html#list">機種の詳細・期待値記録へ</a>
 <a id="x-page" class="btn secondary" href="./x-live.html">Xで最新の反例を探す</a></div>
-<p class="muted">この画面に載っている目安は現時点で調査した3機種のみ。ほかの機種は、検証できる出典を増やしてから追加します。</p>
+<p class="muted">この画面に載っている目安は現時点で調査した6機種のみ。ほかの機種は、検証できる出典を増やしてから追加します。</p>
 </section>
 </main>
 <footer>掲載数値の正確性・適用条件・実際の収支を保証するものではありません。入力情報は外部送信されず、期待値記録にも自動入力しません。リンク先の記述・更新日は後から変わることがあります。</footer>
@@ -63,7 +63,10 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 const MACHINES=[
  ["seiya","聖闘士星矢 黄金十二宮"],
  ["ggo","ガンゲイル・オンライン"],
- ["kabaneri","カバネリ 海門決戦"]
+ ["kabaneri","カバネリ 海門決戦"],
+ ["tokyoghoul","東京喰種"],
+ ["otome5","戦国乙女5"],
+ ["monhun","モンスターハンターライズ（2024年版・初代）"]
 ];
 const CONDITIONS={
  seiya:[
@@ -82,7 +85,10 @@ const CONDITIONS={
   ["normal_ceiling","通常時・ST後のG数天井"],
   ["shortened_ceiling","短縮天井・リセット等"],
   ["cycle","周期ゾーン"]
- ]
+ ],
+ tokyoghoul:[["at_ceiling","AT間ゲーム数天井"],["cz_ceiling","CZ間液晶ゲーム数天井"],["reset_cz","変更後のCZ短縮天井"]],
+ otome5:[["normal_ceiling","通常時のAT間G数天井"],["reset_ceiling","設定変更後の短縮天井"],["cycle","周期天井・周期示唆"]],
+ monhun:[["normal_ceiling","初代ライズ：通常時G数天井"],["reset_ceiling","初代ライズ：設定変更後AT間"],["quest_through","初代ライズ：クエストスルー天井"]]
 };
 const CHECKS={
  seiya:[
@@ -102,6 +108,24 @@ const CHECKS={
  "通常・リセット・ST駆け抜け・上位ST後の違いを確認",
  "狙い始めの基準はサイトごとに時給・目標期待値が異なる",
  "やめどきと示唆を確認。周期を無視してG数だけで判断しない"
+ ],
+ tokyoghoul:[
+ "AT間の実G（メニュー）とCZ間の液晶G（スイカ加算など）を別カウンターとして確認",
+ "通常CZ間600G+αと変更後200G+αの違い。変更根拠を確認",
+ "AT終了後の引き戻しとCZ終了カードの示唆も確認",
+ "出典によってAT間510／550／650G、CZ間300／360Gなど目安が異なる"
+ ],
+ otome5:[
+ "通常は999G・最大6周期、変更後は650G・最大4周期。別条件として確認",
+ "周期表示とG数カウンターの起点を分けて確認",
+ "AT後の1周期目・終了示唆・やめどきを確認",
+ "出典ごとの360G・550Gなどの目安を同じ正解として統合しない"
+ ],
+ monhun:[
+ "対象は2024年11月導入の初代ライズ。2026年のサンブレイクとは別機種",
+ "G数999G+α、AT間クエスト6スルー後の7回目を別カウンターで確認",
+ "設定変更後もゲーム数天井の短縮なし。変更優遇の根拠を確認",
+ "AT終了後の1G目・天国示唆・やめどきを確認"
  ]
 };
 // Every threshold below is a published author's illustrative starting line,
@@ -121,7 +145,19 @@ const EXAMPLES=[
  {id:"kabaneri-normal-slobase",machine:"kabaneri",condition:"normal_ceiling",source:"スロベース",url:"https://slobase.jp/machines/kabaneri-unato",asof:"2026-11-09",thresholds:{equal:570},basis:"通常ST連後のST間G数",goal:"同サイトの立ち回り狙い目例",warning:"570Gの根拠・目標は道具箱と異なる。単純平均しない"},
  {id:"kabaneri-reset-toolbox",machine:"kabaneri",condition:"shortened_ceiling",source:"スロッターの道具箱",url:"https://slot-toolbox.com/kabaneri-unato-tenjo/",asof:"2026-10-12",thresholds:{equal:0,medals:0,cash:30},basis:"短縮天井状態のST間G数",goal:"時給1000円以上を目指す掲載例",warning:"設定変更・ST駆け抜け・上位ST後など短縮状態である根拠が必要"},
  {id:"kabaneri-reset-slobase",machine:"kabaneri",condition:"shortened_ceiling",source:"スロベース",url:"https://slobase.jp/machines/kabaneri-unato",asof:"2026-11-09",thresholds:{equal:60},basis:"リセット確認後のST間G数",goal:"リセット時の立ち回り目安",warning:"ST駆け抜け後は90G、上位ST後は80Gとして別の開始目安が掲載"},
- {id:"kabaneri-cycle-slobase",machine:"kabaneri",condition:"cycle",source:"スロベース",url:"https://slobase.jp/articles/kabaneri-unato-reset",asof:"2026-11-09",thresholds:{equal:130},basis:"1周期目手前の表示G数",goal:"周期到達前のゾーン例",warning:"130Gは1周期目の例。2周期手前270Gは別の条件で、どちらも現在周期確認が必要"}
+ {id:"kabaneri-cycle-slobase",machine:"kabaneri",condition:"cycle",source:"スロベース",url:"https://slobase.jp/articles/kabaneri-unato-reset",asof:"2026-11-09",thresholds:{equal:130},basis:"1周期目手前の表示G数",goal:"周期到達前のゾーン例",warning:"130Gは1周期目の例。2周期手前270Gは別の条件で、どちらも現在周期確認が必要"},
+ {"id":"tokyo-at-toolbox","machine":"tokyoghoul","condition":"at_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/tokyo-ghoul-tenjo/","asof":"2026-10-12","thresholds":{"equal":510},"basis":"AT間実G・メニュー","goal":"天井狙いの掲載例","warning":"CZ間液晶Gと混同しない。CZ間とAT間の履歴は別"},
+ {"id":"tokyo-at-nana","machine":"tokyoghoul","condition":"at_ceiling","source":"なな徹","url":"https://nana-press.com/kaiseki/machine/889/27251/","asof":"2026-11-09","thresholds":{"equal":550},"basis":"AT間実G・メニュー","goal":"AT間天井狙いの掲載例","warning":"5.6枚交換700Gも掲載されるが持ち玉／現金条件を断定できないためここでは省略"},
+ {"id":"tokyo-at-slobase","machine":"tokyoghoul","condition":"at_ceiling","source":"スロベース","url":"https://slobase.jp/machines/tokyo-ghoul","asof":"2026-11-10","thresholds":{"equal":650},"basis":"AT間実G","goal":"サイト掲載の天井狙い目","warning":"別サイト550Gと基準が異なる。目標期待値・やめどき同一とみなさない"},
+ {"id":"tokyo-cz-nana","machine":"tokyoghoul","condition":"cz_ceiling","source":"なな徹","url":"https://nana-press.com/kaiseki/machine/889/27251/","asof":"2026-11-09","thresholds":{"equal":300},"basis":"CZ間液晶G","goal":"CZ天井狙いの掲載例","warning":"液晶Gはスイカ加算などあり得る。AT間実Gと混同しない"},
+ {"id":"tokyo-cz-slobase","machine":"tokyoghoul","condition":"cz_ceiling","source":"スロベース","url":"https://slobase.jp/machines/tokyo-ghoul","asof":"2026-11-10","thresholds":{"equal":360},"basis":"CZ間液晶G","goal":"サイト掲載のCZ間狙い目","warning":"CZ間とAT間の別カウンターを同一視しない"},
+ {"id":"tokyo-reset-nana","machine":"tokyoghoul","condition":"reset_cz","source":"なな徹","url":"https://nana-press.com/kaiseki/machine/889/27251/","asof":"2026-11-09","thresholds":{"equal":60},"basis":"変更後CZ間液晶G","goal":"リセット狙いの掲載例","warning":"朝一0Gだけでは設定変更を断定できない"},
+ {"id":"otome-normal-toolbox","machine":"otome5","condition":"normal_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/sengoku-otome5-tenjo/","asof":"2026-10-12","thresholds":{"equal":360,"medals":370,"cash":510},"basis":"AT間実G","goal":"通常天井の掲載例","warning":"G数999+αと6周期は別。リセット後は別の値"},
+ {"id":"otome-normal-nana","machine":"otome5","condition":"normal_ceiling","source":"なな徹","url":"https://nana-press.com/kaiseki/machine/1160/37315/","asof":"2026-11-11","thresholds":{"equal":550},"basis":"AT間実G","goal":"通常天井の掲載例","warning":"360Gという別媒体の目安と目標条件が異なり得る"},
+ {"id":"otome-reset-toolbox","machine":"otome5","condition":"reset_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/sengoku-otome5-tenjo/","asof":"2026-10-12","thresholds":{"equal":10,"medals":20,"cash":160},"basis":"変更後AT間実G","goal":"設定変更後の狙い目掲載例","warning":"変更後650G+α・最大4周期が適用される根拠を確認"},
+ {"id":"monhun-normal-nana","machine":"monhun","condition":"normal_ceiling","source":"なな徹","url":"https://nana-press.com/kaiseki/machine/837/25431/","asof":"2026-03-25","thresholds":{"equal":550},"basis":"初代ライズ通常AT間G","goal":"999G天井狙いの掲載例","warning":"5.6枚650Gは持ち玉か現金か判別困難なため省略。クエスト回数も別途確認"},
+ {"id":"monhun-normal-diary","machine":"monhun","condition":"normal_ceiling","source":"スロ手帳","url":"https://slot-diary.com/l-mh-rise-tenjo/","asof":"2026-11-13","thresholds":{"equal":550},"basis":"初代ライズAT間G","goal":"実戦データベース等価105%ラインの掲載例","warning":"朝一など除外条件のある計算値。別の解析サイトとデータの独立性は未確認"},
+ {"id":"monhun-reset-diary","machine":"monhun","condition":"reset_ceiling","source":"スロ手帳","url":"https://slot-diary.com/l-mh-rise-tenjo/","asof":"2026-11-13","thresholds":{"equal":300},"basis":"初代ライズ変更後AT間G","goal":"変更後・等価105%ラインの掲載例","warning":"変更後も天井G数短縮なし。状態優遇・クエスト履歴が前提"}
 ];
 // Scenario-specific requirements are prompts for human source checking,
 // never a claim that the particular machine satisfies that requirement.
@@ -137,11 +173,44 @@ const SOURCE_REQUIREMENTS={
  "kabaneri-normal-slobase":"通常ST連後という条件である",
  "kabaneri-reset-toolbox":"天井短縮の根拠がある",
  "kabaneri-reset-slobase":"リセット後という条件である",
- "kabaneri-cycle-slobase":"1周期目手前という条件である"
+ "kabaneri-cycle-slobase":"1周期目手前という条件である",
+ "tokyo-at-toolbox":"AT間実ゲーム数でありCZ間液晶ゲーム数ではない",
+ "tokyo-at-nana":"AT間実ゲーム数でありCZ間液晶ゲーム数ではない",
+ "tokyo-at-slobase":"AT間実ゲーム数でありCZ間液晶ゲーム数ではない",
+ "tokyo-cz-nana":"液晶CZ間ゲーム数でありAT間実Gではない",
+ "tokyo-cz-slobase":"液晶CZ間ゲーム数でありAT間実Gではない",
+ "tokyo-reset-nana":"設定変更後のCZ間200G短縮を確認できる",
+ "otome-normal-toolbox":"通常状態であり変更後650G/4周期短縮ではない",
+ "otome-normal-nana":"通常状態であり変更後650G/4周期短縮ではない",
+ "otome-reset-toolbox":"変更後650G・4周期短縮が適用される",
+ "monhun-normal-nana":"2024年初代ライズでありサンブレイクではない",
+ "monhun-normal-diary":"2024年初代ライズでありサンブレイクではない",
+ "monhun-reset-diary":"2024年初代ライズの設定変更後と確認できる"
 };
 const SUPPORTED_CHECKS=["unknown","yes","no"];
 const SOURCE_CHECKS=new Map();
+const INFO_CONDITIONS={
+ "monhun:quest_through":{
+  title:"初代ライズのクエストスルー天井",
+  detail:"AT間でクエスト6回スルー後、7回目のクエストで赤7以上のボーナス（AT）とする解析掲載例。G数天井とは別。クエスト履歴の起点を確認してください。",
+  url:"https://nana-press.com/kaiseki/machine/837/25431/"
+ },
+ "otome5:cycle":{
+  title:"戦国乙女5の周期天井",
+  detail:"通常時最大6周期、設定変更後最大4周期という解析掲載例。周期の進行、G数、状態を合わせて確認。G数に換算した開始目安はこの資料では未採用です。",
+  url:"https://nana-press.com/kaiseki/machine/1160/37315/"
+ }
+};
 const $=id=>document.getElementById(id);
+function showRelevantFields(){
+ const machine=$("machine").value,condition=$("condition").value;
+ $("through-group").hidden=!(condition==="sj_through"||
+   (machine==="monhun"&&["quest_through","normal_ceiling","reset_ceiling"].includes(condition)));
+ $("cycle-group").hidden=!(condition==="cycle"||
+   machine==="otome5"||machine==="kabaneri"||
+   (machine==="seiya"&&condition==="fire_clock"));
+}
+
 function statusFor(row,flags,extra){
  const flagsToCheck=[flags.basis,flags.state,flags.stop];
  if(Object.hasOwn(SOURCE_REQUIREMENTS,row.id))flagsToCheck.push(extra);
@@ -182,7 +251,10 @@ function refreshLinks(){
  const mid=$("machine").value,condition=$("condition").value;
  const map={seiya:{at_gap:"at_gap",cz_gap:"cz_gap",cz_after_fail:"cz_gap",reset_cz:"cz_gap",fire_clock:"fire_clock"},
  ggo:{normal_ceiling:"normal_ceiling",reset_ceiling:"reset_ceiling",sj_through:"sj_through"},
- kabaneri:{normal_ceiling:"normal_ceiling",shortened_ceiling:"shortened_ceiling",cycle:"cycle"}};
+ kabaneri:{normal_ceiling:"normal_ceiling",shortened_ceiling:"shortened_ceiling",cycle:"cycle"},
+ tokyoghoul:{at_ceiling:"general",cz_ceiling:"general",reset_cz:"general"},
+ otome5:{normal_ceiling:"general",reset_ceiling:"general",cycle:"general"},
+ monhun:{normal_ceiling:"general",reset_ceiling:"general",quest_through:"general"}};
  const noteCondition=map[mid]?.[condition]||"general";
  $("notes-link").href="./community-notes.html#machine="+mid+"&condition="+noteCondition;
  $("machine-page").href="./opportunities.html#machine="+mid;
@@ -192,12 +264,22 @@ function render(){
  const mid=$("machine").value,condition=$("condition").value,exchange=$("exchange").value;
  refreshLinks();
  const rows=matches(mid,condition,exchange);
+ showRelevantFields();
  const out=$("published-examples");out.replaceChildren();
  $("result-count").textContent=rows.length+"件の掲載例を表示。交換条件に対応する出典のみ掲載しています。";
  if(!rows.length){
   const p=document.createElement("p");p.className="muted";
   p.textContent="この条件・交換率に対応する掲載例はまだ記録されていません。別の交換条件の数値を流用しません。";
   out.append(p);
+ }
+ const info=INFO_CONDITIONS[mid+":"+condition];
+ if(info){
+  const article=document.createElement("article");article.className="row";
+  const h=document.createElement("h3");h.textContent=info.title+"（数値換算なし）";
+  const p=document.createElement("p");p.textContent=info.detail;
+  const link=document.createElement("a");link.href=info.url;link.target="_blank";
+  link.rel="noopener noreferrer";link.textContent="掲載元の条件を確認";
+  article.append(h,p,link);out.append(article);
  }
  for(const row of rows){
   const item=document.createElement("article");item.className="row";
