@@ -32,29 +32,29 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v1.2 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
-<p>候補一覧 → 機種ごとの確認 → 実戦した期待値を記録</p>
+<header><div><small>試用版 v1.2 · オフライン動作 · スマホ対応</small><h1>次に狙う台を探そう</h1>
+<p>気になる台を選ぶ → 条件を確認 → 打ったら期待値をメモ</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
-<section class="card"><h2>使い方</h2>
+<section class="card"><h2>まずはこの3ステップ</h2>
 <div class="group">
-<div><strong>① 一覧から探す</strong><p class="help">今いる機種が狙えない場合、別の機種を一覧で探します。</p></div>
-<div><strong>② 台の情報と照合</strong><p class="help">機種別ページに移り、G数・履歴・条件と出典を確認します。</p></div>
-<div><strong>③ 打った台を記録</strong><p class="help">自分で確認・算出した期待値を保存し、累計を確認します。</p></div>
+<div><strong>① 一覧から探す</strong><p class="help">狙えそうな機種を一覧から選ぼう。</p></div>
+<div><strong>② 台の情報と照合</strong><p class="help">今のG数や履歴が合っているかチェック。</p></div>
+<div><strong>③ 打った台を記録</strong><p class="help">打った台と自分の見積もり期待値を残せます。</p></div>
 </div>
-<p class="notice"><strong>重要：</strong>現在の一覧は「狙い目の調査候補」です。実際の推奨条件や期待値を確定した一覧ではありません。正式な条件・数値が確認できるまで、自動計算や「打てる」の判定は行いません。期待値合計は自分で入力した見積額の合計であり、実収支や保証される利益ではありません。</p></section>
-<section class="card"><h2>一般解析と最新のX投稿を確認する</h2>
-<p>6機種の出典別狙い目比較と、重点3機種の詳しい解析・実戦報告を確認できます。SNSの体感を期待値へ自動換算しません。</p>
+<p class="notice"><strong>注意：</strong>ここにあるのは狙い目の候補です。G数やリセット条件は自分で確認してください。期待値の合計は入力した金額で、実際の収支とは別です。</p></section>
+<section class="card"><h2>解析とXをチェック</h2>
+<p>6機種の狙い目G数をサイト別に比較。Xの実戦報告もチェックできます。</p>
 <a class="btn" href="./alternatives.html">他の狙い目候補を探す</a>
-<a class="btn" href="./strategy-cards.html">出典別の狙い目G数・交換率を比較する</a>
+<a class="btn" href="./strategy-cards.html">何Gから？ 解析サイトを比べる</a>
 <a class="btn" href="./research.html">星矢・ガンゲイル・カバネリの解析比較を見る</a>
 <a class="btn secondary" href="./x-live.html">Xの最新投稿・リストを開く</a>
 <a class="btn secondary" href="./community-notes.html">実戦報告・反論を整理する</a>
 </section>
-<section class="card" id="list-panel"><h2>狙い目候補一覧</h2>
+<section class="card" id="list-panel"><h2>機種から探す</h2>
 <div class="group">
 <div><label for="search">機種を検索</label><input id="search" type="search" placeholder="機種名から探す"></div>
-<div><label for="tier-filter">優先順位</label><select id="tier-filter"><option value="all">すべて</option><option value="1">新台</option><option value="2">稼働重点</option><option value="3">その他重点</option></select></div><div><label for="kind-filter">調べたい狙い目の種類</label><select id="kind-filter"><option value="all">すべて</option><option value="ceiling">天井</option><option value="zone">ゾーン</option><option value="through">スルー</option><option value="reset">リセット</option><option value="state">状態・示唆</option><option value="other">その他</option></select></div>
+<div><label for="tier-filter">機種のグループ</label><select id="tier-filter"><option value="all">すべて</option><option value="1">新台</option><option value="2">稼働重点</option><option value="3">その他重点</option></select></div><div><label for="kind-filter">どんな狙い方？</label><select id="kind-filter"><option value="all">すべて</option><option value="ceiling">天井</option><option value="zone">ゾーン</option><option value="through">スルー</option><option value="reset">リセット</option><option value="state">状態・示唆</option><option value="other">その他</option></select></div>
 </div>
 <p class="help" id="list-summary" role="status"></p><div id="target-list" class="group"></div>
 </section>
@@ -62,41 +62,41 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <div class="actions"><a class="btn secondary" href="#list">← 狙い目一覧へ戻る</a><a id="detail-alternative-link" class="btn" href="./alternatives.html">この台を見送り、別の候補を探す</a><a class="btn secondary" href="./index.html">現地メモへ</a></div>
 <h2 id="detail-name"></h2><p id="detail-description"></p>
 <div id="detail-status" class="notice"></div>
-<h3>まず調べる条件</h3><ul id="detail-checkpoints"></ul>
-<p class="help">以下は確認する項目の説明であり、この状態なら必ず有利という意味ではありません。機種名が未確定なら別機種の解析値を流用しないでください。</p>
+<h3>まずチェックすること</h3><ul id="detail-checkpoints"></ul>
+<p class="help">G数や前回の当たり方をチェック。別バージョンの機種の解析を流用しないでください。</p>
 <div class="card" id="condition-community">
-<h3>条件別：解析と現場の報告を照合</h3>
-<p class="help">条件を指定して保存した報告だけを照合します。旧メモ・未分類の記録を自動で当てはめません。</p>
-<label for="condition-check">確認する条件</label><select id="condition-check"></select>
+<h3>この狙い方の実戦報告</h3>
+<p class="help">保存したX・実戦メモのうち、選んだ狙い方に合うものだけ表示します。</p>
+<label for="condition-check">気になる狙い方</label><select id="condition-check"></select>
 <p id="condition-evidence-summary" class="help" role="status"></p>
 <div id="condition-evidence"></div>
-<div class="actions"><a id="condition-evidence-add" class="btn secondary" href="./community-notes.html">この条件に報告を追加</a></div></div>
-<div class="card" id="community-snapshot"><h3>この機種の現場メモ（自分の保存分）</h3>
-<p class="help">Xや解析サイトを自分で読んで保存した報告です。SNS全体の評価ではありません。反例・矛盾を先に表示し、期待値には加算しません。</p>
+<div class="actions"><a id="condition-evidence-add" class="btn secondary" href="./community-notes.html">この狙い方のメモを追加</a></div></div>
+<div class="card" id="community-snapshot"><h3>X・実戦メモ（自分の保存分）</h3>
+<p class="help">自分が保存したXや実戦の声を表示。注意したい報告を先に出します。SNS全体の集計ではありません。</p>
 <p id="community-summary" class="help" role="status"></p>
 <div id="community-records"></div>
 <div class="actions">
 <a id="community-add-link" class="btn secondary" href="./community-notes.html">この機種の報告を追加・確認</a>
 <a id="community-x-link" class="btn secondary" href="./x-live.html">Xで最新の投稿を見る</a>
 </div></div>
-<div id="detail-sources"></div><div class="card" id="reviewed-rules-box"><h3>出典を確認した参考条件</h3><p class="help">ここは人が掲載元・適用条件・更新日を照合した参考条件のみを表示します。「狙える」という判定や期待値の自動算出ではありません。</p><div id="reviewed-rules"></div></div>
+<div id="detail-sources"></div><div class="card" id="reviewed-rules-box"><h3>確認できた参考条件</h3><p class="help">ここは人が掲載元・適用条件・更新日を照合した参考条件のみを表示します。「狙える」という判定や期待値の自動算出ではありません。</p><div id="reviewed-rules"></div></div>
 <hr>
-<h3>台の状況を記録する</h3>
+<h3>今の台をメモ</h3>
 <div class="group">
-<div><label for="detail-counter-type">見た数値の種類</label><select id="detail-counter-type"></select></div>
-<div><label for="detail-counter-value">表示数値（任意）</label><input id="detail-counter-value" type="text" inputmode="decimal" maxlength="32" placeholder="例：580"></div>
+<div><label for="detail-counter-type">何の数字？</label><select id="detail-counter-type"></select></div>
+<div><label for="detail-counter-value">今の数値（任意）</label><input id="detail-counter-value" type="text" inputmode="decimal" maxlength="32" placeholder="例：580"></div>
 </div>
-<label for="detail-conditions">現在の台の状況・根拠（任意）</label>
+<label for="detail-conditions">気になる履歴や状態（任意）</label>
 <textarea id="detail-conditions" placeholder="例：通常時、ST後、スルー回数、前任者の履歴、前兆など。未確認事項は未確認と記録"></textarea>
-<div class="actions"><button type="button" class="secondary" id="load-hall-note">現地メモから台情報を取り込む</button></div>
+<div class="actions"><button type="button" class="secondary" id="load-hall-note">保存した台メモを使う</button></div>
 <p class="help" id="hall-import-status" role="status"></p>
-<p class="help">数値を入力しても機械的に期待値へ換算しません。出典に記されたカウンターの起点・設定変更条件と照らし合わせてください。</p>
+<p class="help">G数を入れただけでは期待値は出ません。AT間かCZ間か、リセット後かも確認してください。</p>
 <hr>
-<h3>実戦と期待値を保存</h3>
+<h3>打ったら期待値を記録</h3>
 <div class="group">
-<div><label for="played-status">実際に打った？</label><select id="played-status"><option value="played">打った</option><option value="not_played">候補として検討のみ</option></select></div>
+<div><label for="played-status">この台、打った？</label><select id="played-status"><option value="played">打った</option><option value="not_played">見ただけ・打ってない</option></select></div>
 <div><label for="opportunity-kind">狙い目の種類（メモ分類）</label><select id="opportunity-kind"><option value="ceiling">天井</option><option value="zone">ゾーン</option><option value="through">スルー</option><option value="reset">リセット</option><option value="hint">示唆・状態</option><option value="other">その他・不明</option></select></div>
-<div><label for="manual-ev">自分で見積もった期待値（円・任意）</label><input id="manual-ev" type="text" inputmode="decimal" placeholder="例：1500 ／ -500"></div>
+<div><label for="manual-ev">見積もり期待値（円・任意）</label><input id="manual-ev" type="text" inputmode="decimal" placeholder="例：1500 ／ -500"></div>
 <div><label for="actual-result">実際の収支（円・任意）</label><input id="actual-result" type="text" inputmode="decimal" placeholder="例：-3000 ／ 7000"></div>
 </div>
 <input type="hidden" id="linked-rule" value="">
@@ -107,18 +107,18 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <div class="actions"><button id="save-play" type="button">記録を保存する</button><a href="#ledger" class="btn secondary">期待値の累計を見る</a></div>
 <p class="help" id="save-feedback" role="status"></p>
 </section>
-<section id="ledger-panel" class="card"><h2>期待値の積み上げ記録</h2>
-<p class="help">この端末で「打った」として登録した記録のみ集計します。期待値が未入力の記録は件数には含みますが合計額には入りません。数値はすべて自己申告で、解析上の確認済み期待値ではありません。</p>
+<section id="ledger-panel" class="card"><h2>期待値をどれだけ積めた？</h2>
+<p class="help">打った台だけを集計します。期待値が空欄なら合計に含めません。入力した見積もりと実収支は別々に確認できます。</p>
 <div class="group">
-<div class="stat"><small>記録した実戦</small><div class="amount" id="played-count">0件</div></div>
-<div class="stat"><small>入力済み期待値の合計</small><div class="amount num" id="ev-total">0円</div><small id="ev-known">0件の入力値を合算</small></div>
-<div class="stat"><small>入力済み実収支の合計</small><div class="amount num" id="result-total">0円</div><small id="result-known">0件の入力値を合算</small></div>
+<div class="stat"><small>打った台の数</small><div class="amount" id="played-count">0件</div></div>
+<div class="stat"><small>見積もり期待値の合計</small><div class="amount num" id="ev-total">0円</div><small id="ev-known">0件の入力値を合算</small></div>
+<div class="stat"><small>実際の収支</small><div class="amount num" id="result-total">0円</div><small id="result-known">0件の入力値を合算</small></div>
 </div>
-<div class="group"><div><label for="ledger-machine">記録を絞り込む</label><select id="ledger-machine"><option value="all">すべての機種</option></select></div></div>
+<div class="group"><div><label for="ledger-machine">機種で絞る</label><select id="ledger-machine"><option value="all">すべての機種</option></select></div></div>
 <div id="ledger-rows"></div>
 <div class="actions"><button type="button" class="secondary" id="export-ledger">記録をJSONでバックアップ</button><button type="button" class="secondary" id="export-ledger-csv">Excel用CSVを書き出す</button><label class="btn secondary" for="import-ledger-file">バックアップを読み込む</label><input type="file" id="import-ledger-file" accept=".json,application/json" class="hidden"><button type="button" class="danger" id="clear-ledger">記録をすべて削除</button></div>
 <p class="help" id="ledger-status" role="status"></p>
-<p class="notice">端末内のブラウザ保存のみです。iPhoneのSafariでサイトデータを消すと失われる場合があります。別の端末とは自動同期されません。バックアップをおすすめします。</p>
+<p class="notice">記録はこの端末だけに保存。スマホのデータを消すと戻らないことがあるので、バックアップがおすすめです。</p>
 </section>
 </main>
 <footer>Slot Intelligence 試用版 v1.2。掲載例は出典別比較で提供し、未確認の機種は調査中として表示。期待値は利用者の見積もりであり、投資・収益・遊技結果を保証するものではありません。</footer>
@@ -316,7 +316,7 @@ function showList(){
   ref.textContent=verified.length?"出典確認済み参考条件 "+verified.length+"件":"参考条件の公開待ち";
   const p=document.createElement("p");p.textContent="調査項目："+m.topics.join("／");
   const a=document.createElement("a");a.href="#machine="+m.id;a.className="btn";
-  a.textContent="機種の確認ページへ";
+  a.textContent="この台をチェック";
   card.append(h,flag,status,ref,p,a);list.append(card);
  }
 }
@@ -344,7 +344,7 @@ function showDetail(m){
   const strategy=document.createElement("p");strategy.id="strategy-shortcut";
   const a=document.createElement("a");
   a.href="./strategy-cards.html#machine="+m.id+"&condition="+conditionHint;
-  a.textContent="出典別の狙い目G数・交換率を比較する";
+  a.textContent="何Gから？ 解析サイトを比べる";
   strategy.append(a);$("detail-checkpoints").after(strategy);
  }
  const xsearch=document.createElement("p");xsearch.id="x-search-shortcut";
