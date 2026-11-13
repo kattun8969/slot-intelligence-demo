@@ -32,7 +32,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><div><small>試用版 v0.6 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
+<header><div><small>試用版 v0.7 · オフライン動作 · スマホ対応</small><h1>狙い目を探す</h1>
 <p>候補一覧 → 機種ごとの確認 → 実戦した期待値を記録</p>
 <a href="./index.html">現地メモ画面に戻る</a></div></header>
 <main>
@@ -62,6 +62,14 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <div id="detail-status" class="notice"></div>
 <h3>まず調べる条件</h3><ul id="detail-checkpoints"></ul>
 <p class="help">以下は確認する項目の説明であり、この状態なら必ず有利という意味ではありません。機種名が未確定なら別機種の解析値を流用しないでください。</p>
+<div class="card" id="community-snapshot"><h3>この機種の現場メモ（自分の保存分）</h3>
+<p class="help">Xや解析サイトを自分で読んで保存した報告です。SNS全体の評価ではありません。反例・矛盾を先に表示し、期待値には加算しません。</p>
+<p id="community-summary" class="help" role="status"></p>
+<div id="community-records"></div>
+<div class="actions">
+<a id="community-add-link" class="btn secondary" href="./community-notes.html">この機種の報告を追加・確認</a>
+<a id="community-x-link" class="btn secondary" href="./x-live.html">Xで最新の投稿を見る</a>
+</div></div>
 <div id="detail-sources"></div><div class="card" id="reviewed-rules-box"><h3>出典を確認した参考条件</h3><p class="help">ここは人が掲載元・適用条件・更新日を照合した参考条件のみを表示します。「狙える」という判定や期待値の自動算出ではありません。</p><div id="reviewed-rules"></div></div>
 <hr>
 <h3>台の状況を記録する</h3>
@@ -127,6 +135,77 @@ const PUBLISHED_RULES=[];
 const KIND_LABELS={ceiling:"天井",zone:"ゾーン",through:"スルー",reset:"リセット",state:"状態・示唆",other:"その他"};
 const UNIT_LABELS={games:"表示G数",cycles:"周期数",points:"ポイント数",throughs:"スルー回数",abeshi:"あべし",count:"回数"};
 const LEDGER_KEY="slotintel-play-ev-ledger-v1";
+const COMMUNITY_KEY="slotintel-community-observations-v1";
+const COMMUNITY_LABELS={support:"整合する報告",caution:"反例・慎重意見",conflict:"解析との食い違い",neutral:"判断保留"};
+const COMMUNITY_KINDS={x_post:"X実戦投稿",community:"SNS・コメント",analysis:"解析記事",field:"自分の実戦"};
+function readCommunityNotes(){
+ try{
+  const data=JSON.parse(localStorage.getItem(COMMUNITY_KEY)||"[]");
+  return Array.isArray(data)?data.slice(0,200).filter(x=>x&&typeof x==="object"&&
+    typeof x.machine_id==="string"&&typeof x.summary==="string"&&
+    x.status==="user_observation_not_verified"):[];
+ }catch(_){return []}
+}
+function communitySourceUrl(raw){
+ if(typeof raw!=="string"||!raw||raw.length>1500)return null;
+ try{
+  const url=new URL(raw);
+  if(url.protocol!=="https:"||url.username||url.password||url.hostname==="localhost"||
+    /^127\.|^10\.|^192\.168\./.test(url.hostname))return null;
+  if(url.hostname==="x.com"||url.hostname==="www.x.com"||
+      url.hostname==="twitter.com"||url.hostname==="www.twitter.com"){
+    if(!/^\/[A-Za-z0-9_]{1,15}\/status\/\d{10,25}\/?$/.test(url.pathname)||
+       url.search||url.hash)return null;
+  }
+  return url.href;
+ }catch(_){return null}
+}
+function communityRows(machineId,records){
+ const order={conflict:0,caution:1,support:2,neutral:3};
+ return records.filter(x=>x.machine_id===machineId).sort((a,b)=>{
+   const priority=(order[a.stance]??4)-(order[b.stance]??4);
+   if(priority)return priority;
+   return String(b.posted_date||b.captured_at||"").localeCompare(String(a.posted_date||a.captured_at||""));
+ });
+}
+function renderCommunity(m){
+ if(!m)return;
+ const records=communityRows(m.id,readCommunityNotes());
+ const types={support:0,caution:0,conflict:0,neutral:0};
+ for(const row of records)if(Object.hasOwn(types,row.stance))types[row.stance]++;
+ $("community-summary").textContent=records.length+"件の自分の記録 ／ "+
+   Object.keys(types).map(key=>COMMUNITY_LABELS[key]+" "+types[key]+"件").join("・")+
+   "（表示は要確認の反例・矛盾を優先）";
+ $("community-add-link").href="./community-notes.html#machine="+encodeURIComponent(m.id);
+ $("community-x-link").href="./x-live.html#machine="+encodeURIComponent(m.id);
+ const root=$("community-records");root.replaceChildren();
+ if(records.length===0){
+  const p=document.createElement("p");p.className="help";
+  p.textContent="保存した実戦報告はまだありません。Xの最新投稿を確認し、条件が分かるものから記録できます。";
+  root.append(p);return;
+ }
+ for(const row of records.slice(0,5)){
+  const card=document.createElement("article");card.className="mini-card";
+  const title=document.createElement("strong");
+  title.textContent=(COMMUNITY_LABELS[row.stance]||"判断保留")+" ／ "+
+    (COMMUNITY_KINDS[row.source_type]||"出典不明")+" ／ "+
+    (row.posted_date||"日付未確認");
+  const description=document.createElement("p");description.textContent=row.summary.slice(0,1000);
+  const conditions=document.createElement("p");conditions.className="help";
+  conditions.textContent="観測条件："+(row.conditions||"不明")+
+     " ／ 未確認事項："+(row.limits||"未記入");
+  card.append(title,description,conditions);
+  const url=communitySourceUrl(row.source_url);
+  if(url){const link=document.createElement("a");link.href=url;link.target="_blank";
+    link.rel="noopener noreferrer";link.textContent="元の出典を確認";card.append(link)}
+  root.append(card);
+ }
+ if(records.length>5){
+  const p=document.createElement("p");p.className="help";
+  p.textContent="残り"+(records.length-5)+"件は「この機種の報告を追加・確認」から確認できます。";
+  root.append(p);
+ }
+}
 const $=id=>document.getElementById(id);
 const formatter=new Intl.NumberFormat("ja-JP");
 function money(n){return (n>0?"+":"")+formatter.format(n)+"円"}
@@ -183,6 +262,7 @@ function showList(){
  }
 }
 function showDetail(m){
+ renderCommunity(m);
  $("detail-name").textContent=m.name;
  $("detail-description").textContent="調査優先度："+m.tier+" ／ 機種の状態を確認するためのページです。";
  $("detail-status").textContent=m.uncertain?
@@ -430,6 +510,12 @@ $("clear-ledger").addEventListener("click",()=>{
  if(persist([])){updateLedger();$("ledger-status").textContent="すべての記録を削除しました"}
 });
 showList();updateLedger();navigate();
+window.addEventListener("pageshow",()=>{
+ const m=selected();if(m)renderCommunity(m);
+});
+document.addEventListener("visibilitychange",()=>{
+ if(!document.hidden){const m=selected();if(m)renderCommunity(m)}
+});
 </script>
 </body>
 </html>
