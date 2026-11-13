@@ -18,11 +18,11 @@ a{color:#155d95}a:focus-visible,button:focus-visible,select:focus-visible,input:
 summary{cursor:pointer;padding:5px 0}.row-state{font-size:13px;font-weight:650;margin:8px 0}.row-state.warn{color:#815a21}.row-state.no{color:#9b3e3e}.row-state.yes{color:#195d50}
 footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 </style></head><body>
-<header><div><small style="color:#d7e6f4">試用版 v1.1 ・ 2026年11月13日時点の掲載例</small>
+<header><div><small style="color:#d7e6f4">試用版 v1.2 ・ 2026年11月13日時点の掲載例</small>
 <h1>狙い目を出典別に比較</h1><p>交換率・状態・カウンター起点による違いを確認してから現地判断へ</p></div></header>
 <main>
 <section class="card">
-<div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧へ</a><a class="btn secondary" href="./research.html">解析と現場の声</a></div>
+<div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧へ</a><a id="switch-alternatives" class="btn" href="./alternatives.html">この台を見送り、別の候補を探す</a><a class="btn secondary" href="./research.html">解析と現場の声</a></div>
 <p class="notice"><strong>注意：</strong>この画面は一般解析サイトに掲載されている開始目安の<strong>比較資料</strong>です。「この台を打つべき」という自動判定ではありません。数値は掲載元の独自条件・期待値の目標・交換率に依存します。現在の台にその条件が当てはまるかを先に確認してください。SNSの情報も独立した実測検証ではありません。</p>
 <div class="grid">
 <div><label for="machine">機種</label><select id="machine"></select></div>
@@ -259,6 +259,11 @@ function refreshLinks(){
  $("notes-link").href="./community-notes.html#machine="+mid+"&condition="+noteCondition;
  $("machine-page").href="./opportunities.html#machine="+mid;
  $("x-page").href="./x-live.html#machine="+mid;
+ const kind=condition==="sj_through"?"through":
+   ["reset_cz","reset_ceiling","shortened_ceiling"].includes(condition)?"reset":
+   ["cycle","fire_clock"].includes(condition)?"zone":"ceiling";
+ $("switch-alternatives").href="./alternatives.html#skip="+encodeURIComponent(mid)+
+   "&exchange="+encodeURIComponent($("exchange").value)+"&kind="+kind;
 }
 function render(){
  const mid=$("machine").value,condition=$("condition").value,exchange=$("exchange").value;
@@ -349,10 +354,15 @@ function compare(){
   mismatch.length+"件、残りは確認不足。数値比較・自己申告による照合であり、打つ判定・期待値の算出ではありません。";
 }
 for(const [id,label] of MACHINES)$("machine").add(new Option(label,id));
-const request=location.hash.match(/^#machine=([a-z0-9]+)(?:&condition=([a-z0-9_]+))?$/);
-if(request&&MACHINES.some(m=>m[0]===request[1]))$("machine").value=request[1];
+const requestParams=new URLSearchParams(location.hash.startsWith("#")?location.hash.slice(1):"");
+const requestedMachine=requestParams.get("machine");
+const requestedCondition=requestParams.get("condition");
+const requestedExchange=requestParams.get("exchange");
+if(MACHINES.some(m=>m[0]===requestedMachine))$("machine").value=requestedMachine;
 options();
-if(request?.[2]&&(CONDITIONS[$("machine").value]||[]).some(x=>x[0]===request[2]))$("condition").value=request[2];
+if(requestedCondition&&(CONDITIONS[$("machine").value]||[]).some(x=>x[0]===requestedCondition))
+ $("condition").value=requestedCondition;
+if(["equal","medals","cash"].includes(requestedExchange))$("exchange").value=requestedExchange;
 $("machine").addEventListener("change",()=>{options();resetChecks();render()});
 $("condition").addEventListener("change",()=>{resetChecks();render()});
 $("exchange").addEventListener("change",()=>{resetChecks();render()});
