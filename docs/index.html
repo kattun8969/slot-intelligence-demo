@@ -16,18 +16,18 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 </style>
 </head><body>
 <header><div><div class="pills"><span class="pill tier1">試用版 v0.2</span><span class="pill">スマホ対応</span><span class="pill">通信なし</span></div>
-<h1>Slot Intelligence</h1>
-<p>現地で見た情報を整理する、機種別の確認メモ</p></div></header>
+<h1>狙い目チェック</h1>
+<p>ホールで見つけた台のG数や履歴をメモ</p></div></header>
 <main>
-<section class="card"><h2>このデモでできること</h2>
-<div class="grid"><div><strong>1. 重点機種を選ぶ</strong><p class="meta">優先14機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 現地の事実を記録</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 確認漏れを見つける</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
-<p class="note"><strong>仮公開デモ：</strong>機種名と入力項目の操作を試すためのものです。天井・期待値・設定推測・「打てる／打てない」は未提供です。登録データが足りない機種について判断を作りません。メーカー・解析サイトの正式な確認を経た運用版とは異なります。</p>
+<section class="card"><h2>この画面でできること</h2>
+<div class="grid"><div><strong>1. 機種を選ぶ</strong><p class="meta">優先14機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 今の台をメモ</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 見落としをチェック</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
+<p class="note"><strong>この画面は台のメモ用です。</strong> 狙い目G数は一覧から確認できます。ここでは打てる・打てないを自動判定しません。</p>
 </section>
-<section class="card"><h2>狙い目を一覧から探す</h2>
-<p>現在の機種が候補に合わなかったら、別の機種を一覧から選び、確認すべき条件や出典を見比べられます。打った台の期待値の記録・累計もこちらから確認できます。</p>
+<section class="card"><h2>狙い目のある機種を探す</h2>
+<p>ほかの台を探すなら一覧へ。打った台の期待値も記録できます。</p>
 <div class="actions"><a href="./opportunities.html#list" class="btn" style="text-decoration:none;display:inline-block">狙い目候補一覧を見る</a><a href="./opportunities.html#ledger" class="btn secondary" style="text-decoration:none;display:inline-block">期待値の記録を見る</a></div>
-<p class="meta">試用版のため、実際の天井・ゾーンの具体的な狙い目や計算済み期待値は未掲載です。</p></section>
-<section class="card" id="entry"><h2>現地の入力</h2>
+<p class="meta">6機種の解析サイト別の狙い始めG数を比較できます。期待値の自動計算はまだありません。</p></section>
+<section class="card" id="entry"><h2>今の台をメモする</h2>
 <div class="grid">
 <div><label for="tier">表示する機種</label><select id="tier"><option value="all">重点14機種すべて</option><option value="1">新台（最優先）</option><option value="2">稼働機種</option><option value="3">その他重点</option></select></div>
 <div><label for="machine">機種を選択</label><select id="machine" required></select></div>
@@ -35,11 +35,11 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <div id="machine-description" class="note" aria-live="polite" style="margin-top:13px"></div>
 <p><a id="chosen-opportunities" href="./opportunities.html#list">選択中の機種の狙い目確認ページへ</a></p>
 <div class="grid-small">
-<div><label for="counter-kind">表示数値の種類</label><select id="counter-kind"><option value="games">表示G数</option></select><p class="meta" id="unit-note"></p></div>
+<div><label for="counter-kind">何の数値？</label><select id="counter-kind"><option value="games">表示G数</option></select><p class="meta" id="unit-note"></p></div>
 <div><label for="counter-value">表示数値（未入力でも保存できます）</label><input id="counter-value" inputmode="decimal" type="text" maxlength="30" placeholder="例：450"></div>
 <div><label for="unit-extra">その他の単位・補足（任意）</label><input id="unit-extra" type="text" maxlength="60" placeholder="例：液晶ポイント、差枚、スルーなど"></div>
 </div>
-<details style="margin-top:13px"><summary><strong>詳細な状態・履歴（任意）</strong></summary><p class="meta">分からない項目はそのままで大丈夫です。</p>
+<details style="margin-top:13px"><summary><strong>リセット・AT後などの詳しい情報（任意）</strong></summary><p class="meta">分からない項目はそのままで大丈夫です。</p>
 <div class="grid">
 <div id="basis-group"><label for="basis">カウンターの起点</label><select id="basis"><option value="">不明・未確認</option></select>
 <label class="check" id="basis-confirmed-group"><input type="checkbox" id="basis-confirmed">起点を確認済み</label></div>
