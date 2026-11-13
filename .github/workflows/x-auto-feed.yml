@@ -1,0 +1,51 @@
+name: Optional daily X post discovery
+on:
+  schedule:
+    - cron: '10 18 * * *' # 03:10 JST; runs only if explicitly enabled
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  collect:
+    if: vars.X_COLLECTION_ENABLED == 'true'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    env:
+      X_COLLECTION_ENABLED: ${{ vars.X_COLLECTION_ENABLED }}
+      X_API_BEARER_TOKEN: ${{ secrets.X_API_BEARER_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stop without contacting X if token missing
+        if: env.X_API_BEARER_TOKEN == ''
+        run: echo 'No X token. No API requests made.'
+      - name: Collect up to 3 machine queries (max 10 posts each)
+        if: env.X_API_BEARER_TOKEN != ''
+        run: python3 scripts/collect_x_feed.py --output docs/x-feed.json
+      - name: Commit IDs only
+        id: commit
+        if: env.X_API_BEARER_TOKEN != ''
+        run: |
+          git add docs/x-feed.json
+          if git diff --cached --quiet; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+          else
+            git -c user.name='slot-bot' -c user.email='slot-bot@users.noreply.github.com' commit -m 'Update X post IDs (no text)'
+            git push origin HEAD:main
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/configure-pages@v5
+        if: steps.commit.outputs.changed == 'true'
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.commit.outputs.changed == 'true'
+        with:
+          path: docs
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        if: steps.commit.outputs.changed == 'true'
