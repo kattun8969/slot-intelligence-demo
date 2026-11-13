@@ -20,13 +20,13 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <p>ホールで見つけた台のG数や履歴をメモ</p></div></header>
 <main>
 <section class="card"><h2>この画面でできること</h2>
-<div class="grid"><div><strong>1. 機種を選ぶ</strong><p class="meta">優先14機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 今の台をメモ</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 見落としをチェック</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
+<div class="grid"><div><strong>1. 機種を選ぶ</strong><p class="meta">優先18機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 今の台をメモ</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 見落としをチェック</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
 <p class="note"><strong>この画面は台のメモ用です。</strong> 狙い目G数は一覧から確認できます。ここでは打てる・打てないを自動判定しません。</p>
 </section>
 <section class="card"><h2>狙い目のある機種を探す</h2>
 <p>ほかの台を探すなら一覧へ。打った台の期待値も記録できます。</p>
 <div class="actions"><a href="./opportunities.html#list" class="btn" style="text-decoration:none;display:inline-block">狙い目候補一覧を見る</a><a href="./opportunities.html#ledger" class="btn secondary" style="text-decoration:none;display:inline-block">期待値の記録を見る</a></div>
-<p class="meta">6機種の解析サイト別の狙い始めG数を比較できます。期待値の自動計算はまだありません。</p></section>
+<p class="meta">10機種の解析サイト別の狙い始めG数を比較できます。期待値の自動計算はまだありません。</p></section>
 <section class="card" id="entry"><h2>今の台をメモする</h2>
 <div class="grid">
 <div><label for="tier">表示する機種</label><select id="tier"><option value="all">重点14機種すべて</option><option value="1">新台（最優先）</option><option value="2">稼働機種</option><option value="3">その他重点</option></select></div>
@@ -81,7 +81,11 @@ const machines=[
  {id:"world",name:"ワールドダイスター",tier:3,note:"周期・ポイント表示の確認待ち",uncertain:false},
  {id:"lycoris",name:"リコリコ",tier:3,note:"リコリス・リコイル。出典・更新履歴を確認待ち",uncertain:false},
  {id:"mahoako",name:"まほあこ",tier:3,note:"CZ/ATの履歴条件を確認待ち",uncertain:false},
- {id:"juoh",name:"獣王",tier:3,note:"対象のパチスロ機・世代の正式特定待ち",uncertain:true}
+ {id:"juoh",name:"獣王",tier:3,note:"対象のパチスロ機・世代の正式特定待ち",uncertain:true},
+ {id:"sunbreak",name:"モンスターハンターライズ：サンブレイク（2026年）",tier:2,note:"初代ライズと別機種。AT間・CZ間・リプレイ周期を分けて記録",uncertain:false},
+ {id:"monkey5",name:"モンキーターンV",tier:2,note:"通常795Gと短縮495G、6周期と4周期を分けて記録",uncertain:false},
+ {id:"sencolle5",name:"戦国コレクション5",tier:2,note:"ゲーム数ではなく液晶のコレポイントを記録",uncertain:false},
+ {id:"kanokari",name:"彼女、お借りします（かのかり）",tier:2,note:"BIG後・REG後・変更後を分けて記録",uncertain:false}
 ];
 const FIELDS={
  seiya:{units:["games"],st:false,contexts:["after_reset"]},
@@ -97,7 +101,11 @@ const FIELDS={
  world:{units:["games","cycles","points"],st:false,contexts:[]},
  lycoris:{units:["games"],st:false,contexts:[]},
  mahoako:{units:["games"],st:false,contexts:[]},
- juoh:{units:["games"],st:false,contexts:[]}
+ juoh:{units:["games"],st:false,contexts:[]},
+ sunbreak:{units:["games","cycles","throughs"],st:false,contexts:["after_reset"]},
+ monkey5:{units:["games","cycles","points"],st:false,contexts:["after_reset","after_at"]},
+ sencolle5:{units:["points"],st:false,contexts:["after_reset","after_at"]},
+ kanokari:{units:["games","throughs"],st:false,contexts:["after_reset"]}
 };
 const UNIT_NAMES={games:"表示G数",cycles:"周期数",throughs:"スルー回数",points:"ポイント数"};
 const CONTEXT_NAMES={after_reset:"設定変更後",after_st:"ST駆け抜け後",after_upper:"上位ST終了後"};
