@@ -61,7 +61,8 @@ const MACHINES=[
  ["kabaneri","カバネリ 海門決戦"],["sao2","SAO2"],["monhun","モンスターハンターライズ（2024年版・初代）"],
  ["otome5","戦国乙女5"],["yoshimune","吉宗"],["god","GOD"],["tokyoghoul","東京喰種"],
  ["aobuta","青ブタ"],["world","ワールドダイスター"],["lycoris","リコリコ"],
- ["mahoako","まほあこ"],["juoh","獣王"]
+ ["mahoako","まほあこ"],["juoh","獣王"],
+ ["sunbreak","モンスターハンターライズ：サンブレイク（2026年）"],["monkey5","モンキーターンV"],["sencolle5","戦国コレクション5"],["kanokari","彼女、お借りします（かのかり）"]
 ];
 const LABELS={support:"解析と合っていた",caution:"反例・慎重意見",conflict:"解析との食い違い",neutral:"判断保留"};
 const KEY="slotintel-community-observations-v1";
@@ -69,6 +70,10 @@ const CONDITION_TARGETS={
  seiya:[["at_gap","AT間ゲーム数"],["cz_gap","CZ間ゲーム数"],["fire_clock","火時計・周期ポイント"]],
  ggo:[["normal_ceiling","通常時のG数天井"],["reset_ceiling","設定変更後の短縮天井"],["sj_through","SJ間のスルー回数"]],
  kabaneri:[["normal_ceiling","通常時のゲーム数天井"],["shortened_ceiling","短縮条件・リセット／ST後"],["cycle","周期・前兆／示唆"]],
+ sunbreak:[["at_ceiling","AT間天井"],["cz_ceiling","CZ間天井"],["cz_through","CZスルー・周期"]],
+ monkey5:[["normal_ceiling","通常時天井"],["reset_ceiling","短縮天井"],["cycle","周期"]],
+ sencolle5:[["normal_collection","通常のコレ数"],["reset_collection","リセット後のコレ数"],["zone","ゾーン"]],
+ kanokari:[["bonus_after","BIG後"],["reg_after","REG後"],["reset_ceiling","リセット後"],["reg_through","REG単発・ゾーン"]],
 };
 const DEFAULT_CONDITION=[["general","その他・機種全般"]];
 function conditionsFor(machineId){return [...(CONDITION_TARGETS[machineId]||[]),...DEFAULT_CONDITION]}
