@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none';style-src 'unsafe-inline';script-src 'unsafe-inline';connect-src 'none';img-src 'none';base-uri 'none';form-action 'none'">
+<title>別の狙い目候補を探す | Slot Intelligence</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fa;color:#19344b;font:15px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{background:#102f4b;color:#fff;padding:19px 15px}header>div,main,footer{max-width:940px;margin:auto}
+h1{font-size:24px;margin:3px 0}h2{font-size:20px;margin:0 0 9px}h3{font-size:17px;margin:0 0 7px}
+main{padding:12px}.card{border:1px solid #dce5ed;background:white;border-radius:12px;padding:16px;margin:13px 0}
+.notice{background:#fff7e8;border-left:4px solid #b98635;border-radius:6px;padding:11px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+label{display:block;font-weight:600;margin:8px 0 5px}select,input{width:100%;border:1px solid #a1b5c5;border-radius:8px;background:white;color:inherit;padding:11px;font:inherit}
+button,.btn{display:inline-block;border:0;border-radius:9px;background:#195e93;color:#fff;padding:11px 14px;text-decoration:none;font:inherit;font-weight:650;cursor:pointer}
+.secondary{background:#e7eef5;color:#214763}.pill{display:inline-block;background:#eaf1f7;color:#2a5473;border-radius:50px;font-size:12px;padding:3px 9px;margin:2px 4px 2px 0}
+.muted{font-size:13px;color:#586e80}.option{border:1px solid #d9e3ec;border-radius:11px;padding:13px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.actions>*{flex:1 1 145px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7bb6e4;outline-offset:2px}
+footer{font-size:12px;color:#50697e;padding:15px}p{margin:8px 0}
+</style></head><body>
+<header><div><small style="color:#d4e7f4">試用版 v1.2 / 現地で次の候補を探す</small><h1>別の狙い目候補へ</h1><p>今の台を見送ったら、機種・狙い目の種類・交換条件から探し直す</p></div></header>
+<main>
+<section class="card"><div class="actions"><a class="btn secondary" href="./opportunities.html#list">14機種の一覧</a><a class="btn secondary" href="./strategy-cards.html">6機種の出典別比較</a></div>
+<p class="notice">ここは<strong>調査候補の切り替え</strong>です。候補を並べる順番は期待値・勝率ランキングではなく、機種名と入力した条件による絞り込みです。ホールの実際の空台・現在のG数・設定変更の有無は自動取得していません。</p></section>
+<section class="card"><h2>探し直す条件</h2><div class="grid">
+<div><label for="skip-machine">見送った機種</label><select id="skip-machine"><option value="">指定なし</option></select></div>
+<div><label for="kind">狙い目の種類</label><select id="kind"><option value="all">すべて</option><option value="ceiling">ゲーム数・CZ／AT間</option><option value="reset">リセット・短縮</option><option value="zone">周期・ゾーン</option><option value="through">スルー回数</option></select></div>
+<div><label for="exchange">交換条件</label><select id="exchange"><option value="equal">等価</option><option value="medals">5.6枚・持ちメダル</option><option value="cash">5.6枚・現金投資</option></select></div>
+<div><label for="text-query">機種名検索（任意）</label><input id="text-query" type="search" placeholder="例：東京喰種"></div>
+</div><p id="status" role="status" class="muted"></p><div class="actions"><button type="button" id="reset-filters" class="secondary">条件をクリア</button></div></section>
+<section class="card"><h2>確認先のある機種</h2><p class="muted">この交換条件について一般解析の掲載例がある機種・種類だけを表示します。掲載例があることは狙い目成立を意味しません。</p><div class="grid" id="available"></div>
+<p id="available-empty" class="muted"></p></section>
+<section class="card"><h2>その他の調査候補</h2><p class="muted">まだ出典別の具体的な開始目安を比較できない機種です。未検証のG数を補って表示しません。</p><div class="grid" id="pending"></div></section>
+</main><footer>出典・更新日・状態はリンク先で確認してください。検索条件や空台状況はサーバーに送信・保存されません。既存の実戦期待値記録にも影響しません。</footer>
+<script>
+"use strict";
+// All 14 user-requested IDs. The six with sourced comparison are
+// separated from research-only machines; there is no EV ranking.
+const MACHINES=[
+ ["seiya","聖闘士星矢 黄金十二宮"],
+ ["ggo","ガンゲイル・オンライン"],
+ ["kabaneri","カバネリ 海門決戦"],
+ ["tokyoghoul","東京喰種"],
+ ["otome5","戦国乙女5"],
+ ["monhun","モンスターハンターライズ（2024年版・初代）"],
+ ["sao2","SAO2"],
+ ["yoshimune","吉宗"],["god","GOD"],["aobuta","青ブタ"],
+ ["world","ワールドダイスター"],["lycoris","リコリコ"],
+ ["mahoako","まほあこ"],["juoh","獣王"]
+];
+// Only source-presence metadata, not threshold/EV values.
+// Exchange conditions refer to the same explicitly sourced exchange keys
+// as the strategy comparison page; do not synthesize missing exchanges.
+const SOURCED=[
+ {id:"seiya",kind:"ceiling",condition:"at_gap",label:"AT間G数",exchange:["equal","medals","cash"]},
+ {id:"seiya",kind:"ceiling",condition:"cz_gap",label:"CZ間G数",exchange:["equal","medals","cash"]},
+ {id:"seiya",kind:"reset",condition:"reset_cz",label:"設定変更後CZ間",exchange:["equal","medals","cash"]},
+ {id:"ggo",kind:"ceiling",condition:"normal_ceiling",label:"通常時天井",exchange:["equal","cash"]},
+ {id:"ggo",kind:"reset",condition:"reset_ceiling",label:"設定変更後短縮",exchange:["equal","cash"]},
+ {id:"ggo",kind:"through",condition:"sj_through",label:"SJ間スルー（条件付き）",exchange:["equal"]},
+ {id:"kabaneri",kind:"ceiling",condition:"normal_ceiling",label:"通常時ST間",exchange:["equal","medals","cash"]},
+ {id:"kabaneri",kind:"reset",condition:"shortened_ceiling",label:"短縮天井",exchange:["equal","medals","cash"]},
+ {id:"kabaneri",kind:"zone",condition:"cycle",label:"1周期目手前",exchange:["equal"]},
+ {id:"tokyoghoul",kind:"ceiling",condition:"at_ceiling",label:"AT間ゲーム数",exchange:["equal"]},
+ {id:"tokyoghoul",kind:"ceiling",condition:"cz_ceiling",label:"CZ間液晶ゲーム数",exchange:["equal"]},
+ {id:"tokyoghoul",kind:"reset",condition:"reset_cz",label:"設定変更後CZ間",exchange:["equal"]},
+ {id:"otome5",kind:"ceiling",condition:"normal_ceiling",label:"通常AT間",exchange:["equal","medals","cash"]},
+ {id:"otome5",kind:"reset",condition:"reset_ceiling",label:"変更後短縮",exchange:["equal","medals","cash"]},
+ {id:"monhun",kind:"ceiling",condition:"normal_ceiling",label:"初代ライズ通常時",exchange:["equal"]},
+ {id:"monhun",kind:"reset",condition:"reset_ceiling",label:"初代ライズ変更後",exchange:["equal"]}
+];
+const $=id=>document.getElementById(id);
+const KIND_LABEL={ceiling:"天井・G数",reset:"リセット",zone:"周期・ゾーン",through:"スルー"};
+function getCandidates(skip,kind,exchange,term){
+ const name=new Map(MACHINES);
+ const searchable=String(term||"").trim().toLowerCase();
+ const filtered=SOURCED.filter(x=>x.id!==skip&&(kind==="all"||x.kind===kind)&&
+    x.exchange.includes(exchange)&&String(name.get(x.id)||"").toLowerCase().includes(searchable));
+ const result=[];
+ for(const machine of MACHINES){
+  if(machine[0]===skip)continue;
+  const rows=filtered.filter(x=>x.id===machine[0]);
+  if(rows.length)result.push({id:machine[0],name:machine[1],conditions:rows});
+ }
+ const pending=MACHINES.filter(x=>x[0]!==skip&&!SOURCED.some(s=>s.id===x[0])&&
+   x[1].toLowerCase().includes(searchable));
+ return {available:result,pending};
+}
+function createCandidate(machine){
+ const item=document.createElement("article");item.className="option";
+ const h=document.createElement("h3");h.textContent=machine.name;item.append(h);
+ const p=document.createElement("p");p.className="muted";
+ p.textContent=machine.conditions.length+"種類の掲載例へのリンクがあります。G数・適用条件・更新日は比較先で確認してください。";
+ item.append(p);
+ for(const condition of machine.conditions){
+  const a=document.createElement("a");a.className="btn secondary";
+  a.style.margin="3px 5px 3px 0";
+  a.href="./strategy-cards.html#machine="+encodeURIComponent(machine.id)+
+    "&condition="+encodeURIComponent(condition.condition)+
+    "&exchange="+encodeURIComponent($("exchange").value);
+  a.textContent=condition.label+"を比較";
+  item.append(a);
+ }
+ return item;
+}
+function render(){
+ const values=getCandidates($("skip-machine").value,$("kind").value,
+  $("exchange").value,$("text-query").value);
+ $("available").replaceChildren();$("pending").replaceChildren();
+ for(const m of values.available)$("available").append(createCandidate(m));
+ for(const m of values.pending){
+  const article=document.createElement("article");article.className="option";
+  const h=document.createElement("h3");h.textContent=m[1];
+  const p=document.createElement("p");p.className="muted";p.textContent="具体的な開始目安は調査中です。";
+  const a=document.createElement("a");a.className="btn secondary";
+  a.href="./opportunities.html#machine="+encodeURIComponent(m[0]);
+  a.textContent="機種の確認ページへ";
+  article.append(h,p,a);$("pending").append(article);
+ }
+ $("available-empty").textContent=values.available.length===0?
+  "現在の条件で、出典別掲載例のある機種はありません。交換条件や狙い目の種類を切り替えてください。":"";
+ $("status").textContent="掲載例への導線："+values.available.length+
+  "機種 ／ 詳細調査中："+values.pending.length+
+  "機種。該当機種の空台や期待値を確認した結果ではありません。";
+}
+for(const [id,name] of MACHINES)$("skip-machine").add(new Option(name,id));
+const hash=location.hash.startsWith("#")?location.hash.slice(1):"";
+const params=new URLSearchParams(hash);
+const skipped=params.get("skip");
+if(MACHINES.some(m=>m[0]===skipped))$("skip-machine").value=skipped;
+if(["all","ceiling","reset","zone","through"].includes(params.get("kind")))
+ $("kind").value=params.get("kind");
+if(["equal","medals","cash"].includes(params.get("exchange")))
+ $("exchange").value=params.get("exchange");
+for(const id of ["skip-machine","kind","exchange"])$(id).addEventListener("change",render);
+$("text-query").addEventListener("input",render);
+$("reset-filters").addEventListener("click",()=>{
+ $("skip-machine").value="";$("kind").value="all";$("exchange").value="equal";
+ $("text-query").value="";render();
+});
+render();
+</script></body></html>
