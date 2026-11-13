@@ -17,9 +17,9 @@ button,.btn{display:inline-block;border:0;border-radius:9px;background:#195e93;c
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7bb6e4;outline-offset:2px}
 footer{font-size:12px;color:#50697e;padding:15px}p{margin:8px 0}
 </style></head><body>
-<header><div><small style="color:#d4e7f4">試用版 v1.2 / 現地で次の候補を探す</small><h1>ほかに狙える台はある？</h1><p>今の台が微妙なら、別の機種を探してみよう</p></div></header>
+<header><div><small style="color:#d4e7f4">試用版 v1.6 / 現地で次の候補を探す</small><h1>ほかに狙える台はある？</h1><p>今の台が微妙なら、別の機種を探してみよう</p></div></header>
 <main>
-<section class="card"><div class="actions"><a class="btn secondary" href="./opportunities.html#list">14機種の一覧</a><a class="btn secondary" href="./strategy-cards.html">6機種の出典別比較</a></div>
+<section class="card"><div class="actions"><a class="btn secondary" href="./opportunities.html#list">18機種の一覧</a><a class="btn secondary" href="./strategy-cards.html">10機種の出典別比較</a></div>
 <p class="notice">ここに出るのは<strong>狙い目の情報がある機種</strong>です。実際に空いている台やG数は分かりません。期待値・勝率ランキングではなく、入力した条件で絞り込む一覧です。</p></section>
 <section class="card"><h2>どんな台を探す？</h2><div class="grid">
 <div><label for="skip-machine">さっき見送った機種</label><select id="skip-machine"><option value="">指定なし</option></select></div>
@@ -45,7 +45,8 @@ const MACHINES=[
  ["sao2","SAO2"],
  ["yoshimune","吉宗"],["god","GOD"],["aobuta","青ブタ"],
  ["world","ワールドダイスター"],["lycoris","リコリコ"],
- ["mahoako","まほあこ"],["juoh","獣王"]
+ ["mahoako","まほあこ"],["juoh","獣王"],
+ ["sunbreak","モンスターハンターライズ：サンブレイク（2026年）"],["monkey5","モンキーターンV"],["sencolle5","戦国コレクション5"],["kanokari","彼女、お借りします（かのかり）"]
 ];
 // Only source-presence metadata, not threshold/EV values.
 // Exchange conditions refer to the same explicitly sourced exchange keys
@@ -66,7 +67,16 @@ const SOURCED=[
  {id:"otome5",kind:"ceiling",condition:"normal_ceiling",label:"通常AT間",exchange:["equal","medals","cash"]},
  {id:"otome5",kind:"reset",condition:"reset_ceiling",label:"変更後短縮",exchange:["equal","medals","cash"]},
  {id:"monhun",kind:"ceiling",condition:"normal_ceiling",label:"初代ライズ通常時",exchange:["equal"]},
- {id:"monhun",kind:"reset",condition:"reset_ceiling",label:"初代ライズ変更後",exchange:["equal"]}
+ {id:"monhun",kind:"reset",condition:"reset_ceiling",label:"初代ライズ変更後",exchange:["equal"]},
+ {"id":"sunbreak","kind":"ceiling","condition":"at_ceiling","label":"サンブレイク AT間","exchange":["equal","medals","cash"]},
+ {"id":"sunbreak","kind":"ceiling","condition":"cz_ceiling","label":"サンブレイク CZ間","exchange":["equal"]},
+ {"id":"monkey5","kind":"ceiling","condition":"normal_ceiling","label":"通常天井","exchange":["equal"]},
+ {"id":"monkey5","kind":"reset","condition":"reset_ceiling","label":"変更・青島後の短縮","exchange":["equal"]},
+ {"id":"sencolle5","kind":"ceiling","condition":"normal_collection","label":"通常・コレ数天井","exchange":["equal"]},
+ {"id":"sencolle5","kind":"reset","condition":"reset_collection","label":"リセット・コレ数","exchange":["equal"]},
+ {"id":"kanokari","kind":"ceiling","condition":"bonus_after","label":"BIG後の天井","exchange":["equal","medals","cash"]},
+ {"id":"kanokari","kind":"ceiling","condition":"reg_after","label":"REG後の天井","exchange":["equal","medals","cash"]},
+ {"id":"kanokari","kind":"reset","condition":"reset_ceiling","label":"リセット後","exchange":["equal","medals","cash"]}
 ];
 const $=id=>document.getElementById(id);
 const KIND_LABEL={ceiling:"天井・G数",reset:"リセット",zone:"周期・ゾーン",through:"スルー"};
