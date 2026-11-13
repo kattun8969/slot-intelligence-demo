@@ -15,9 +15,10 @@ button,.btn{font:inherit;display:inline-block;border:0;border-radius:9px;backgro
 .muted,small{color:#516a80;font-size:13px}h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:5px 0}
 a{color:#155d95}a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #83b7df;outline-offset:2px}
 .result{padding:14px;border-radius:10px;background:#eaf2fa;border:1px solid #b5cadb}.result.warn{background:#fff6e8;border-color:#dbbe93}
+summary{cursor:pointer;padding:5px 0}.row-state{font-size:13px;font-weight:650;margin:8px 0}.row-state.warn{color:#815a21}.row-state.no{color:#9b3e3e}.row-state.yes{color:#195d50}
 footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 </style></head><body>
-<header><div><small style="color:#d7e6f4">試用版 v0.9 ・ 2026年11月13日時点の掲載例</small>
+<header><div><small style="color:#d7e6f4">試用版 v1.0 ・ 2026年11月13日時点の掲載例</small>
 <h1>狙い目を出典別に比較</h1><p>交換率・状態・カウンター起点による違いを確認してから現地判断へ</p></div></header>
 <main>
 <section class="card">
@@ -29,6 +30,17 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 <div><label for="exchange">交換条件</label><select id="exchange"><option value="equal">等価</option><option value="medals">5.6枚・持ちメダル</option><option value="cash">5.6枚・現金投資</option></select></div>
 <div><label for="counter">現在の表示G数（任意）</label><input id="counter" inputmode="numeric" type="text" maxlength="8" placeholder="例：320"></div>
 </div>
+<details class="card" open><summary><strong>現地の適用条件を確認（すべて任意）</strong></summary>
+<p class="muted">情報が不足している場合は「未確認」のままにしてください。選択肢は自分の確認状況の記録であり、台の内部状態を自動推測しません。</p>
+<div class="grid">
+<div><label for="basis-check">表示数値の起点は出典と一致する？</label><select id="basis-check"><option value="unknown">未確認</option><option value="yes">一致すると自分で確認</option><option value="no">一致しない</option></select></div>
+<div><label for="state-check">現在の台の状態・リセット条件は一致する？</label><select id="state-check"><option value="unknown">未確認</option><option value="yes">一致すると自分で確認</option><option value="no">一致しない</option></select></div>
+<div><label for="stop-check">出典に書かれたやめどきを確認した？</label><select id="stop-check"><option value="unknown">未確認</option><option value="yes">確認した</option><option value="no">確認できていない</option></select></div>
+<div><label for="through-count">スルー回数（任意・不明なら空欄）</label><input id="through-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：5"></div>
+<div><label for="cycle-count">現在の周期数（任意・不明なら空欄）</label><input id="cycle-count" inputmode="numeric" type="text" maxlength="4" placeholder="例：2"></div>
+</div>
+<p class="muted">出典ごとに必要な追加条件が異なる場合は、下の掲載例カードに追加確認欄を表示します。スルー回数・周期数は入力しただけで判定に使わず、該当条件を出典で照合してください。</p>
+</details>
 <div class="actions"><button type="button" id="compare">掲載目安と見比べる</button>
 <a id="notes-link" class="btn secondary" href="./community-notes.html">この条件の実戦報告を見る</a></div>
 <p id="compare-feedback" class="result" role="status">状態・交換率を選ぶと、掲載元ごとの目安を比較できます。</p>
@@ -111,7 +123,49 @@ const EXAMPLES=[
  {id:"kabaneri-reset-slobase",machine:"kabaneri",condition:"shortened_ceiling",source:"スロベース",url:"https://slobase.jp/machines/kabaneri-unato",asof:"2026-11-09",thresholds:{equal:60},basis:"リセット確認後のST間G数",goal:"リセット時の立ち回り目安",warning:"ST駆け抜け後は90G、上位ST後は80Gとして別の開始目安が掲載"},
  {id:"kabaneri-cycle-slobase",machine:"kabaneri",condition:"cycle",source:"スロベース",url:"https://slobase.jp/articles/kabaneri-unato-reset",asof:"2026-11-09",thresholds:{equal:130},basis:"1周期目手前の表示G数",goal:"周期到達前のゾーン例",warning:"130Gは1周期目の例。2周期手前270Gは別の条件で、どちらも現在周期確認が必要"}
 ];
+// Scenario-specific requirements are prompts for human source checking,
+// never a claim that the particular machine satisfies that requirement.
+const SOURCE_REQUIREMENTS={
+ "seiya-at-chon":"CZ間が0〜99Gの条件である",
+ "seiya-czfail-chon":"直前のCZ失敗後という条件である",
+ "seiya-reset-chon":"設定変更後の初回CZまでという条件である",
+ "seiya-reset-slobase":"設定変更後の初回CZまでという条件である",
+ "ggo-normal-slobase":"SJのスルー履歴が0〜4回という条件である",
+ "ggo-reset-slobase":"設定変更後の条件である",
+ "ggo-through-slobase":"5スルー以上、または駆け抜け後2スルーという条件である",
+ "kabaneri-normal-toolbox":"2周期目の抽選前という条件である",
+ "kabaneri-normal-slobase":"通常ST連後という条件である",
+ "kabaneri-reset-toolbox":"天井短縮の根拠がある",
+ "kabaneri-reset-slobase":"リセット後という条件である",
+ "kabaneri-cycle-slobase":"1周期目手前という条件である"
+};
+const SUPPORTED_CHECKS=["unknown","yes","no"];
+const SOURCE_CHECKS=new Map();
 const $=id=>document.getElementById(id);
+function statusFor(row,flags,extra){
+ const flagsToCheck=[flags.basis,flags.state,flags.stop];
+ if(Object.hasOwn(SOURCE_REQUIREMENTS,row.id))flagsToCheck.push(extra);
+ if(flagsToCheck.includes("no"))return "condition_mismatch";
+ if(flagsToCheck.some(x=>x!=="yes"))return "needs_confirmation";
+ return "self_checked";
+}
+function readChecks(){
+ return {basis:$("basis-check").value,state:$("state-check").value,
+   stop:$("stop-check").value};
+}
+function validOptionalCount(value){
+ return value===""||(/^[0-9]{1,3}$/.test(value)&&Number(value)<=999);
+}
+function resetChecks(){
+ for(const id of ["basis-check","state-check","stop-check"])$(id).value="unknown";
+ for(const id of ["through-count","cycle-count"])$(id).value="";
+ SOURCE_CHECKS.clear();
+}
+function statusText(status){
+ return status==="condition_mismatch"?"確認した適用条件が一致しません":
+   status==="self_checked"?"掲載条件は自己確認済み（正の期待値を保証しません）":
+   "適用条件に未確認項目があります";
+}
 function options(){
  const mid=$("machine").value,old=$("condition").value;
  const selected=CONDITIONS[mid]||[];
@@ -151,9 +205,39 @@ function render(){
   const p=document.createElement("p");
   p.textContent="掲載時の目標："+row.goal+" ／ カウンター："+row.basis+" ／ 確認時点："+row.asof;
   const caution=document.createElement("p");caution.className="muted";caution.textContent="注意："+row.warning;
+  const requirement=SOURCE_REQUIREMENTS[row.id];
+  let extra="yes";
+  if(requirement){
+   const label=document.createElement("label");label.textContent="追加条件："+requirement;
+   const select=document.createElement("select");select.dataset.sourceId=row.id;
+   select.add(new Option("未確認","unknown"));
+   select.add(new Option("自分で条件一致を確認","yes"));
+   select.add(new Option("条件が一致しない","no"));
+   select.value=SOURCE_CHECKS.get(row.id)||"unknown";
+   if(!SUPPORTED_CHECKS.includes(select.value))select.value="unknown";
+   select.addEventListener("change",()=>{
+     SOURCE_CHECKS.set(row.id,select.value);
+     updateSourceState(row);
+   });
+   item.append(label,select);
+   extra=select.value;
+  }
+  const stateLabel=document.createElement("p");stateLabel.className="row-state";
+  stateLabel.dataset.statusFor=row.id;
+  item.append(stateLabel);
+  function updateSourceState(subject){
+   const flags=readChecks(),specific=requirement?
+     (SOURCE_CHECKS.get(row.id)||"unknown"):"yes";
+   const status=statusFor(subject,flags,specific);
+   stateLabel.textContent=statusText(status);
+   stateLabel.className="row-state "+(status==="condition_mismatch"?"no":
+      status==="self_checked"?"yes":"warn");
+  }
+  updateSourceState(row);
   const a=document.createElement("a");a.href=row.url;a.target="_blank";a.rel="noopener noreferrer";
   a.textContent="元の掲載内容・更新日・条件を確認";
-  item.append(h,p,caution,a);out.append(item);
+  item.prepend(h,p,caution);
+  item.append(a);out.append(item);
  }
  const list=$("checks");list.replaceChildren();
  for(const t of CHECKS[mid]||[]){const li=document.createElement("li");li.textContent=t;list.append(li)}
@@ -165,21 +249,34 @@ function compare(){
  if(!/^\d{1,6}$/.test(raw)||!Number.isSafeInteger(num)||num>99999){
   $("compare-feedback").textContent="表示G数は0〜99999の整数にしてください。入力エラーでも出典比較は利用できます。";return;
  }
+ if(!validOptionalCount($("through-count").value.trim())||
+     !validOptionalCount($("cycle-count").value.trim())){
+   $("compare-feedback").textContent="スルー回数・周期数は0〜999の整数または空欄にしてください。掲載目安の閲覧は可能です。";return;
+ }
  const rows=matches($("machine").value,$("condition").value,$("exchange").value);
  const above=rows.filter(x=>num>=x.thresholds[$("exchange").value]);
  const below=rows.filter(x=>num<x.thresholds[$("exchange").value]);
+ const flags=readChecks();
+ const eligible=above.filter(x=>statusFor(x,flags,
+  SOURCE_REQUIREMENTS[x.id]?SOURCE_CHECKS.get(x.id)||"unknown":"yes")==="self_checked");
+ const mismatch=above.filter(x=>statusFor(x,flags,
+  SOURCE_REQUIREMENTS[x.id]?SOURCE_CHECKS.get(x.id)||"unknown":"yes")==="condition_mismatch");
  $("compare-feedback").textContent=
-  "表示"+num+"G：掲載目安を超える例 "+above.length+"件、未到達の例 "+below.length+
-  "件。これはG数の単純比較であり、設定変更・履歴・周期・やめどき等の適用条件を確認していません。打つ判定・期待値の算出ではありません。";
+  "表示"+num+"G：掲載目安への数値到達 "+above.length+"件／未到達 "+below.length+
+  "件。うち自己申告で掲載条件を照合済み "+eligible.length+"件、条件不一致 "+
+  mismatch.length+"件、残りは確認不足。数値比較・自己申告による照合であり、打つ判定・期待値の算出ではありません。";
 }
 for(const [id,label] of MACHINES)$("machine").add(new Option(label,id));
 const request=location.hash.match(/^#machine=([a-z0-9]+)(?:&condition=([a-z0-9_]+))?$/);
 if(request&&MACHINES.some(m=>m[0]===request[1]))$("machine").value=request[1];
 options();
 if(request?.[2]&&(CONDITIONS[$("machine").value]||[]).some(x=>x[0]===request[2]))$("condition").value=request[2];
-$("machine").addEventListener("change",()=>{options();render()});
-$("condition").addEventListener("change",render);
-$("exchange").addEventListener("change",render);
+$("machine").addEventListener("change",()=>{options();resetChecks();render()});
+$("condition").addEventListener("change",()=>{resetChecks();render()});
+$("exchange").addEventListener("change",()=>{resetChecks();render()});
+for(const id of ["basis-check","state-check","stop-check"]){
+ $(id).addEventListener("change",render);
+}
 $("compare").addEventListener("click",compare);
 render();
 </script></body></html>
