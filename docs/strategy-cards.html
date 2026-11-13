@@ -26,7 +26,7 @@ details.source-detail summary{font-size:14px;font-weight:650;color:#195e93}
 summary{cursor:pointer;padding:5px 0}.row-state{font-size:13px;font-weight:650;margin:8px 0}.row-state.warn{color:#815a21}.row-state.no{color:#9b3e3e}.row-state.yes{color:#195d50}
 footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 </style></head><body>
-<header><div><small style="color:#d7e6f4">試用版 v1.5 ・ 2026年11月13日時点の掲載例</small>
+<header><div><small style="color:#d7e6f4">試用版 v1.6 ・ 2026年11月13日時点の掲載例</small>
 <h1>この台、何Gから狙える？</h1><p>機種と交換率を選んで、解析サイトの目安をチェック</p></div></header>
 <main>
 <section class="card">
@@ -36,7 +36,7 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 <div><label for="machine">機種</label><select id="machine"></select></div>
 <div><label for="condition">今の台はどんな状態？</label><select id="condition"></select></div>
 <div><label for="exchange">交換条件</label><select id="exchange"><option value="equal">等価</option><option value="medals">5.6枚・持ちメダル</option><option value="cash">5.6枚・現金投資</option></select></div>
-<div><label for="counter">今のG数（分かれば入力）</label><input id="counter" inputmode="numeric" type="text" maxlength="8" placeholder="例：320"></div>
+<div><label for="counter" id="counter-label">今のG数（分かれば入力）</label><input id="counter" inputmode="numeric" type="text" maxlength="8" placeholder="例：320"></div>
 </div>
 <details class="card" id="preflight"><summary><strong>台の状態を詳しく確認する（任意）</strong></summary>
 <p class="muted">分からないところはそのままでOK。今の台が記事の条件と同じか、分かる範囲でチェック。</p>
@@ -75,7 +75,7 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 <ul id="checks"></ul>
 <div class="actions"><a id="machine-page" class="btn" href="./opportunities.html#list">台のメモ・期待値記録へ</a>
 <a id="x-page" class="btn secondary" href="./x-live.html">Xの最新投稿を見る</a></div>
-<p class="muted">今は6機種に対応。ほかの機種も順次追加します。</p>
+<p class="muted">今は10機種に対応。ほかの機種も順次追加します。</p>
 </details>
 </main>
 <footer>掲載数値の正確性・適用条件・実際の収支を保証するものではありません。入力情報は外部送信されず、期待値記録にも自動入力しません。リンク先の記述・更新日は後から変わることがあります。</footer>
@@ -87,7 +87,11 @@ const MACHINES=[
  ["kabaneri","カバネリ 海門決戦"],
  ["tokyoghoul","東京喰種"],
  ["otome5","戦国乙女5"],
- ["monhun","モンスターハンターライズ（2024年版・初代）"]
+ ["monhun","モンスターハンターライズ（2024年版・初代）"],
+ ["sunbreak","モンスターハンターライズ：サンブレイク（2026年）"],
+ ["monkey5","モンキーターンV"],
+ ["sencolle5","戦国コレクション5"],
+ ["kanokari","彼女、お借りします（かのかり）"]
 ];
 const CONDITIONS={
  seiya:[
@@ -109,7 +113,11 @@ const CONDITIONS={
  ],
  tokyoghoul:[["at_ceiling","AT間ゲーム数天井"],["cz_ceiling","CZ間液晶ゲーム数天井"],["reset_cz","変更後のCZ短縮天井"]],
  otome5:[["normal_ceiling","通常時のAT間G数天井"],["reset_ceiling","設定変更後の短縮天井"],["cycle","周期天井・周期示唆"]],
- monhun:[["normal_ceiling","初代ライズ：通常時G数天井"],["reset_ceiling","初代ライズ：設定変更後AT間"],["quest_through","初代ライズ：クエストスルー天井"]]
+ monhun:[["normal_ceiling","初代ライズ：通常時G数天井"],["reset_ceiling","初代ライズ：設定変更後AT間"],["quest_through","初代ライズ：クエストスルー天井"]],
+ sunbreak:[["at_ceiling","サンブレイク：AT間天井"],["cz_ceiling","サンブレイク：CZ間天井"],["reset_ceiling","設定変更後のAT間"],["cz_through","CZスルー・オトモ潜水艇"]],
+ monkey5:[["normal_ceiling","通常時のAT間G数"],["reset_ceiling","変更後・青島VS波多野敗北後"],["cycle","周期・激走ポイント"]],
+ sencolle5:[["normal_collection","通常：コレポイント天井"],["reset_collection","設定変更後：コレポイント"],["zone","128コレなどのゾーン"]],
+ kanokari:[["bonus_after","かのかりBONUS（BIG）後"],["reg_after","REGULAR BONUS後"],["reset_ceiling","設定変更後のG数天井"],["reg_through","REG単発回数・ゾーン"]]
 };
 const CHECKS={
  seiya:[
@@ -147,7 +155,11 @@ const CHECKS={
  "G数999G+α、AT間クエスト6スルー後の7回目を別カウンターで確認",
  "設定変更後もゲーム数天井の短縮なし。変更優遇の根拠を確認",
  "AT終了後の1G目・天国示唆・やめどきを確認"
- ]
+ ],
+ sunbreak:["2026年サンブレイク。初代ライズ（2024年版）とは別","AT間999G+α、CZ間333G+α、CZ6スルーの次CZ、リプレイ最大5周期を別々に確認","設定変更後もAT天井999G+αは短縮なし","AT後1Gのエンタチャンスとリプレイ蓄積を確認"],
+ monkey5:["通常795G+α／6周期、設定変更・青島VS波多野敗北後495G+α／4周期","AT間G数、周期、激走ポイントとヘルメットを確認","データ表示機と液晶のG数がずれることがある","AT後1G・前兆・ライバルモード示唆を確認"],
+ sencolle5:["戦国コレクション5（2023年・6.5号機）。戦国乙女5と別機種","天井は最大1280コレ。G数でなく液晶のコレポイントを見る","天国は128コレ、モードCは384コレ天井の掲載例","AT後の128コレや終了画面示唆を確認"],
+ kanokari:["かのかりBONUS後1000G+α、REG後800G+α、変更後600G+α","直前のボーナス種別とREG単発回数を確認","1Gレンチャンスと66G引き戻しゾーン・ユメカノ示唆を確認","BIG後とREG後の狙い始めを混ぜない"]
 };
 // Every threshold below is a published author's illustrative starting line,
 // not a validated recommendation or site's computed expected value.
@@ -178,7 +190,20 @@ const EXAMPLES=[
  {"id":"otome-reset-toolbox","machine":"otome5","condition":"reset_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/sengoku-otome5-tenjo/","asof":"2026-10-12","thresholds":{"equal":10,"medals":20,"cash":160},"basis":"変更後AT間実G","goal":"設定変更後の狙い目掲載例","warning":"変更後650G+α・最大4周期が適用される根拠を確認"},
  {"id":"monhun-normal-nana","machine":"monhun","condition":"normal_ceiling","source":"なな徹","url":"https://nana-press.com/kaiseki/machine/837/25431/","asof":"2026-03-25","thresholds":{"equal":550},"basis":"初代ライズ通常AT間G","goal":"999G天井狙いの掲載例","warning":"5.6枚650Gは持ち玉か現金か判別困難なため省略。クエスト回数も別途確認"},
  {"id":"monhun-normal-diary","machine":"monhun","condition":"normal_ceiling","source":"スロ手帳","url":"https://slot-diary.com/l-mh-rise-tenjo/","asof":"2026-11-13","thresholds":{"equal":550},"basis":"初代ライズAT間G","goal":"実戦データベース等価105%ラインの掲載例","warning":"朝一など除外条件のある計算値。別の解析サイトとデータの独立性は未確認"},
- {"id":"monhun-reset-diary","machine":"monhun","condition":"reset_ceiling","source":"スロ手帳","url":"https://slot-diary.com/l-mh-rise-tenjo/","asof":"2026-11-13","thresholds":{"equal":300},"basis":"初代ライズ変更後AT間G","goal":"変更後・等価105%ラインの掲載例","warning":"変更後も天井G数短縮なし。状態優遇・クエスト履歴が前提"}
+ {"id":"monhun-reset-diary","machine":"monhun","condition":"reset_ceiling","source":"スロ手帳","url":"https://slot-diary.com/l-mh-rise-tenjo/","asof":"2026-11-13","thresholds":{"equal":300},"basis":"初代ライズ変更後AT間G","goal":"変更後・等価105%ラインの掲載例","warning":"変更後も天井G数短縮なし。状態優遇・クエスト履歴が前提"},
+ {"id":"sunbreak-at-toolbox","machine":"sunbreak","condition":"at_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/mhrsb-tenjo/","asof":"2026-10-25","thresholds":{"equal":400,"medals":420,"cash":540},"basis":"AT間実G（2026年サンブレイク）","goal":"AT間999G+αの掲載目安","warning":"初代ライズと別機種。周期・CZスルーも確認"},
+ {"id":"sunbreak-at-tennabi","machine":"sunbreak","condition":"at_ceiling","source":"天井・やめ時ナビ","url":"https://tennabi.jp/mh-rise-sunbreak/","asof":"2026-11-01","thresholds":{"equal":450},"basis":"AT間実G","goal":"等価・通常時の掲載目安","warning":"別サイトの400Gとの前提の違いに注意"},
+ {"id":"sunbreak-cz-toolbox","machine":"sunbreak","condition":"cz_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/mhrsb-tenjo/","asof":"2026-10-25","thresholds":{"equal":250},"basis":"CZ間実G","goal":"CZ間333G+αの掲載目安","warning":"CZ当選とAT当選は別。CZスルー数を確認"},
+ {"id":"sunbreak-cz-tennabi","machine":"sunbreak","condition":"cz_ceiling","source":"天井・やめ時ナビ","url":"https://tennabi.jp/mh-rise-sunbreak/","asof":"2026-11-01","thresholds":{"equal":200},"basis":"CZ間実G","goal":"等価・CZ間の掲載目安","warning":"スルーやオトモ潜水艇の周期は別条件"},
+ {"id":"monkey-normal","machine":"monkey5","condition":"normal_ceiling","source":"天井・やめ時ナビ","url":"https://tennabi.jp/monkey-turn-5/","asof":"2026-10-15","thresholds":{"equal":400},"basis":"通常時AT間G","goal":"795G+α・最大6周期の掲載目安","warning":"周期・激走ポイント・ヘルメット示唆を確認"},
+ {"id":"monkey-reset","machine":"monkey5","condition":"reset_ceiling","source":"天井・やめ時ナビ","url":"https://tennabi.jp/monkey-turn-5/","asof":"2026-10-15","thresholds":{"equal":50},"basis":"変更・青島VS波多野敗北後AT間G","goal":"495G+α・最大4周期の短縮状態の掲載目安","warning":"リセットまたは青島VS波多野敗北の証拠が必要"},
+ {"id":"sencolle-normal","machine":"sencolle5","condition":"normal_collection","source":"天井・やめ時ナビ","url":"https://tennabi.jp/sengoku-collection-5/","asof":"2026-11-04","thresholds":{"equal":640},"unit":"コレ","basis":"液晶コレポイント","goal":"最大1280コレ天井の掲載目安","warning":"G数ではなくコレポイント。モード別の天井に注意"},
+ {"id":"sencolle-reset","machine":"sencolle5","condition":"reset_collection","source":"天井・やめ時ナビ","url":"https://tennabi.jp/sengoku-collection-5/","asof":"2026-11-04","thresholds":{"equal":448},"unit":"コレ","basis":"変更後の液晶コレポイント","goal":"設定変更後の掲載目安","warning":"設定変更を確認。G数へ換算しない"},
+ {"id":"kanokari-big-toolbox","machine":"kanokari","condition":"bonus_after","source":"スロッターの道具箱","url":"https://slot-toolbox.com/kanokari-tenjo/","asof":"2026-10-12","thresholds":{"equal":250,"medals":250,"cash":300},"basis":"かのかりBONUS後の実G","goal":"BONUS後1000G+α天井の掲載目安","warning":"500G付近で状態を再確認。REG後は別条件"},
+ {"id":"kanokari-big-tennabi","machine":"kanokari","condition":"bonus_after","source":"天井・やめ時ナビ","url":"https://tennabi.jp/kanokari/","asof":"2026-10-15","thresholds":{"equal":700},"basis":"かのかりBONUS後の実G","goal":"等価の掲載目安","warning":"道具箱の250Gと前提が異なる。平均しない"},
+ {"id":"kanokari-reg-toolbox","machine":"kanokari","condition":"reg_after","source":"スロッターの道具箱","url":"https://slot-toolbox.com/kanokari-tenjo/","asof":"2026-10-12","thresholds":{"equal":200,"medals":200,"cash":250},"basis":"REG後の実G","goal":"REG後800G+α天井の掲載目安","warning":"REG連続単発回数・引き戻し区間を確認"},
+ {"id":"kanokari-reg-tennabi","machine":"kanokari","condition":"reg_after","source":"天井・やめ時ナビ","url":"https://tennabi.jp/kanokari/","asof":"2026-10-15","thresholds":{"equal":300},"basis":"REG後の実G","goal":"等価の掲載目安","warning":"道具箱の200Gと基準・前提が異なる"},
+ {"id":"kanokari-reset-toolbox","machine":"kanokari","condition":"reset_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/kanokari-tenjo/","asof":"2026-10-12","thresholds":{"equal":0,"medals":0,"cash":0},"basis":"設定変更後の実G","goal":"変更後600G+α天井の掲載目安","warning":"リセット確認が必要。朝一0Gだけでは断定しない"}
 ];
 // Scenario-specific requirements are prompts for human source checking,
 // never a claim that the particular machine satisfies that requirement.
@@ -206,11 +231,28 @@ const SOURCE_REQUIREMENTS={
  "otome-reset-toolbox":"変更後650G・4周期短縮が適用される",
  "monhun-normal-nana":"2024年初代ライズでありサンブレイクではない",
  "monhun-normal-diary":"2024年初代ライズでありサンブレイクではない",
- "monhun-reset-diary":"2024年初代ライズの設定変更後と確認できる"
+ "monhun-reset-diary":"2024年初代ライズの設定変更後と確認できる",
+ "sunbreak-at-toolbox":"2026年サンブレイクAT間実Gである",
+ "sunbreak-at-tennabi":"2026年サンブレイクAT間実Gである",
+ "sunbreak-cz-toolbox":"CZ間実GでありAT間ではない",
+ "sunbreak-cz-tennabi":"CZ間実GでありAT間ではない",
+ "monkey-normal":"通常795G天井の状態",
+ "monkey-reset":"設定変更または青島VS波多野敗北後",
+ "sencolle-normal":"液晶コレポイントを確認",
+ "sencolle-reset":"設定変更後の液晶コレポイントを確認",
+ "kanokari-big-toolbox":"前回かのかりBONUS",
+ "kanokari-big-tennabi":"前回かのかりBONUS",
+ "kanokari-reg-toolbox":"前回REGULAR BONUS",
+ "kanokari-reg-tennabi":"前回REGULAR BONUS",
+ "kanokari-reset-toolbox":"設定変更済みである"
 };
 const SUPPORTED_CHECKS=["unknown","yes","no"];
 const SOURCE_CHECKS=new Map();
 const INFO_CONDITIONS={
+ "sunbreak:cz_through":{title:"CZ6スルー・リプレイ周期",detail:"CZ6連続失敗後は次回CZ成功濃厚。リプレイ20回で1周期、最大5周期のCZ。G数に一律換算はしません。",url:"https://slot-toolbox.com/mhrsb-tenjo/"},
+ "monkey5:cycle":{title:"モンキーターンVの周期",detail:"最大6周期、設定変更・青島VS波多野敗北後は4周期。激走ポイントやヘルメット示唆も確認。",url:"https://slobase.jp/machines/monkey-turn"},
+ "sencolle5:zone":{title:"戦コレ5のゾーン",detail:"液晶コレ数の128コレ・384コレなど、モード別のゾーンを確認。ゲーム数とは違います。",url:"https://nana-press.com/kaiseki/machine/506/13930/"},
+ "kanokari:reg_through":{title:"かのかりのREG単発・ゾーン",detail:"REG単発の連続回数で次回ボーナス恩恵が変わる場合があります。66G引き戻しと100G付近の前兆も確認。",url:"https://hisshobon.com/machineinfo/143129/"},
  "monhun:quest_through":{
   title:"初代ライズのクエストスルー天井",
   detail:"AT間でクエスト6回スルー後、7回目のクエストで赤7以上のボーナス（AT）とする解析掲載例。G数天井とは別。クエスト履歴の起点を確認してください。",
@@ -224,6 +266,23 @@ const INFO_CONDITIONS={
 };
 // Short, independently attributed gameplay context. This is not an EV model.
 const FIELD_GUIDES={
+ sunbreak:{source:"スロッターの道具箱／一撃（2026年10月確認）",url:"https://slot-toolbox.com/mhrsb-tenjo/",
+  items:[["天井","AT間999G+α、CZ間333G+α。CZ6スルーなら次回CZ成功濃厚。リプレイ最大5周期も別に確認。"],
+   ["狙い目","AT間400Gから、CZ間250Gから等はサイト掲載例。交換率とCZスルー数で変わります。"],
+   ["やめどき","AT後1Gのエンタチャンスを確認。リプレイ周期や前兆が残れば原記事で確認。"]]},
+ monkey5:{source:"なな徹／天井・やめ時ナビ",url:"https://nana-press.com/kaiseki/machine/644/18016/",
+  items:[["天井","通常AT間795G+αまたは最大6周期。設定変更・青島VS波多野敗北後は495G+α・最大4周期。"],
+   ["狙い目","通常400G・短縮確認後50Gからの掲載例。周期・激走ポイントも確認。"],
+   ["やめどき","AT終了後のヘルメット、優出前兆、ライバルモード示唆、1G目を確認。"]]},
+ sencolle5:{source:"なな徹／天井・やめ時ナビ",url:"https://nana-press.com/kaiseki/machine/506/13930/",
+  items:[["天井","最大1280コレ。G数ではなく液晶のコレポイントで判定。モードCは384コレ・天国128コレなど。"],
+   ["狙い目","通常640コレ前後、変更後448コレ前後の掲載例。交換条件の違いに注意。"],
+   ["やめどき","AT後128コレ（天国）や384コレ（モードC）まで確認する掲載例。示唆次第で変更。"]]},
+ kanokari:{source:"スロッターの道具箱／必勝本（2026年秋確認）",url:"https://slot-toolbox.com/kanokari-tenjo/",
+  items:[["天井","BIG後1000G+α、REG後800G+α、変更後600G+α。前回ボーナスが重要。"],
+   ["狙い目","BIG後・REG後・変更後でサイトの狙い始めが大きく違います。500G付近のゾーンも確認。"],
+   ["やめどき","1Gレンチャンス、66Gの引き戻し、ユメカノランプやREG後100G付近の前兆を確認。"]]},
+
  tokyoghoul:{
   source:"ちょんぼりすた／なな徹（2026-11-13確認）",
   url:"https://chonborista.com/slot/spiky/226073/",
@@ -292,9 +351,9 @@ function renderFieldGuide(mid){
 const $=id=>document.getElementById(id);
 function showRelevantFields(){
  const machine=$("machine").value,condition=$("condition").value;
- $("through-group").hidden=!(condition==="sj_through"||
+ $("through-group").hidden=!(condition==="sj_through"||condition==="cz_through"||condition==="reg_through"||
    (machine==="monhun"&&["quest_through","normal_ceiling","reset_ceiling"].includes(condition)));
- $("cycle-group").hidden=!(condition==="cycle"||
+ $("cycle-group").hidden=!(condition==="cycle"||condition==="zone"||condition==="cz_through"||
    machine==="otome5"||machine==="kabaneri"||
    (machine==="seiya"&&condition==="fire_clock"));
 }
@@ -342,7 +401,11 @@ function refreshLinks(){
  kabaneri:{normal_ceiling:"normal_ceiling",shortened_ceiling:"shortened_ceiling",cycle:"cycle"},
  tokyoghoul:{at_ceiling:"general",cz_ceiling:"general",reset_cz:"general"},
  otome5:{normal_ceiling:"general",reset_ceiling:"general",cycle:"general"},
- monhun:{normal_ceiling:"general",reset_ceiling:"general",quest_through:"general"}};
+ monhun:{normal_ceiling:"general",reset_ceiling:"general",quest_through:"general"},
+ sunbreak:{at_ceiling:"general",cz_ceiling:"general",reset_ceiling:"general",cz_through:"general"},
+ monkey5:{normal_ceiling:"general",reset_ceiling:"general",cycle:"general"},
+ sencolle5:{normal_collection:"general",reset_collection:"general",zone:"general"},
+ kanokari:{bonus_after:"general",reg_after:"general",reset_ceiling:"general",reg_through:"general"}};
  const noteCondition=map[mid]?.[condition]||"general";
  $("notes-link").href="./community-notes.html#machine="+mid+"&condition="+noteCondition;
  $("machine-page").href="./opportunities.html#machine="+mid;
@@ -355,7 +418,7 @@ function refreshLinks(){
 }
 function quickRows(machine,condition,exchange){
  return matches(machine,condition,exchange).map(row=>({
-  id:row.id,source:row.source,threshold:row.thresholds[exchange],
+  id:row.id,source:row.source,threshold:row.thresholds[exchange],unit:row.unit||"G",
   warning:row.warning,basis:row.basis,asof:row.asof,url:row.url,
   stop:"やめどきは元記事で確認（この一覧では未判定）"
  }));
@@ -385,7 +448,7 @@ function renderQuickSummary(machine,condition,exchange){
   const box=document.createElement("article");box.className="quick-card";
   const h=document.createElement("h3");h.textContent=row.source;
   const value=document.createElement("p");value.className="quick-number";
-  value.textContent=row.threshold+"G〜（掲載例）";
+  value.textContent=row.threshold+row.unit+"〜（掲載例）";
   const basis=document.createElement("p");basis.className="muted";
   basis.textContent="見る数字："+row.basis;
   const caution=document.createElement("p");caution.className="quick-warning";
@@ -398,6 +461,7 @@ function renderQuickSummary(machine,condition,exchange){
  }
 }
 function render(){
+ $("counter-label").textContent=$("machine").value==="sencolle5"?"今のコレ数（液晶表示）":"今のG数（分かれば入力）";
  const mid=$("machine").value,condition=$("condition").value,exchange=$("exchange").value;
  refreshLinks();
  const rows=matches(mid,condition,exchange);
@@ -423,8 +487,8 @@ function render(){
  for(const row of rows){
   const item=document.createElement("details");item.className="row source-detail";
   const summary=document.createElement("summary");
-  summary.textContent=row.source+"｜"+row.thresholds[exchange]+"G〜｜詳しい条件を見る";
-  const h=document.createElement("h3");h.textContent=row.source+"："+row.thresholds[exchange]+"G付近から";
+  summary.textContent=row.source+"｜"+row.thresholds[exchange]+(row.unit||"G")+"〜｜詳しい条件を見る";
+  const h=document.createElement("h3");h.textContent=row.source+"："+row.thresholds[exchange]+(row.unit||"G")+"付近から";
   const p=document.createElement("p");
   p.textContent="目安の基準："+row.goal+" ／ 見るG数："+row.basis+" ／ 情報確認："+row.asof;
   const caution=document.createElement("p");caution.className="muted";caution.textContent="注意："+row.warning;
@@ -477,6 +541,9 @@ function compare(){
    $("compare-feedback").textContent="スルー回数・周期は0〜999で入力するか、空欄にしてください。";return;
  }
  const rows=matches($("machine").value,$("condition").value,$("exchange").value);
+ const units=new Set(rows.map(x=>x.unit||"G"));
+ if(units.size>1){$("compare-feedback").textContent="単位が混ざっているため比較できません。";return}
+ const unit=units.size?[...units][0]:"G";
  const above=rows.filter(x=>num>=x.thresholds[$("exchange").value]);
  const below=rows.filter(x=>num<x.thresholds[$("exchange").value]);
  const flags=readChecks();
@@ -485,7 +552,7 @@ function compare(){
  const mismatch=above.filter(x=>statusFor(x,flags,
   SOURCE_REQUIREMENTS[x.id]?SOURCE_CHECKS.get(x.id)||"unknown":"yes")==="condition_mismatch");
  $("compare-feedback").textContent=
-  "表示"+num+"G：G数だけなら目安以上 "+above.length+"件／目安未満 "+below.length+
+  "表示"+num+unit+"：数値だけなら目安以上 "+above.length+"件／目安未満 "+below.length+
   "件。うち自分で条件を確認できたもの "+eligible.length+"件、条件が違うもの "+
   mismatch.length+"件。残りは確認が必要です。<strong>これはG数の比較だけ</strong>。期待値は計算していません。";
 }
