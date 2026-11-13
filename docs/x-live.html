@@ -68,7 +68,11 @@ const MACHINES=[
 ["god","GOD","スマスロ GOD"],["tokyoghoul","東京喰種","スマスロ 東京喰種"],
 ["aobuta","青ブタ","スマスロ 青ブタ"],["world","ワールドダイスター","ワールドダイスター スロット"],
 ["lycoris","リコリコ","スマスロ リコリコ"],["mahoako","まほあこ","スマスロ まほあこ"],
-["juoh","獣王","スマスロ 獣王"]
+["juoh","獣王","スマスロ 獣王"],
+ ["sunbreak","モンスターハンターライズ：サンブレイク（2026年）","スマスロ モンハン サンブレイク"],
+ ["monkey5","モンキーターンV","スマスロ モンキーターンV"],
+ ["sencolle5","戦国コレクション5","パチスロ 戦国コレクション5"],
+ ["kanokari","彼女、お借りします（かのかり）","スマスロ 彼女 お借りします"]
 ];
 const $=id=>document.getElementById(id);
 function searchLink(query,sort){
@@ -89,7 +93,7 @@ function updateMachine(){
 }
 const AUTO_FEED_PATH="./x-feed.json";
 let autoSnapshot=null;
-const AUTO_MACHINE_IDS=new Set(["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun"]);
+const AUTO_MACHINE_IDS=new Set(["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun","sunbreak","monkey5","sencolle5","kanokari"]);
 function validAutoPost(post){
  return post&&typeof post==="object"&&typeof post.id==="string"&&
   /^[0-9]{10,25}$/.test(post.id)&&
