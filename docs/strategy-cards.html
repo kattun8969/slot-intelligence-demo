@@ -81,7 +81,6 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 <footer>掲載数値の正確性・適用条件・実際の収支を保証するものではありません。入力情報は外部送信されず、期待値記録にも自動入力しません。リンク先の記述・更新日は後から変わることがあります。</footer>
 <script>
 "use strict";
-const STORE_INSTALLED=new Set(["seiya","ggo","kabaneri","sao2","monhun","otome5","yoshimune","tokyoghoul","aobuta","world","lycoris","mahoako","juoh","sunbreak","monkey5","kanokari","godeva2","garo","ragnador","vivy","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
 const MACHINES=[
  ["seiya","聖闘士星矢 黄金十二宮"],
  ["ggo","ガンゲイル・オンライン"],
@@ -628,7 +627,7 @@ function compare(){
   "件。うち自分で条件を確認できたもの "+eligible.length+"件、条件が違うもの "+
   mismatch.length+"件。残りは確認が必要です。<strong>これはG数の比較だけ</strong>。期待値は計算していません。";
 }
-for(const [id,label] of MACHINES.filter(x=>STORE_INSTALLED.has(x[0])))$("machine").add(new Option(label,id));
+for(const [id,label] of MACHINES)$("machine").add(new Option(label,id));
 const requestParams=new URLSearchParams(location.hash.startsWith("#")?location.hash.slice(1):"");
 const requestedMachine=requestParams.get("machine");
 const requestedCondition=requestParams.get("condition");
