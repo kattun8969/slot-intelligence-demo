@@ -35,7 +35,6 @@ footer{font-size:12px;color:#50697e;padding:15px}p{margin:8px 0}
 "use strict";
 // All 18 user-requested IDs. Sixteen have sourced comparisons;
 // the remaining two are research-only, not EV-ranked.
-const STORE_INSTALLED=new Set(["seiya","ggo","kabaneri","sao2","monhun","otome5","yoshimune","tokyoghoul","aobuta","world","lycoris","mahoako","juoh","sunbreak","monkey5","kanokari","godeva2","garo","ragnador","vivy","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
 const MACHINES=[
  ["seiya","聖闘士星矢 黄金十二宮"],
  ["ggo","ガンゲイル・オンライン"],
@@ -104,7 +103,7 @@ function getCandidates(skip,kind,exchange,term){
  const filtered=SOURCED.filter(x=>x.id!==skip&&(kind==="all"||x.kind===kind)&&
     x.exchange.includes(exchange)&&String(name.get(x.id)||"").toLowerCase().includes(searchable));
  const result=[];
- for(const machine of MACHINES.filter(x=>STORE_INSTALLED.has(x[0]))){
+ for(const machine of MACHINES){
   if(machine[0]===skip)continue;
   const rows=filtered.filter(x=>x.id===machine[0]);
   if(rows.length)result.push({id:machine[0],name:machine[1],conditions:rows});
@@ -150,7 +149,7 @@ function render(){
   "機種 ／ 調査中："+values.pending.length+
   "機種。実際の空台かどうかは未確認です。";
 }
-for(const [id,name] of MACHINES.filter(x=>STORE_INSTALLED.has(x[0])))$("skip-machine").add(new Option(name,id));
+for(const [id,name] of MACHINES)$("skip-machine").add(new Option(name,id));
 const hash=location.hash.startsWith("#")?location.hash.slice(1):"";
 const params=new URLSearchParams(hash);
 const skipped=params.get("skip");
