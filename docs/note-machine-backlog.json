@@ -1,0 +1,963 @@
+{
+  "schema": 1,
+  "title": "提供された狙い目noteに掲載された未登録機種",
+  "source_url": "https://note.com/velmot_toushi/n/nf83f0a04ca68",
+  "source_scope": "ユーザー提供の保存済み完全HTMLの機種見出しのみ。機種名の公式表記、導入日、現行稼働、攻略条件は別途未検証。",
+  "notes": "既登録の40件と近い名前は除外。名称の揺れ・旧作／新作は別機種の場合があるため、今後、正式名と解析根拠を照合する。",
+  "machines": [
+    {
+      "id": "note-001",
+      "name": "Lパチスロ 喰霊-零-Re",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-002",
+      "name": "Ｌすーぱぁびん娘",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-003",
+      "name": "スマスロ ストリートファイター6",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-004",
+      "name": "L南国育ち SPECIAL",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-005",
+      "name": "スマスロヤバチバ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-006",
+      "name": "ローティス",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-007",
+      "name": "L ULTRAMAN 最終決戦",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-008",
+      "name": "スマート沖スロダークハイビ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-009",
+      "name": "スマスロ BIRDIE WING ‐Golf Girls' Story‐",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-010",
+      "name": "スマスロ バイオハザードRE:3",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-011",
+      "name": "スマスロ ビッグドリーム THE GOLDEN PUSHER",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-012",
+      "name": "スマスロスーパーリオエース2",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-013",
+      "name": "Ｌタクトオーパス デスティニー",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-014",
+      "name": "Lパチスロ 機動戦士ガンダムユニコーン 覚醒DRIVE",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-015",
+      "name": "アニマルスロットドッチ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-016",
+      "name": "スマスロヨルムンガンド",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-017",
+      "name": "L虚構推理",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-018",
+      "name": "Lアクダマドライブ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-019",
+      "name": "スマスロ 攻殻機動隊",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-020",
+      "name": "スマスロ ゴブリンスレイヤーI",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-021",
+      "name": "Lパチスロうみねこのなく頃に2",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-022",
+      "name": "L範馬刃牙",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-023",
+      "name": "スマスロ鉄拳6",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-024",
+      "name": "スマスロ 秘宝伝",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-025",
+      "name": "L 無職転生 ～異世界行ったら本気だす～",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-026",
+      "name": "スマスロ 沖ドキ！DUO アンコール",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-027",
+      "name": "スマスロ 化物語",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-028",
+      "name": "銀河英雄伝説 Die Neue These",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-029",
+      "name": "プリズムナナ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-030",
+      "name": "バーニングエクスプレス",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-031",
+      "name": "スマスロ ネオプラネット",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-032",
+      "name": "L 絶対衝激IV",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-033",
+      "name": "スマスロ とある科学の超電磁砲2（レールガン）",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-034",
+      "name": "L 荒野のコトブキ飛行隊",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-035",
+      "name": "スマスロ バベル",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-036",
+      "name": "L主役は銭形5",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-037",
+      "name": "L転生したら剣でした",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-038",
+      "name": "L咲-Saki-頂上決戦",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-039",
+      "name": "L ダーリン・イン・ザ・フランキス",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-040",
+      "name": "L アズールレーン THE ANIMATION",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-041",
+      "name": "パチスロなめ猫",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-042",
+      "name": "わたしの幸せな結婚",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-043",
+      "name": "ハイビリターン-30",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-044",
+      "name": "L 絶対衝激～PLATONIC HEART～",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-045",
+      "name": "スマスロ デビル メイ クライ 5 スタイリッシュトライブ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-046",
+      "name": "Lいざ！番長スマスロ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-047",
+      "name": "ギルティクラウン2",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-048",
+      "name": "L ULTRAMAN",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-049",
+      "name": "L ToLOVEるダークネス TRANCE ver.8.7",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-050",
+      "name": "スマスロ ようこそ実力至上主義の教室へ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-051",
+      "name": "スマスロ 緑ドン VIVA!情熱南米編 REVIVAL",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-052",
+      "name": "Lパチスロ 機動戦士ガンダムSEED",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-053",
+      "name": "L吉宗",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-054",
+      "name": "L麻雀物語",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-055",
+      "name": "スマスロ アイドルマスター ミリオンライブ！ ネクストプロローグ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-056",
+      "name": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-057",
+      "name": "Lゴジラスマスロ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-058",
+      "name": "スマート沖スロ アメイジングライブ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-059",
+      "name": "Lうしおととら 白面決戦",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-060",
+      "name": "スマスロ　少女歌劇 レヴュースタァライト ‐The SLOT‐",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-061",
+      "name": "スマスロ　シスタークエスト",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-062",
+      "name": "L　TIDADONDON （てぃだどんどん）",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-063",
+      "name": "スマスロ バイオハザード5",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-064",
+      "name": "スマスロ　回胴黙示録カイジ 狂宴",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-065",
+      "name": "L 仮面ライダー電王",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-066",
+      "name": "Lパチスロありふれた職業で世界最強",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-067",
+      "name": "スマスロシャーマンキング",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-068",
+      "name": "スマスロスーパーブラックジャック（ＳＢＪ）",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-069",
+      "name": "L七つの魔剣が支配する",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-070",
+      "name": "Lシンエヴァンゲリオン",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-071",
+      "name": "L島娘",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-072",
+      "name": "にゃんこ大戦争　超神速",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-073",
+      "name": "スマスロ　サラリーマン金太郎",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-074",
+      "name": "チバリヨ２＋",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-075",
+      "name": "スマスロスーパービンゴネオ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-076",
+      "name": "Lパチスロダンベル何キロ持てる？",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-077",
+      "name": "Lアクセラレーター（一方通行 とある魔術の禁書目録）",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-078",
+      "name": "犬夜叉2",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-079",
+      "name": "聖戦士ダンバイン",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-080",
+      "name": "ルパン三世-大航海者の秘宝",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-081",
+      "name": "桃太郎電鉄",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-082",
+      "name": "ダブルアタック２",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-083",
+      "name": "Lバンドリ！",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-084",
+      "name": "スマスロ必殺仕置人",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-085",
+      "name": "re：ゼロから始める異世界生活",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-086",
+      "name": "スマスロ頭文字2nd",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-087",
+      "name": "スマスロ鬼武者３",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-088",
+      "name": "L真・一騎当千",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-089",
+      "name": "L今日から俺は！！",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-090",
+      "name": "パチスロL黄門ちゃま天",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-091",
+      "name": "パチスロ閃乱カグラ２",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-092",
+      "name": "ワンパンマン",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-093",
+      "name": "ゲゲゲの鬼太郎",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-094",
+      "name": "トロピカーナ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-095",
+      "name": "D4DJ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-096",
+      "name": "スマスロゴッドイーター",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-097",
+      "name": "ゾンビランドサガ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-098",
+      "name": "黄金首Angel",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-099",
+      "name": "アカメが斬る！",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-100",
+      "name": "戦姫絶唱シンフォギア",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-101",
+      "name": "真・北斗無双",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-102",
+      "name": "L聖闘士星矢 海皇覚醒 CUSTOM EDITION",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-103",
+      "name": "スマスロ痛いのは嫌なので防御力に極振りしたいと思います。",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-104",
+      "name": "L ToLOVEるダークネス",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-105",
+      "name": "エウレカセブン４",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-106",
+      "name": "ウルトラマンティガ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-107",
+      "name": "炎炎ノ消防隊スマスロ！",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-108",
+      "name": "押忍！番長4",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-109",
+      "name": "パチスロ ダンジョンに出会いを求めるのは間違っているだろうか2",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-110",
+      "name": "スマスロゴールデンカムイ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-111",
+      "name": "Lうる星やつら",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-112",
+      "name": "Lストライクザブラッド",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-113",
+      "name": "忍魂奥義皆伝ノ章",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-114",
+      "name": "L南国育ち",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-115",
+      "name": "キングパルサー",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-116",
+      "name": "コードギアス反撃のルルーシュ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-117",
+      "name": "スマスロガールズパンツァー",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-118",
+      "name": "Sky Love",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-119",
+      "name": "Lストライクウィッチーズ2",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-120",
+      "name": "G１優駿倶楽部黄金",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-121",
+      "name": "スマスロ冴えない彼女の育てかた",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-122",
+      "name": "L 仮面ライダー 7RIDERS",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-123",
+      "name": "スマスロ バイオハザードヴィレッジ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-124",
+      "name": "Lパチスロ マクロスフロンティア4",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-125",
+      "name": "L吉宗RISING",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-126",
+      "name": "バジリスク絆天膳ver",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-127",
+      "name": "マジカルハロウィン８",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-128",
+      "name": "L花の慶次〜佐渡攻めの章〜",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-129",
+      "name": "スマスロラブ嬢",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-130",
+      "name": "スマスロリンかけ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-131",
+      "name": "スマスロケンガンアシュラ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-132",
+      "name": "スマスロ劇場版 魔法少女まどか☆マギカ[前編]始まりの物語／[後編]永遠の物語f-フォルテ-",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-133",
+      "name": "L大工の源さん超夢源",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-134",
+      "name": "L エヴァンゲリオン ～未来への創造～",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-135",
+      "name": "転生したらスライムだった件スマスロ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-136",
+      "name": "戦国コレクション５スマスロ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-137",
+      "name": "麻雀格闘俱楽部覚醒",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-138",
+      "name": "スマスロ戦国乙女４",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-139",
+      "name": "009RE:CYBORG",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-140",
+      "name": "スマスロ 戦国BASARA GIGA",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-141",
+      "name": "防空少女ラブキューレ2〜極限の共鳴〜",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-142",
+      "name": "乃木坂46",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-143",
+      "name": "スマスロ バイオハザード:ヴェンデッタ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-144",
+      "name": "スマスロベルセルク",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-145",
+      "name": "Lにゃんこ大戦争古い方",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-146",
+      "name": "スマスロSAO",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-147",
+      "name": "主役は銭形４",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-148",
+      "name": "スマスロ北斗の拳",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-149",
+      "name": "ゴブリンスレイヤー",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-150",
+      "name": "エリートサラリーマン鏡",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-151",
+      "name": "ヴァルヴレイヴ",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-152",
+      "name": "バキ強くなりたくば喰らえ！",
+      "kind": "スマスロ・現行記事収録",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-153",
+      "name": "押忍！番長０",
+      "kind": "メダル機",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-154",
+      "name": "カバネリ",
+      "kind": "メダル機",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-155",
+      "name": "新鬼武者",
+      "kind": "メダル機",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-156",
+      "name": "炎炎メダル機",
+      "kind": "メダル機",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-157",
+      "name": "コインメダルグランベルム",
+      "kind": "メダル機",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-158",
+      "name": "ハーデス6.5",
+      "kind": "メダル機",
+      "status": "research_pending"
+    },
+    {
+      "id": "note-159",
+      "name": "傷物語",
+      "kind": "メダル機",
+      "status": "research_pending"
+    }
+  ]
+}
