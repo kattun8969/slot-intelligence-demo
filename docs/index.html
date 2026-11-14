@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- Public build includes local cabinet and hint photos, cached 2026-11-14. -->
 <meta name="theme-color" content="#11243a">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src 'none'; img-src 'self' https://www.daitogiken.com https://assets.hisshobon.jp https://new.sammy.co.jp https://yugi-nippon.com https://livedoor.blogimg.jp https://pachima.itembox.cloud https://item-shopping.c.yimg.jp">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src 'self'; img-src 'self' https://www.daitogiken.com https://assets.hisshobon.jp https://new.sammy.co.jp https://yugi-nippon.com https://livedoor.blogimg.jp https://pachima.itembox.cloud https://item-shopping.c.yimg.jp">
 <title>Slot Intelligence｜現地メモ 仮公開デモ</title>
 <style>
 :root{color-scheme:light;--ink:#19334a;--muted:#536c80;--blue:#124f88;--bg:#eef3f8;--card:#fff;--border:#d9e2eb;--warn:#8c5300}
@@ -154,6 +154,7 @@ const DISCOVERY=[
 {id:"god",name:"GOD（型式確認中）",aliases:["ゴッド"],group:"other",colors:["#a77927","#445982"]}
 ];
 const CATALOG_GROUPS=[
+{key:"archive",heading:"note掲載・追加調査中の機種",desc:"保存された記事の見出しを収録。正式名・導入日・解析値は未照合です。詳細は未検証として表示します。",style:"list"},
 {key:"popular",heading:"注目されている機種",desc:"設置・検索動向などを参考に選んだ注目機種。リアルタイム順位ではありません。",style:"rail"},
 {key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種。調査資料の追加機種も掲載",style:"grid"},
 {key:"recent",heading:"最近導入された台",desc:"2026年9〜10月導入のピックアップ",style:"grid"},
@@ -187,10 +188,10 @@ function makeMachineTile(m){
  art.append(cabinet,note);
  const body=document.createElement("div");body.className="tile-body";
  const h=document.createElement("h4");h.textContent=m.name;
- const meta=document.createElement("p");meta.textContent=m.date?"導入："+m.date:"機種別の狙い方・示唆を見る";
+ const meta=document.createElement("p");meta.textContent=m.group==="archive"?"noteに掲載／狙い目の調査中":m.date?"導入："+m.date:"機種別の狙い方・示唆を見る";
  const links=document.createElement("div");links.className="tile-links";
- for(const [title,path] of [["機種詳細","./opportunities.html#machine="],["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
-  const a=document.createElement("a");const newGuide=!["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun","sunbreak","monkey5","sencolle5","kanokari","aobuta","world","lycoris","mahoako","juoh","yoshimune"].includes(m.id);const linkBase=title==="狙い目"&&newGuide?"./opportunities.html#machine=":path;a.href=linkBase+encodeURIComponent(m.id);a.textContent=title;links.append(a);
+ for(const [title,path] of (m.group==="archive"?[["機種詳細","./opportunities.html#machine="]]:[["機種詳細","./opportunities.html#machine="],["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]])){
+  const a=document.createElement("a");const newGuide=m.group==="archive"||!["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun","sunbreak","monkey5","sencolle5","kanokari","aobuta","world","lycoris","mahoako","juoh","yoshimune"].includes(m.id);const linkBase=title==="狙い目"&&newGuide?"./opportunities.html#machine=":path;a.href=linkBase+encodeURIComponent(m.id);a.textContent=title;links.append(a);
  }
  body.append(h,meta,links);
  const entry=document.createElement("a");entry.className="tile-hit";entry.href="./opportunities.html#machine="+encodeURIComponent(m.id);entry.setAttribute("aria-label",m.name+"の機種詳細・狙い方を開く");
@@ -213,7 +214,27 @@ function renderDiscovery(){
  document.getElementById("catalog-no-results").hidden=total!==0;
 }
 document.getElementById("catalog-query").addEventListener("input",renderDiscovery);
+async function loadNoteMachineBacklog(){
+ try{
+  const res=await fetch("./note-machine-backlog.json",{cache:"no-cache"});
+  if(!res.ok)throw Error("HTTP "+res.status);
+  const data=await res.json();
+  if(data.schema!==1||!Array.isArray(data.machines))throw Error("backlog schema");
+  const existing=new Set(DISCOVERY.map(m=>m.id));
+  for(const m of data.machines){
+   if(!m||!/^note-[0-9]{3}$/.test(m.id)||typeof m.name!=="string"||existing.has(m.id))continue;
+   DISCOVERY.push({id:m.id,name:m.name,aliases:[],group:"archive",colors:["#5d788f","#65869b"],pending:true});
+   existing.add(m.id);
+  }
+  renderDiscovery();
+ }catch(e){
+  const msg=document.createElement("p");msg.className="meta";
+  msg.textContent="追加調査中の機種リストを読み込めませんでした。登録済み機種はそのまま検索できます。";
+  document.getElementById("catalog-groups").after(msg);
+ }
+}
 renderDiscovery();
+loadNoteMachineBacklog();
 
 const machines=[
 {"id":"paripi","name":"スマスロ パリピ孔明","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
