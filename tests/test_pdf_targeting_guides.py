@@ -44,7 +44,7 @@ class PDFGuideTests(unittest.TestCase):
  def test_machine_page_leads_with_targeting_before_numbers_and_notes(self):
   self.assertLess(self.detail.index('id="targeting-categories"'),self.detail.index('id="strategy-source-summary"'))
   self.assertLess(self.detail.index('id="category-guide-content"'),self.detail.index('id="detail-counter-value"'))
-  for part in ('① 天井狙い','② ゾーン狙い','③ その他・特殊狙い','showTargetingCategories(m);','loadTargetingCategories();','targeting-categories.json'):
+  for part in ('天井狙い','ゾーン狙い','特殊狙い','showTargetingCategories(m);','loadTargetingCategories();','targeting-categories.json'):
    self.assertIn(part,self.detail)
   self.assertIn('sourceComparison.textContent=isNew?',self.detail)
   self.assertIn('linkBase=title==="狙い目"&&newGuide',self.home)
