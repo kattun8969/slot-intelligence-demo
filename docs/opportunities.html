@@ -553,6 +553,29 @@ async function loadTargetingCategories(){
  const current=selected();if(current)showTargetingCategories(current);
 }
 
+const MONKEY_CUE_DATA=[
+["ロゴなし（デフォルト）","天国否定ではありません。AT後1周期目が未消化なら、現在の激走ポイント・前兆と合わせて1周期目までを検討。デフォルトだけでAT当選まで続行とは判断しません。"],
+["ロゴあり","モードBの期待度アップ。ただし確定ではないので、現在の周期・ポイントと追加示唆を確認。"],
+["ロゴ＋キラキラ","モードB以上濃厚。最大3周期の状態と残り周期を照合し、続行を検討。"],
+["Vロゴ","天国濃厚。1周期目の天井と現在の周期を確認。"],
+["ライバルヘルメット","榎木・洞口・蒲生・浜岡・青島・モノクロ波多野で恩恵が異なります。通常モードのロゴとは別軸で判断。"]
+];
+function renderCompoundCues(machine){
+ const root=$("compound-cue-content");if(!root)return;root.replaceChildren();
+ if(machine.id!=="monkey5"){
+  const p=document.createElement("p");p.className="strategy-guide-note";
+  p.textContent="この機種の複合示唆の具体的なボーダーは出典照合中。現在G数・周期の起点、終了画面・アイキャッチ、リセットやAT/CZ終了後の状態を合わせて確認してください。";
+  root.append(p);return;
+ }
+ const select=document.createElement("select");select.setAttribute("aria-label","ヘルメットの種類");
+ MONKEY_CUE_DATA.forEach((a,i)=>select.add(new Option(a[0],String(i))));
+ const details=document.createElement("div");details.className="cue-detail";
+ function update(){details.replaceChildren();const v=MONKEY_CUE_DATA[Number(select.value)];
+  appendDigestText(details,"strong","",v[0]);appendDigestText(details,"p","",v[1]);
+  details.append(fieldLink("ヘルメット画像・出典を確認","https://nana-press.com/kaiseki/machine/644/18061/"));
+ }
+ select.addEventListener("change",update);root.append(select,details);update();
+}
 let FIELD_REPORTS=[],FIELD_REPORTS_LOADED=false;
 const FIELD_SCOPE_LABELS={
  article_read:"記事本文まで確認済み（独自予想は未確定）",
@@ -565,6 +588,34 @@ function appendDigestText(parent,element,klass,content){
  const p=document.createElement(element);if(klass)p.className=klass;
  p.textContent=content;parent.append(p);return p;
 }
+function buildReportMedia(item){
+ let url;try{url=new URL(item.url)}catch(_){return null}
+ const host=url.hostname.toLowerCase(),holder=document.createElement("div");holder.className="report-media";
+ if(item.type==="video"&&["youtube.com","www.youtube.com","youtu.be"].includes(host)){
+  const id=host==="youtu.be"?url.pathname.slice(1):url.searchParams.get("v");
+  if(!id||!/^[a-zA-Z0-9_-]{11}$/.test(id))return null;
+  const img=document.createElement("img");img.src="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";img.alt="YouTube動画サムネイル";img.loading="lazy";
+  const btn=document.createElement("button");btn.type="button";btn.textContent="動画をこの場で表示";
+  btn.addEventListener("click",()=>{
+   const iframe=document.createElement("iframe");iframe.src="https://www.youtube-nocookie.com/embed/"+id;iframe.title=item.title;
+   iframe.loading="lazy";iframe.referrerPolicy="strict-origin-when-cross-origin";iframe.allow="autoplay; encrypted-media; picture-in-picture";
+   holder.replaceChildren(iframe);
+  });holder.append(img,btn);return holder;
+ }
+ if(item.type==="x"&&["x.com","www.x.com","twitter.com","www.twitter.com"].includes(host)&&/^\\/[^/]+\\/status\\/\\d+$/.test(url.pathname)){
+  const btn=document.createElement("button");btn.type="button";btn.textContent="X投稿をこの場で表示";
+  btn.addEventListener("click",()=>{
+   const quote=document.createElement("blockquote");quote.className="twitter-tweet";quote.append(fieldLink("元投稿を見る",item.url));
+   holder.replaceChildren(quote);
+   const load=()=>{if(window.twttr?.widgets?.load)window.twttr.widgets.load(holder)};
+   if(window.twttr?.widgets?.load){load();return}
+   const script=document.createElement("script");script.src="https://platform.twitter.com/widgets.js";script.async=true;script.onload=load;
+   script.onerror=()=>holder.replaceChildren(fieldLink("埋め込めませんでした。Xで開く",item.url));
+   document.head.append(script);
+  });holder.append(btn);return holder;
+ }
+ return null;
+}
 function renderFieldReports(machine){
  const root=$("field-report-items");root.replaceChildren();
  const status=$("field-report-status");
@@ -576,6 +627,7 @@ function renderFieldReports(machine){
   appendDigestText(card,"div","report-tag","要検証・"+(item.type==="video"?"動画":item.type==="x"?"X投稿":"記事")+"／"+item.kind);
   appendDigestText(card,"h4","",item.headline||item.title);
   appendDigestText(card,"p","digest-confidence",FIELD_SCOPE_LABELS[item.source_scope]||"確認範囲を調査中");
+   const media=buildReportMedia(item);if(media)card.append(media);
   appendDigestText(card,"p","digest-label","開く前に分かること");
   const list=document.createElement("ul");list.className="digest-points";
   for(const point of item.highlights||[item.summary])appendDigestText(list,"li","",point);
@@ -625,6 +677,7 @@ function renderStrategyFirst(m){
  showStrategyPhoto(m);
  showTargetingCategories(m);
  renderFieldReports(m);
+ renderCompoundCues(m);
  const root=$("strategy-source-lines");root.replaceChildren();
  const sourceComparison=$("strategy-all-sources");
  const newIds=new Set(["godeva2","garo","ragnador","vivy","uminchu","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
