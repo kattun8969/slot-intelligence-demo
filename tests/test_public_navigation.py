@@ -25,18 +25,25 @@ class PublicNavigationTests(unittest.TestCase):
   self.assertIn('function selected(){return MACHINES.find(x=>x.id===location.hash.replace("#machine=",""))||null}',self.detail)
 
  def test_unverified_sources_are_separate_from_strategy(self):
-  self.assertEqual(self.reports["schema"],1)
+  self.assertEqual(self.reports["schema"],2)
   items=self.reports["items"]
   self.assertGreaterEqual(len(items),9)
   self.assertEqual(len({x["id"] for x in items}),len(items))
   for record in items:
    self.assertTrue(record["url"].startswith("https://"))
-   for field in ("machine","title","published_at","source","caution","kind","summary"):
+   self.assertGreaterEqual(len(record["highlights"]),2)
+   self.assertTrue(all(isinstance(x,str) and x for x in record["highlights"]))
+   for field in ("machine","title","published_at","source","caution","kind","summary","headline","why_watch","verification","source_scope"):
     self.assertTrue(record[field])
   self.assertTrue({"monkey5","tokyoghoul","yoshimune","juoh","world","otome5"}<=set(x["machine"] for x in items))
   self.assertIn('FIELD_REPORTS=data.items.filter',self.detail)
-  self.assertIn('textContent=item.summary',self.detail)
-  self.assertIn('textContent="注意："+item.caution',self.detail)
+  self.assertIn('FIELD_SCOPE_LABELS={',self.detail)
+  self.assertIn('typeof x.verification==="string"',self.detail)
+  self.assertIn('どんな人に役立つ？',self.detail)
+  self.assertIn('item.source_scope==="channel_index"',self.detail)
+  self.assertIn('if(data.schema!==2',self.detail)
+  self.assertIn('for(const point of item.highlights',self.detail)
+  self.assertIn('"未検証の点："+item.caution',self.detail)
   self.assertLess(self.detail.index('id="field-report-items"'),self.detail.index('id="detail-counter-value"'))
 
 if __name__=="__main__":
