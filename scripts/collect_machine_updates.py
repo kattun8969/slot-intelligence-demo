@@ -118,6 +118,10 @@ def parse_updates(html: str) -> list[dict]:
         headline = clean(label[match.end():].lstrip("　 -:"))
         if not 3 <= len(headline) <= 95:
             continue
+        # The same page also shows new-machine release dates and pachinko news.
+        # Only article update announcements should become the change feed.
+        if "メーカー名" in headline or not ("更新" in headline or "アップ" in headline):
+            continue
         # Keep brief change labels, not article paragraphs, and never invent a claim.
         key = (url, date, headline)
         if key in seen:
@@ -159,7 +163,8 @@ def build(previous: dict, catalog: list[dict], updates: list[dict], today: str) 
     updates = [row for row in updates if row["url"] in catalog_urls or slot_label.search(row["headline"])]
     previous_updates = {(
         x.get("date"), x.get("headline"), x.get("url")
-    ): x for x in previous.get("updates", [])}
+    ): x for x in previous.get("updates", [])
+        if "メーカー名" not in x.get("headline", "")}
     merged = list(previous_updates.values())
     keys = set(previous_updates)
     for entry in updates:
