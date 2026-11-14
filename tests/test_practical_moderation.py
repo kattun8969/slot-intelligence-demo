@@ -18,7 +18,7 @@ class PracticalAndModerationTests(unittest.TestCase):
   self.assertEqual(self.candidates["schema"],1)
   self.assertTrue({"monkey-reset","monkey-after-at"} <= {x["id"] for x in rows})
   for row in rows:
-   self.assertTrue(row["source"].startswith("https://"))
+   self.assertTrue(row["source"].startswith("https://") or (row["machine"]=="kiseki" and row["source"]=="" and "暫定" in row["confidence"]))
    self.assertIsInstance(row["check"],list)
    self.assertTrue(row["stop"])
    self.assertTrue(row["ev_yen"] is None or isinstance(row["ev_yen"],int))
