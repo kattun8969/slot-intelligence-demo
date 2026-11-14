@@ -55,5 +55,21 @@
       "first_seen": "2026-11-15"
     }
   ],
-  "updates": []
+  "updates": [
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe：天井機能の解析更新",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe：ボーナス後のフェザーランプによる設定示唆",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe：初当りREGからの天国移行率",
+      "url": "https://pachiseven.jp/machines/7463"
+    }
+  ]
 }
