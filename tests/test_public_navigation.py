@@ -22,7 +22,7 @@ class PublicNavigationTests(unittest.TestCase):
    '.machine-tile .tile-hit{position:absolute;inset:0;z-index:1',
   ):
    self.assertIn(marker,self.home)
-  self.assertIn('function selected(){return MACHINES.find(x=>x.id===location.hash.replace("#machine=","")&&SHOP_INSTALLED.has(x.id))||null}',self.detail)
+  self.assertIn('function selected(){return MACHINES.find(x=>x.id===location.hash.replace("#machine=",""))||null}',self.detail)
 
  def test_unverified_sources_are_separate_from_strategy(self):
   self.assertEqual(self.reports["schema"],2)

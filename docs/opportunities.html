@@ -184,8 +184,6 @@ const MACHINES=[
  {"id":"sencolle5","name":"戦国コレクション5","tier":2,"uncertain":false,"topics":["最大1280コレ（G数ではない）","液晶コレ数のモード・天国128コレ","AT後のやめどき"],"units":["points"],"sources":[["なな徹","https://nana-press.com/kaiseki/machine/506/13930/"]]},
  {"id":"kanokari","name":"彼女、お借りします（かのかり）","tier":2,"uncertain":false,"topics":["BIG後1000G／REG後800G／変更後600G","REG単発連続回数","1Gレンチャンスと66G引き戻し"],"units":["games","throughs"],"sources":[["必勝本","https://hisshobon.com/machineinfo/143129/"]]}
 ];
-const SHOP_INSTALLED=new Set(["seiya","ggo","kabaneri","sao2","monhun","otome5","yoshimune","tokyoghoul","aobuta","world","lycoris","mahoako","juoh","sunbreak","monkey5","kanokari","godeva2","garo","ragnador","vivy","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
-const SHOP_COUNTS={"seiya":17,"ggo":12,"kabaneri":45,"sao2":26,"monhun":1,"otome5":31,"yoshimune":10,"tokyoghoul":62,"aobuta":7,"world":4,"lycoris":28,"mahoako":5,"juoh":24,"sunbreak":24,"monkey5":33,"kanokari":8,"godeva2":8,"garo":1,"ragnador":8,"vivy":5,"paripi":4,"tenma":6,"mogumogu":5,"mieruko":1,"jashin":8,"tondemo":5,"karakuri2":6,"sencolle6":7,"kiseki":36,"tensei2":36,"valv2":16,"toaru2":8,"yajikita":6,"tokyorev":3,"enge2":5,"kaguyasama":11,"oshin3":1};
 const PUBLISHED_RULES=[];
 const KIND_LABELS={ceiling:"天井",zone:"ゾーン",through:"スルー",reset:"リセット",state:"状態・示唆",other:"その他"};
 const UNIT_LABELS={games:"表示G数",cycles:"周期数",points:"ポイント数",throughs:"スルー回数",abeshi:"あべし",count:"回数"};
@@ -330,7 +328,7 @@ function parseYen(raw){
  const n=Number(s);
  return Number.isFinite(n)&&Math.abs(n)<=100000000&&Number.isSafeInteger(n*100)?n:undefined;
 }
-function selected(){return MACHINES.find(x=>x.id===location.hash.replace("#machine=","")&&SHOP_INSTALLED.has(x.id))||null}
+function selected(){return MACHINES.find(x=>x.id===location.hash.replace("#machine=",""))||null}
 function navigate(){
  const m=selected();
  $("list-panel").hidden=!!m || location.hash==="#ledger";
@@ -343,8 +341,8 @@ function navigate(){
 function showList(){
  const term=$("search").value.trim().toLowerCase(),tier=$("tier-filter").value;
  const kind=$("kind-filter").value;
- const items=MACHINES.filter(m=>SHOP_INSTALLED.has(m.id)&&(tier==="all"||String(m.tier)===tier)&&
-   m.name.toLowerCase().includes(term)&&
+ const items=MACHINES.filter(m=>(tier==="all"||String(m.tier)===tier)&&
+   (m.name.toLowerCase().includes(term)||(m.aliases||[]).some(a=>a.toLowerCase().includes(term)))&&
    (kind==="all"||PUBLISHED_RULES.some(rule=>rule.machine_id===m.id&&rule.kind===kind)));
 
  const list=$("target-list");list.replaceChildren();
@@ -354,7 +352,7 @@ function showList(){
   const card=document.createElement("article");card.className="mini-card";
   const h=document.createElement("h3");h.textContent=m.name;
   const flag=document.createElement("span");flag.className="pill "+(m.tier===1?"tier1":"");
-  flag.textContent="楽園大宮店 "+SHOP_COUNTS[m.id]+"台（11/12一覧）";
+  flag.textContent=m.tier===1?"新台・重点":m.tier===2?"対象機種":"継続調査";
   const status=document.createElement("span");status.className="pill warn";
   status.textContent=m.uncertain?"機種の同定待ち":"狙い目条件の確認待ち";
   const verified=PUBLISHED_RULES.filter(rule=>rule.machine_id===m.id);
@@ -488,7 +486,7 @@ function renderStrategyFirst(m){
  const root=$("strategy-source-lines");root.replaceChildren();
  const sourceComparison=$("strategy-all-sources");
  const newIds=new Set(["godeva2","garo","ragnador","vivy","uminchu","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
- const isNew=newIds.has(m.id);
+ const isNew=newIds.has(m.id)||m.id.startsWith("note-");
  sourceComparison.href=isNew?(m.sources[0]?.[1]||"./strategy-cards.html"):"./strategy-cards.html#machine="+encodeURIComponent(m.id);
  sourceComparison.textContent=isNew?"機種解析・原典を開く":"出典別の狙い目を詳しく比較";
  sourceComparison.target=isNew?"_blank":"_self";
@@ -557,8 +555,8 @@ function showDetail(m){
  renderCommunity(m);
  renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
- $("detail-description").textContent="楽園大宮店での掲載台数："+SHOP_COUNTS[m.id]+"台（11月12日の別の公開一覧による参考値） ／ 狙い方は解析と原典を照合してください。";
- $("detail-status").textContent=m.uncertain?
+ $("detail-description").textContent="機種の狙い方は解析・原典と照合してください。登録内容は機種固有の条件で確認します。";
+ $("detail-status").textContent=m.id.startsWith("note-")?"提供されたnoteで見出しを確認しました。正確な型式・解析・狙い目・示唆は未調査です。別機種の数値は流用しません。":m.uncertain?
   "対象機種の正式な同定がまだ済んでいません。別バージョンの解析を流用せず、記録を先に残してください。":
   "狙い目の条件・期待値の検証が完了していません。確認する項目と掲載元への参照だけを提供しています。";
  const ul=$("detail-checkpoints");ul.replaceChildren();
@@ -582,7 +580,8 @@ function showDetail(m){
  const xsearch=document.createElement("p");xsearch.id="x-search-shortcut";
  document.getElementById("x-search-shortcut")?.remove();
  const xlink=document.createElement("a");
- xlink.href="./x-live.html#machine="+m.id;
+ xlink.href=m.id.startsWith("note-")?"https://x.com/search?q="+encodeURIComponent('"'+m.name+'" 狙い目')+"&f=live":"./x-live.html#machine="+m.id;
+ if(m.id.startsWith("note-")){xlink.target="_blank";xlink.rel="noopener noreferrer";}
  xlink.textContent="Xでこの機種の最新投稿を見る";
  xsearch.append(xlink);$("detail-checkpoints").after(xsearch);
  document.getElementById("community-notes-shortcut")?.remove();
@@ -816,6 +815,27 @@ $("clear-ledger").addEventListener("click",()=>{
  if(persist([])){updateLedger();$("ledger-status").textContent="すべての記録を削除しました"}
 });
 showList();updateLedger();navigate();
+async function loadNoteMachineBacklog(){
+ try{
+  const res=await fetch("./note-machine-backlog.json",{cache:"no-cache"});
+  if(!res.ok)throw Error("HTTP "+res.status);
+  const data=await res.json();
+  if(data.schema!==1||!Array.isArray(data.machines))throw Error("bad schema");
+  const seen=new Set(MACHINES.map(m=>m.id));
+  for(const entry of data.machines){
+   if(!entry||!/^note-[0-9]{3}$/.test(entry.id)||typeof entry.name!=="string"||seen.has(entry.id))continue;
+   MACHINES.push({id:entry.id,name:entry.name,tier:9,uncertain:true,
+     topics:["提供noteの機種見出しのみ登録。天井・ゾーン・特殊狙いの根拠は調査中","同名の別スペック、メダル機・スマスロなど型式の違いを要確認"],
+     aliases:[],units:["games"],sources:[["元記事（購入済みnote）","https://note.com/velmot_toushi/n/nf83f0a04ca68"]]});
+   seen.add(entry.id);
+  }
+  showList();
+  if(selected())navigate();
+ }catch(e){
+  $("list-summary").textContent="追加調査中の機種データの読み込みに失敗しました。既存の機種は利用できます。";
+ }
+}
+loadNoteMachineBacklog();
 window.addEventListener("pageshow",()=>{
  const m=selected();if(m){renderCommunity(m);updateConditionEvidence(m);}
 });
