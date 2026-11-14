@@ -63,26 +63,61 @@ function setStates(){const m=active();$("state").replaceChildren();for(const sta
 function setCap(){const m=active(),s=m.states.find(x=>x[0]===$("state").value);$("ceiling").value=s[2];$("counter").value=s[3];$("denom").value=m.id==="lycoris"&&s[3]==="cz"?198.7:m.denom;$("state-note").textContent=(m.verified?"公開の設定1初当たりを初期値にしています。":"設定1の数値は未照合のため1/250は仮定です。")+" AT間・CZ間・ボーナス間の違いと状態判別を確認してください。";render()}
 function n(id){return Number($(id).value)}
 function yen(v){return (v>=0?"+":"")+Math.round(v).toLocaleString("ja-JP")+"円"}
+function waitSpins(start,cap,p){
+ const r=cap-start;if(r<0)throw Error("現在Gが設定した上限を超えています");
+ if(r===0)return 0;
+ if(p<=0)return r;
+ const pp=Math.min(.99999,p);
+ return -Math.expm1(r*Math.log1p(-pp))/pp;
+}
 function evaluate(v){
- const remain=v.ceiling-v.games;if(remain<0)throw Error("現在のG数が上限を超えています");
- // Probability of hitting a modeled bonus in any spin, with forced hit at the chosen cap.
- const chance=1/v.denom;
- const expectedGames=chance===0?remain:((1-Math.pow(1-chance,remain))/chance);
- const cost=expectedGames*50/v.base*(v.lend*(1-v.owned/100)+v.exchange*v.owned/100);
- const payout=v.win*v.exchange;
- return{expectedGames,cost,payout,ev:payout-cost};
+ const unitCost=50/v.base*(v.lend*(1-v.owned/100)+v.exchange*v.owned/100);
+ const p=Math.min(.99999,v.hitMult/v.denom),entry=v.entry/100;
+ let spins=0,bonuses=0,label="当選までの簡易モデル";
+ if(active().id==="ggo"){
+  const maxSkips=$("state").value==="normal"?6:2;
+  if(v.through>maxSkips)throw Error("スルー回数が選択した状態の上限を超えています");
+  let prob=1;
+  for(let i=0;i<=maxSkips-v.through;i++){
+   const start=i===0?v.games:0,cap=i===0?v.ceiling:975;
+   spins+=prob*waitSpins(start,cap,p);
+   bonuses+=prob;
+   if(i<maxSkips-v.through)prob*=1-entry;
+  }
+  label="スルー天井と複数ボーナスを反映したST到達までの概算";
+ }else if(active().id==="godeva2"&&$("counter").value==="at"){
+  const cap=$("state").value==="at-reset"?750:1500;
+  if(v.games>cap)throw Error("現在のAT間GがAT天井を超えています");
+  const remaining=cap-v.games;
+  let progress=0,prob=1;
+  const bonusGap=waitSpins(0,$("state").value==="at-reset"?400:850,p);
+  for(let i=0;i<24&&progress<remaining&&prob>1e-8;i++){
+   const step=Math.min(bonusGap,remaining-progress);
+   spins+=prob*step;progress+=step;
+   bonuses+=prob;
+   prob*=1-entry;
+  }
+  label="AT間上限とボーナス複数回の概算。AT間は現在Gから、ボーナス間は仮の間隔";
+ }else{
+  spins=waitSpins(v.games,v.ceiling,p);
+  label=$("counter").selectedOptions[0].textContent+"当選までの単純モデル";
+ }
+ const cost=spins*unitCost;
+ const avgPayout=active().id==="ggo"||(active().id==="godeva2"&&$("counter").value==="at")?
+ (bonuses*v.bonus+v.win*v.winMult)*v.exchange:v.win*v.winMult*v.exchange;
+ return{expectedGames:spins,cost,payout:avgPayout,ev:avgPayout-cost,bonuses,label};
 }
 function render(){latest=null;$("memo").disabled=true;$("back").href="./opportunities.html#machine="+active().id;
  if(!$("accept").checked){$("result").textContent="仮定を確認すると試算します";$("detail").textContent="";$("warn").textContent="";return}
- try{const v={games:n("games"),through:n("through"),ceiling:n("ceiling"),denom:n("denom"),win:n("win"),base:n("base"),lend:n("lend"),exchange:n("exchange"),owned:n("owned")};
- if(Object.values(v).some(x=>!Number.isFinite(x))||v.games<0||v.ceiling<=0||v.denom<1||v.base<=0||v.lend<=0||v.exchange<=0||v.win<0||v.through<0||v.owned<0||v.owned>100)throw Error("数値の入力範囲を確認してください");
- const x=evaluate(v);latest={...v,...x,id:active().id,machine:active().name,state:$("state").selectedOptions[0].textContent,counter:$("counter").selectedOptions[0].textContent};
+ try{const v={games:n("games"),through:n("through"),atGames:n("at-g"),ceiling:n("ceiling"),denom:n("denom"),win:n("win"),base:n("base"),lend:n("lend"),exchange:n("exchange"),owned:n("owned"),entry:n("entry"),bonus:n("bonus"),hitMult:n("hit-mult"),winMult:n("win-mult")};
+ if(Object.values(v).some(x=>!Number.isFinite(x))||v.games<0||v.ceiling<=0||v.denom<1||v.base<=0||v.lend<=0||v.exchange<=0||v.win<0||v.through<0||v.owned<0||v.owned>100||v.entry<0||v.entry>100||v.hitMult<=0||v.hitMult>5||v.winMult<=0||v.winMult>5||v.bonus<0)throw Error("数値の入力範囲を確認してください");
+ const x=evaluate(v);latest={...v,...x,id:active().id,machine:active().name,state:$("state").selectedOptions[0].textContent,counter:$("counter").selectedOptions[0].textContent,regime:$("regime").value};
  $("result").textContent=yen(x.ev);$("detail").textContent="想定消化G数 "+Math.round(x.expectedGames).toLocaleString("ja-JP")+"G ／ 仮の投資 "+yen(-x.cost)+" ／ 仮の払出 ＋"+Math.round(x.payout).toLocaleString("ja-JP")+"円";
- $("warn").textContent="この試算は『当選までの平均G数×投資単価』と『仮の平均払出』の差です。スルー回数"+v.through+"回は記録に残しますが、現段階の確率計算には反映されません。";
+ $("warn").textContent=x.label+"。初当たり以外の状態別当選分布・AT獲得枚数や優遇冷遇倍率は未検証の仮定であり、実際の期待値と異なります。";
  $("memo").disabled=false;
  }catch(e){$("result").textContent=e.message;$("detail").textContent="";$("warn").textContent="";}
 }
-$("machine").addEventListener("change",()=>{setStates();render()});$("state").addEventListener("change",setCap);
+$("machine").addEventListener("change",()=>{setStates();render()});$("state").addEventListener("change",setCap);$("regime").addEventListener("change",()=>{const mode=$("regime").value;$("hit-mult").value=mode==="warm"?"1.15":mode==="cold"?"0.85":"1";render()});
 document.querySelectorAll("input,select").forEach(el=>{if(el.id!=="state"&&el.id!=="machine")el.addEventListener("input",render)});
 $("memo").addEventListener("click",()=>{if(!latest||!$("accept").checked)return;
  const x=latest,payload={machine:x.id,ev:Math.round(x.ev),kind:"other",counter:x.counter,games:x.games,through:x.through,
