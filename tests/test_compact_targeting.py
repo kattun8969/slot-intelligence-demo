@@ -27,6 +27,10 @@ class CompactTargetingTests(unittest.TestCase):
  def test_missing_numbers_have_clear_date_and_no_invented_values(self):
   a=self.html
   self.assertIn('現在解析情報なし（数値の掲載例は未登録）',a)
+  self.assertIn('const cue=lines.find',a)
+  self.assertIn('開始G数ではありません',a)
+  self.assertIn('この条件の元資料を確認',a)
+  self.assertIn('その他の示唆・仕様',a)
   self.assertIn('登録資料の最終照合：2026年11月14日',a)
   self.assertIn('SNS・動画を含む網羅的な調査完了を意味しません',a)
   self.assertIn('||{ceiling:[],zone:[],other:[]}',a)
