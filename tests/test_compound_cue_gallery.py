@@ -35,7 +35,7 @@ class CompoundCueGalleryTests(unittest.TestCase):
             self.assertIn(marker, self.html)
 
     def test_profit_example_remains_hypothetical(self):
-        self.assertIn("各狙い目の投資・利益予想ではありません", self.html)
+        self.assertIn("この台の期待値ではありません", self.html)
         self.assertIn("renderProfitWorksheet()", self.html)
 
 if __name__ == "__main__":
