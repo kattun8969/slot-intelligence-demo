@@ -47,12 +47,12 @@ button:disabled{opacity:.45;cursor:not-allowed}.tag{font-size:12px;background:#e
 <script>
 "use strict";
 const MACHINES=[
- {id:"ggo",name:"ガンゲイル・オンライン",denom:250,base:33,verified:false,states:[["normal","通常／ボーナス間",975,"bonus"],["reset","設定変更後",300,"bonus"],["after","ST駆け抜け後",975,"bonus"]]},
+ {id:"ggo",name:"ガンゲイル・オンライン",denom:192,base:31,verified:true,states:[["normal","通常／ボーナス間",975,"bonus"],["reset","設定変更後",300,"bonus"],["after","ST駆け抜け後",975,"bonus"]]},
  {id:"godeva2",name:"ゴジラ対エヴァンゲリオン2",denom:234.2,base:32,verified:true,states:[["normal","通常／ボーナス間",850,"bonus"],["reset","変更後／ボーナス間",400,"bonus"],["at","通常／AT間",1500,"at"],["at-reset","変更後／AT間",750,"at"]]},
  {id:"garo",name:"牙狼 闇を照らす者",denom:291.1,base:33,verified:true,states:[["normal","通常",999,"at"],["reset","設定変更後",777,"at"],["failed","金色になれ！敗北後",555,"at"]]},
  {id:"mahoako",name:"魔法少女にあこがれて",denom:436.3,base:31.4,verified:true,states:[["normal","通常／AT間",999,"at"],["reset","設定変更後／AT間",799,"at"]]},
  {id:"lycoris",name:"リコリス・リコイル",denom:328.8,base:31.8,verified:true,states:[["at","通常／AT間",850,"at"],["cz","通常／CZ間",600,"cz"],["reset-at","変更後／AT間",600,"at"],["reset-cz","変更後／CZ間",250,"cz"],["after-at","ST駆け抜け後／AT間",600,"at"],["after-cz","上位CZ失敗後／AT間",250,"at"]]},
- {id:"vivy",name:"Vivy",denom:250,base:33,verified:false,states:[["normal","通常／AT間",800,"at"],["reset","設定変更後／AT間",500,"at"]]}
+ {id:"vivy",name:"Vivy",denom:276.5,base:33,verified:true,states:[["normal","通常／AT間",800,"at"],["reset","設定変更後／AT間",500,"at"]]}
 ];
 const $=id=>document.getElementById(id);let latest=null;
 function nodeOption(value,label){const x=document.createElement("option");x.value=value;x.textContent=label;return x}
@@ -88,7 +88,7 @@ function evaluate(v){
  }else if(active().id==="godeva2"&&$("counter").value==="at"){
   const cap=$("state").value==="at-reset"?750:1500;
   if(v.games>cap)throw Error("現在のAT間GがAT天井を超えています");
-  const remaining=cap-v.games;
+  const remaining=cap-(v.atGames>0?v.atGames:v.games);
   let progress=0,prob=1;
   const bonusGap=waitSpins(0,$("state").value==="at-reset"?400:850,p);
   for(let i=0;i<24&&progress<remaining&&prob>1e-8;i++){
@@ -97,7 +97,7 @@ function evaluate(v){
    bonuses+=prob;
    prob*=1-entry;
   }
-  label="AT間上限とボーナス複数回の概算。AT間は現在Gから、ボーナス間は仮の間隔";
+  label="AT間上限とボーナス複数回の概算。AT間入力G数（未入力時は現在G）から残りGを求め、ボーナス間隔は仮定";
  }else{
   spins=waitSpins(v.games,v.ceiling,p);
   label=$("counter").selectedOptions[0].textContent+"当選までの単純モデル";
@@ -117,11 +117,11 @@ function render(){latest=null;$("memo").disabled=true;$("back").href="./opportun
  $("memo").disabled=false;
  }catch(e){$("result").textContent=e.message;$("detail").textContent="";$("warn").textContent="";}
 }
-$("machine").addEventListener("change",()=>{setStates();render()});$("state").addEventListener("change",setCap);$("regime").addEventListener("change",()=>{const mode=$("regime").value;$("hit-mult").value=mode==="warm"?"1.15":mode==="cold"?"0.85":"1";render()});
+$("machine").addEventListener("change",()=>{setStates();render()});$("state").addEventListener("change",setCap);$("regime").addEventListener("change",render);
 document.querySelectorAll("input,select").forEach(el=>{if(el.id!=="state"&&el.id!=="machine")el.addEventListener("input",render)});
 $("memo").addEventListener("click",()=>{if(!latest||!$("accept").checked)return;
  const x=latest,payload={machine:x.id,ev:Math.round(x.ev),kind:"other",counter:x.counter,games:x.games,through:x.through,
- basis:"独立・試験モデル（実機の期待値ではない）｜"+x.state+"｜計算上限"+x.ceiling+"G｜仮の当選率1/"+x.denom+"｜仮の払出"+x.win+"枚｜持ちメダル充当率"+x.owned+"%｜計算日2026-11-15"};
+ basis:"独立・試験モデル（実機の期待値ではない）｜"+x.state+"｜計算上限"+x.ceiling+"G｜仮の当選率1/"+x.denom+"｜仮の払出"+x.win+"枚｜区間仮説"+x.regime+"・当選倍率"+x.hitMult+"・獲得倍率"+x.winMult+"｜持ちメダル充当率"+x.owned+"%｜計算日2026-11-15"};
  try{sessionStorage.setItem("slotintel-ev-transfer-v1",JSON.stringify(payload));location.href="./opportunities.html#machine="+encodeURIComponent(x.id)}
  catch(e){$("warn").textContent="ブラウザの一時保存が使えません。試算値と条件を手動でメモしてください。";}
 });
