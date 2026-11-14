@@ -379,7 +379,7 @@ let FIRST_SOURCE_ROWS=[],FIRST_SOURCE_LOADED=false;
 let PDF_CATEGORY_GUIDES=[],PDF_CATEGORY_LOADED=false;
 let ADDITIONAL_LINES=[],ADDITIONAL_LOADED=false;
 const ZONE_CONDITIONS=new Set(["cycle","normal_collection","reset_collection"]);
-const SPECIAL_CONDITIONS=new Set(["bonus_after","reg_after","at_shinbig","upper_cz_fail","cz_after_fail"]);
+const SPECIAL_CONDITIONS=new Set(["bonus_after","reg_after","at_shinbig","upper_cz_fail"]);
 function sourceSectionFor(row){
  if(row.category)return row.category;
  return ZONE_CONDITIONS.has(row.condition)?"zone":SPECIAL_CONDITIONS.has(row.condition)?"other":"ceiling";
@@ -492,9 +492,8 @@ function showTargetingCategories(machine){
  const panel=$("category-guide-content");panel.replaceChildren();
  const status=$("category-status");
  if(!PDF_CATEGORY_LOADED){status.textContent="狙い方の分類を読み込んでいます。";return}
- const entry=PDF_CATEGORY_GUIDES.find(g=>g.machine===machine.id);
- if(!entry){status.textContent="この機種の天井・ゾーン・特殊狙いは整理中です。別機種の情報は流用しません。";return}
- status.textContent="各項目の数値はサイト掲載例や実戦考察に基づきます。条件の確度が低いものは明示します。";
+ const entry=PDF_CATEGORY_GUIDES.find(g=>g.machine===machine.id)||{ceiling:[],zone:[],other:[]};
+ status.textContent="各項目は条件別の暫定的な掲載例です。数値がない分類は登録情報の照合日を表示します。";
  for(const [key,heading] of [["ceiling","① 天井狙い"],["zone","② ゾーン狙い"],["other","③ その他・特殊狙い"]]){
   const section=document.createElement("details");section.className="targeting-category";section.open=key==="ceiling";
   const title=document.createElement("summary");title.className="targeting-accordion-heading";title.textContent=heading;
@@ -624,7 +623,7 @@ function renderStrategyFirst(m){
  for(const condition of uniqueConditions){
   const group=rows.filter(r=>r.condition===condition);
   const article=document.createElement("article");article.className="strategy-line";
-  const title=document.createElement("strong");title.textContent=group[0].basis+"（"+condition+"）";
+  const title=document.createElement("strong");title.textContent=group[0].basis+"（"+scenarioOf(group[0])+"）";
   article.append(title);
   const stack=document.createElement("div");
   for(const row of group){
