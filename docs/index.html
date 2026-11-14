@@ -48,7 +48,7 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 .catalog-list .art-label{display:none}
 .catalog-empty{padding:20px;background:#f1f5f9;border-radius:9px}
 @media(max-width:500px){.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-rail .machine-tile{min-width:165px}.catalog-list{grid-template-columns:1fr}.discovery{padding:14px}}
-.machine-art .cabinet-photo{width:100%;height:100%;object-fit:contain;display:block;position:absolute;inset:0;background:#f5f7fa}.machine-art.has-photo{background:#fff}.machine-art.has-photo .art-label{background:#0e456e;color:white}</style>
+.machine-art .cabinet-photo{width:100%;height:100%;object-fit:contain;display:block;position:absolute;inset:0;background:#f5f7fa}.machine-art.has-photo{background:#fff}.machine-art.has-photo .art-label{background:#0e456e;color:white}.catalog-research-fold{border:1px solid #cedde8;border-radius:11px;background:#fff;padding:12px}.catalog-research-fold>summary{cursor:pointer;font-weight:750;color:#155987}.catalog-research-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:7px;padding-top:13px}.catalog-research-list a{display:block;background:#eef4f8;border-radius:7px;padding:8px;font-size:13px;text-decoration:none}.catalog-research-list a:focus-visible{outline:3px solid #6ab0d9}</style>
 </head><body>
 <header><div><div class="pills"><span class="pill tier1">試用版 v0.2</span><span class="pill">スマホ対応</span><span class="pill">通信なし</span></div>
 <h1>狙い目チェック</h1>
@@ -154,11 +154,11 @@ const DISCOVERY=[
 {id:"god",name:"GOD（型式確認中）",aliases:["ゴッド"],group:"other",colors:["#a77927","#445982"]}
 ];
 const CATALOG_GROUPS=[
-{key:"archive",heading:"note掲載・追加調査中の機種",desc:"保存された記事の見出しを収録。正式名・導入日・解析値は未照合です。詳細は未検証として表示します。",style:"list"},
 {key:"popular",heading:"注目されている機種",desc:"設置・検索動向などを参考に選んだ注目機種。リアルタイム順位ではありません。",style:"rail"},
 {key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種。調査資料の追加機種も掲載",style:"grid"},
 {key:"recent",heading:"最近導入された台",desc:"2026年9〜10月導入のピックアップ",style:"grid"},
-{key:"other",heading:"ほかの機種も探す",desc:"継続稼働機種・調査中機種。古い機種だけを集めた一覧ではありません。",style:"list"}
+{key:"other",heading:"ほかの機種も探す",desc:"継続稼働機種・調査中機種。古い機種だけを集めた一覧ではありません。",style:"list"},
+{key:"archive",heading:"note掲載・追加調査中の機種",desc:"保存された記事の見出しを収録。正式名・導入日・解析値は未照合です。詳細は未検証として表示します。",style:"list"}
 ];
 function normalizeMachine(text){return String(text||"").normalize("NFKC").toLowerCase().replace(/[\s・:：\-－_()（）]/g,"");}
 function makeMachineTile(m){
@@ -207,6 +207,16 @@ function renderDiscovery(){
   const section=document.createElement("section");section.className="catalog-section";
   const h=document.createElement("h3");h.textContent=group.heading+"（"+records.length+"）";
   const p=document.createElement("p");p.className="meta";p.textContent=group.desc;
+  if(group.key==="archive"){
+   const fold=document.createElement("details");fold.className="catalog-research-fold";fold.open=Boolean(q);
+   const summary=document.createElement("summary");summary.textContent="調査中 "+records.length+"機種の一覧を"+(q?"確認する":"開く");
+   const list=document.createElement("div");list.className="catalog-research-list";
+   for(const m of records){
+    const link=document.createElement("a");link.href="./opportunities.html#machine="+encodeURIComponent(m.id);
+    link.textContent=m.name;list.append(link);
+   }
+   fold.append(summary,list);section.append(h,p,fold);root.append(section);continue;
+  }
   const grid=document.createElement("div");grid.className="catalog-"+group.style;
   for(const m of records)grid.append(makeMachineTile(m));
   section.append(h,p,grid);root.append(section);
