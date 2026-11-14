@@ -167,7 +167,7 @@ function makeMachineTile(m){
  const h=document.createElement("h4");h.textContent=m.name;
  const meta=document.createElement("p");meta.textContent=m.date?"導入："+m.date:"機種の情報を見る";
  const links=document.createElement("div");links.className="tile-links";
- for(const [title,path] of [["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
+ for(const [title,path] of [["機種詳細","./opportunities.html#machine="],["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
   const a=document.createElement("a");a.href=path+encodeURIComponent(m.id);a.textContent=title;links.append(a);
  }
  body.append(h,meta,links);
