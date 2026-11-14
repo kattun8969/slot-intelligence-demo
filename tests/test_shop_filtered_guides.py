@@ -41,7 +41,13 @@ class ShopFilteredGuidesTests(unittest.TestCase):
    self.assertEqual(len(m["points"]),3)
    self.assertIn(m["name"],self.pages["index.html"])
    self.assertIn(m["name"],self.pages["opportunities.html"])
-  self.assertEqual(len(expanded),27)
+  self.assertEqual(len(expanded),38)
+  self.assertEqual(len(set(expanded)),38)
+  self.assertEqual(set(self.shop["installed"]) - set(expanded),set())
+  self.assertEqual(set(expanded) - set(self.shop["installed"]),{"uminchu"})
+  for machine_id in self.shop["installed"]:
+   entry=expanded[machine_id]
+   self.assertTrue(entry["ceiling"] and entry["zone"] and entry["other"],msg=machine_id)
 
  def test_shop_gate_applies_to_each_visible_selector(self):
   home=self.pages["index.html"]; detail=self.pages["opportunities.html"]

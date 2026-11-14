@@ -36,9 +36,9 @@ class PDFGuideTests(unittest.TestCase):
    self.assertTrue(r["source_notice"])
    self.assertIn(r["basis"],{"pdf_summary","toc_only","toc_plus_external","owner_full_html_source"})
   records={x["machine"]:x for x in self.guides["machine_guides"]}
-  self.assertEqual(records["vivy"]["basis"],"toc_plus_external")
+  self.assertEqual(records["vivy"]["basis"],"owner_full_html_source")
   self.assertEqual(records["uminchu"]["basis"],"toc_plus_external")
-  self.assertEqual(records["godeva2"]["basis"],"pdf_summary")
+  self.assertEqual(records["godeva2"]["basis"],"owner_full_html_source")
   self.assertNotIn("PDF原本の全内容",self.guides["description"])
 
  def test_machine_page_leads_with_targeting_before_numbers_and_notes(self):
