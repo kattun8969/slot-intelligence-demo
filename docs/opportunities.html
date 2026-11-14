@@ -437,6 +437,28 @@ function populateTargetNumbers(machine,sectionKey,summary,root){
  }
  const group=bestCompactGroup(lines);
  if(!group){
+  const cue=lines.find(r=>typeof r.display==="string"&&r.display.trim()&&/(以内|到達|天井|時点)/.test(r.display));
+  if(cue){
+   const card=document.createElement("div");card.className="compact-target";
+   const label=document.createElement("div");label.className="compact-scenario";
+   label.textContent=(cue.label||"条件付きの示唆・仕様")+" ／ 開始G数ではありません";
+   const num=document.createElement("div");num.className="compact-value";num.textContent=cue.display;
+   const note=document.createElement("p");note.className="compact-context";note.textContent=cue.warning||"この数値は打ち始めの推奨ラインではなく条件付きの示唆・天井仕様です。";
+   const cite=fieldLink("この条件の元資料を確認",cue.url);
+   card.append(label,num,note,cite);
+   if(lines.length>1){
+    const more=document.createElement("details");more.className="compact-other";
+    const head=document.createElement("summary");head.textContent="その他の示唆・仕様（"+(lines.length-1)+"件）";more.append(head);
+    for(const row of lines.filter(x=>x!==cue)){
+     const p=document.createElement("p");p.textContent=(row.label||row.basis||"別の条件")+"： "+targetNumber(row)+" ／ "+row.source;
+     more.append(p,fieldLink("掲載元",row.url));
+    }
+    card.append(more);
+   }
+   root.append(card);
+   const marker=document.createElement("span");marker.className="target-summary-num";marker.textContent=cue.display;summary.append(marker);
+   return;
+  }
   const p=document.createElement("p");p.className="target-missing";
   p.textContent="現在解析情報なし（数値の掲載例は未登録）";
   const date=document.createElement("p");date.className="target-check-date";
