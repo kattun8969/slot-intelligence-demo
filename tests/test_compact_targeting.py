@@ -26,13 +26,13 @@ class CompactTargetingTests(unittest.TestCase):
 
  def test_missing_numbers_have_clear_date_and_no_invented_values(self):
   a=self.html
-  self.assertIn('現在解析情報なし（数値の掲載例は未登録）',a)
+  self.assertIn('暫定の開始ラインは調査中',a)
   self.assertIn('const cue=lines.find',a)
-  self.assertIn('開始G数ではありません',a)
+  self.assertIn('打ち始めの目安ではありません',a)
   self.assertIn('この条件の元資料を確認',a)
   self.assertIn('その他の示唆・仕様',a)
   self.assertIn('登録資料の最終照合：2026年11月14日',a)
-  self.assertIn('SNS・動画を含む網羅的な調査完了を意味しません',a)
+  self.assertIn('出典不明のSNS情報も調査対象',a)
   self.assertIn('||{ceiling:[],zone:[],other:[]}',a)
   self.assertIn('row.display',a)
   self.assertIn('/(天井|以内|到達濃厚|期待値|時点|表の一例)/',a)
@@ -56,7 +56,7 @@ class CompactTargetingTests(unittest.TestCase):
    self.assertTrue(r["url"].startswith("https://"))
    self.assertTrue(r["warning"])
   self.assertEqual(len(self.sourced["rows"]),63)
-  self.assertEqual(len(rows),14)
+  self.assertEqual(len(rows),16)
 
 if __name__=="__main__":
  unittest.main()
