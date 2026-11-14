@@ -60,7 +60,7 @@ for(const m of MACHINES)$("machine").append(nodeOption(m.id,m.name));
 const qs=new URLSearchParams(location.search),defaultId=MACHINES.some(m=>m.id===qs.get("machine"))?qs.get("machine"):"ggo";$("machine").value=defaultId;
 function active(){return MACHINES.find(m=>m.id===$("machine").value)}
 function setStates(){const m=active();$("state").replaceChildren();for(const state of m.states)$("state").append(nodeOption(state[0],state[1]));if(qs.get("state")&&m.states.some(x=>x[0]===qs.get("state")))$("state").value=qs.get("state");$("denom").value=m.denom;$("base").value=m.base;$("at-g-wrap").hidden=m.id!=="godeva2";setCap()}
-function setCap(){const m=active(),s=m.states.find(x=>x[0]===$("state").value);$("ceiling").value=s[2];$("counter").value=s[3];$("denom").value=m.id==="lycoris"&&s[3]==="cz"?198.7:m.denom;$("state-note").textContent=(m.verified?"公開の設定1初当たりを初期値にしています。":"設定1の数値は未照合のため1/250は仮定です。")+" AT間・CZ間・ボーナス間の違いと状態判別を確認してください。";render()}
+function setCap(){const m=active(),s=m.states.find(x=>x[0]===$("state").value);$("ceiling").value=s[2];$("counter").value=s[3];$("denom").value=m.id==="lycoris"&&s[3]==="cz"?198.7:m.denom;$("state-note").textContent=(m.verified?"公開の設定1初当たりを初期値にしています。":"初当たり数値は未確認の仮定です。")+(m.id==="garo"?" ※牙狼の1/291.1はボーナスの初当たりで、AT天井の確率ではありません。":"")+" 状態ごとの確率分布は未実装で、設定1の平均確率を天井まで一定と仮定します。";render()}
 function n(id){return Number($(id).value)}
 function yen(v){return (v>=0?"+":"")+Math.round(v).toLocaleString("ja-JP")+"円"}
 function waitSpins(start,cap,p){
@@ -110,7 +110,7 @@ function evaluate(v){
 function render(){latest=null;$("memo").disabled=true;$("back").href="./opportunities.html#machine="+active().id;
  if(!$("accept").checked){$("result").textContent="仮定を確認すると試算します";$("detail").textContent="";$("warn").textContent="";return}
  try{const v={games:n("games"),through:n("through"),atGames:n("at-g"),ceiling:n("ceiling"),denom:n("denom"),win:n("win"),base:n("base"),lend:n("lend"),exchange:n("exchange"),owned:n("owned"),entry:n("entry"),bonus:n("bonus"),hitMult:n("hit-mult"),winMult:n("win-mult")};
- if(Object.values(v).some(x=>!Number.isFinite(x))||v.games<0||v.ceiling<=0||v.denom<1||v.base<=0||v.lend<=0||v.exchange<=0||v.win<0||v.through<0||v.owned<0||v.owned>100||v.entry<0||v.entry>100||v.hitMult<=0||v.hitMult>5||v.winMult<=0||v.winMult>5||v.bonus<0)throw Error("数値の入力範囲を確認してください");
+ if(Object.values(v).some(x=>!Number.isFinite(x))||v.games<0||v.ceiling<=0||v.denom<1||v.base<=0||v.lend<=0||v.exchange<=0||v.win<0||v.through<0||!Number.isInteger(v.through)||!Number.isInteger(v.games)||v.owned<0||v.owned>100||v.entry<0||v.entry>100||v.hitMult<=0||v.hitMult>5||v.winMult<=0||v.winMult>5||v.bonus<0)throw Error("数値の入力範囲を確認してください");
  const x=evaluate(v);latest={...v,...x,id:active().id,machine:active().name,state:$("state").selectedOptions[0].textContent,counter:$("counter").selectedOptions[0].textContent,regime:$("regime").value};
  $("result").textContent=yen(x.ev);$("detail").textContent="想定消化G数 "+Math.round(x.expectedGames).toLocaleString("ja-JP")+"G ／ 仮の投資 "+yen(-x.cost)+" ／ 仮の払出 ＋"+Math.round(x.payout).toLocaleString("ja-JP")+"円";
  $("warn").textContent=x.label+"。初当たり以外の状態別当選分布・AT獲得枚数や優遇冷遇倍率は未検証の仮定であり、実際の期待値と異なります。";
