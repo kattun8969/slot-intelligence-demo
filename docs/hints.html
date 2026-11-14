@@ -31,7 +31,25 @@ footer{padding:14px;color:#536d80;font-size:12px}
 <footer>記事公開後に解析が更新される場合があります。画面の画像例には掲載元を明記し、別の示唆パターンと取り違えないよう区別しています。Xは検索ページへ移動する方式で、API・投稿自動収集は行いません。</footer>
 <script>
 "use strict";
+const STORESHOP=new Set(["seiya","ggo","kabaneri","sao2","monhun","otome5","yoshimune","tokyoghoul","aobuta","world","lycoris","mahoako","juoh","sunbreak","monkey5","kanokari","godeva2","garo","ragnador","vivy","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
 const MACHINES=[
+["paripi","スマスロ パリピ孔明"],
+["tenma","L 転生王女と天才令嬢の魔法革命"],
+["mogumogu","モグモグ風林火山 大海戦の巻"],
+["mieruko","パチスロ 見える子ちゃん"],
+["jashin","L邪神ちゃんドロップキック"],
+["tondemo","スマスロ とんでもスキルで異世界放浪メシ"],
+["karakuri2","Lパチスロ からくりサーカス2"],
+["sencolle6","戦国コレクション6"],
+["kiseki","スマスロ ミリオンゴッド-神々の軌跡-"],
+["tensei2","スマスロ 北斗の拳 転生の章2"],
+["valv2","Lパチスロ 革命機ヴァルヴレイヴ2"],
+["toaru2","スマスロ とある魔術の禁書目録2"],
+["yajikita","スマスロ やじきた道中記参る！"],
+["tokyorev","スマスロ 東京リベンジャーズ"],
+["enge2","スマスロ 炎炎ノ消防隊2"],
+["kaguyasama","パチスロ かぐや様は告らせたい"],
+["oshin3","スマスロ 新鬼武者3"],
 ["godeva2","Lパチスロ ゴジラ対エヴァンゲリオン 2"],
 ["garo","L牙狼 闇を照らす者"],
 ["ragnador","スマスロ ラグナドール"],
@@ -75,8 +93,8 @@ const SCREEN_SAMPLES=[
 const $=id=>document.getElementById(id);
 let kind="ending";
 const requested=new URLSearchParams(location.hash.replace(/^#/,"")).get("machine");
-for(const [id,name] of MACHINES)$("machine").add(new Option(name,id));
-$("machine").value=MACHINES.some(m=>m[0]===requested)?requested:"aobuta";
+for(const [id,name] of MACHINES.filter(x=>STORESHOP.has(x[0])))$("machine").add(new Option(name,id));
+$("machine").value=MACHINES.some(m=>m[0]===requested&&STORESHOP.has(m[0]))?requested:"aobuta";
 function xLink(machine,term){
  const name=MACHINES.find(row=>row[0]===machine)?.[1]||"";
  return "https://x.com/search?q="+encodeURIComponent('"'+name+'" '+term)+"&f=live";
