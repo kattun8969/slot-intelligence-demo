@@ -58,10 +58,9 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <section class="discovery" id="find-machine">
 <div class="catalog-intro"><div><span class="catalog-tag">機種を探す</span><h2>今日はどの台を調べる？</h2><p class="meta">人気・最近導入・その他から探せます。略称でも検索可能。</p></div>
 <a href="./hints.html" class="catalog-tag">終了画面・示唆を見る</a></div>
-<div class="catalog-search"><label for="catalog-query">楽園大宮店の機種名・略称で探す</label><input id="catalog-query" type="search" placeholder="例：真打吉宗、モンキー5、GGO" autocomplete="off"></div>
+<div class="catalog-search"><label for="catalog-query">機種名・略称で探す</label><input id="catalog-query" type="search" placeholder="例：真打吉宗、モンキー5、GGO" autocomplete="off"></div>
 <p class="meta">画像はサイト内に保存できた筐体写真を優先し、取得できなかった場合は掲載元を試します。どちらも表示できなければ仮イラストになります。順位は稼働・期待値のランキングではありません。</p>
 <div id="catalog-groups"></div><p id="catalog-no-results" hidden class="catalog-empty">該当する機種がありません。機種名の一部で検索してください。</p>
-<p class="meta">店舗の設置一覧は2026年11月12日分の別の公開情報を参照。DMMぱちタウンの店舗ページは直接取得できなかったため、<a href="https://pekasen.com/store/rakuen-omiya" target="_blank" rel="noopener noreferrer">集計元の機種一覧</a>で確認してください。未掲載の機種は一時的に非表示です。</p>
 </section>
 <section class="card"><h2>この画面でできること</h2>
 <div class="grid"><div><strong>1. 機種を選ぶ</strong><p class="meta">優先23機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 今の台をメモ</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 見落としをチェック</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
@@ -154,8 +153,6 @@ const DISCOVERY=[
 {id:"mahoako",name:"魔法少女にあこがれて",aliases:["まほあこ","マホアコ"],group:"other",colors:["#a65ea5","#ca6466"]},
 {id:"god",name:"GOD（型式確認中）",aliases:["ゴッド"],group:"other",colors:["#a77927","#445982"]}
 ];
-const STORE_INSTALLED=new Set(["seiya","ggo","kabaneri","sao2","monhun","otome5","yoshimune","tokyoghoul","aobuta","world","lycoris","mahoako","juoh","sunbreak","monkey5","kanokari","godeva2","garo","ragnador","vivy","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
-const STORE_COUNTS={"seiya":17,"ggo":12,"kabaneri":45,"sao2":26,"monhun":1,"otome5":31,"yoshimune":10,"tokyoghoul":62,"aobuta":7,"world":4,"lycoris":28,"mahoako":5,"juoh":24,"sunbreak":24,"monkey5":33,"kanokari":8,"godeva2":8,"garo":1,"ragnador":8,"vivy":5,"paripi":4,"tenma":6,"mogumogu":5,"mieruko":1,"jashin":8,"tondemo":5,"karakuri2":6,"sencolle6":7,"kiseki":36,"tensei2":36,"valv2":16,"toaru2":8,"yajikita":6,"tokyorev":3,"enge2":5,"kaguyasama":11,"oshin3":1};
 const CATALOG_GROUPS=[
 {key:"popular",heading:"注目されている機種",desc:"設置・検索動向などを参考に選んだ注目機種。リアルタイム順位ではありません。",style:"rail"},
 {key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種。調査資料の追加機種も掲載",style:"grid"},
@@ -190,7 +187,7 @@ function makeMachineTile(m){
  art.append(cabinet,note);
  const body=document.createElement("div");body.className="tile-body";
  const h=document.createElement("h4");h.textContent=m.name;
- const meta=document.createElement("p");meta.textContent="楽園大宮店 "+STORE_COUNTS[m.id]+"台（11/12資料）"+(m.date?" ／ 導入："+m.date:"");
+ const meta=document.createElement("p");meta.textContent=m.date?"導入："+m.date:"機種別の狙い方・示唆を見る";
  const links=document.createElement("div");links.className="tile-links";
  for(const [title,path] of [["機種詳細","./opportunities.html#machine="],["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
   const a=document.createElement("a");const newGuide=!["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun","sunbreak","monkey5","sencolle5","kanokari","aobuta","world","lycoris","mahoako","juoh","yoshimune"].includes(m.id);const linkBase=title==="狙い目"&&newGuide?"./opportunities.html#machine=":path;a.href=linkBase+encodeURIComponent(m.id);a.textContent=title;links.append(a);
@@ -204,7 +201,7 @@ function renderDiscovery(){
  const root=document.getElementById("catalog-groups");root.replaceChildren();
  let total=0;
  for(const group of CATALOG_GROUPS){
-  const records=DISCOVERY.filter(m=>STORE_INSTALLED.has(m.id)&&m.group===group.key&&[m.name,...m.aliases].some(n=>normalizeMachine(n).includes(q)));
+  const records=DISCOVERY.filter(m=>m.group===group.key&&[m.name,...m.aliases].some(n=>normalizeMachine(n).includes(q)));
   total+=records.length;if(!records.length)continue;
   const section=document.createElement("section");section.className="catalog-section";
   const h=document.createElement("h3");h.textContent=group.heading+"（"+records.length+"）";
@@ -219,23 +216,23 @@ document.getElementById("catalog-query").addEventListener("input",renderDiscover
 renderDiscovery();
 
 const machines=[
-{"id":"paripi","name":"スマスロ パリピ孔明","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"tenma","name":"L 転生王女と天才令嬢の魔法革命","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"mogumogu","name":"モグモグ風林火山 大海戦の巻","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"mieruko","name":"パチスロ 見える子ちゃん","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"jashin","name":"L邪神ちゃんドロップキック","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"tondemo","name":"スマスロ とんでもスキルで異世界放浪メシ","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"karakuri2","name":"Lパチスロ からくりサーカス2","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"sencolle6","name":"戦国コレクション6","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"kiseki","name":"スマスロ ミリオンゴッド-神々の軌跡-","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"tensei2","name":"スマスロ 北斗の拳 転生の章2","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"valv2","name":"Lパチスロ 革命機ヴァルヴレイヴ2","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"toaru2","name":"スマスロ とある魔術の禁書目録2","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"yajikita","name":"スマスロ やじきた道中記参る！","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"tokyorev","name":"スマスロ 東京リベンジャーズ","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"enge2","name":"スマスロ 炎炎ノ消防隊2","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"kaguyasama","name":"パチスロ かぐや様は告らせたい","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
-{"id":"oshin3","name":"スマスロ 新鬼武者3","tier":2,"note":"楽園大宮店の設置を確認。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"paripi","name":"スマスロ パリピ孔明","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"tenma","name":"L 転生王女と天才令嬢の魔法革命","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"mogumogu","name":"モグモグ風林火山 大海戦の巻","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"mieruko","name":"パチスロ 見える子ちゃん","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"jashin","name":"L邪神ちゃんドロップキック","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"tondemo","name":"スマスロ とんでもスキルで異世界放浪メシ","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"karakuri2","name":"Lパチスロ からくりサーカス2","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"sencolle6","name":"戦国コレクション6","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"kiseki","name":"スマスロ ミリオンゴッド-神々の軌跡-","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"tensei2","name":"スマスロ 北斗の拳 転生の章2","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"valv2","name":"Lパチスロ 革命機ヴァルヴレイヴ2","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"toaru2","name":"スマスロ とある魔術の禁書目録2","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"yajikita","name":"スマスロ やじきた道中記参る！","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"tokyorev","name":"スマスロ 東京リベンジャーズ","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"enge2","name":"スマスロ 炎炎ノ消防隊2","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"kaguyasama","name":"パチスロ かぐや様は告らせたい","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
+{"id":"oshin3","name":"スマスロ 新鬼武者3","tier":2,"note":"掲載の狙い方を調査中。購入済みnoteから狙い方の論点を独自要約。適用条件は原典と複数資料を確認","uncertain":false},
  {id:"godeva2",name:"Lパチスロ ゴジラ対エヴァンゲリオン 2",tier:1,note:"PDFの機種別分類を参考に追加。天井・特殊狙いの適用条件は出典照合が必要",uncertain:false},
  {id:"garo",name:"L牙狼 闇を照らす者",tier:1,note:"PDFの機種別分類を参考に追加。天井・特殊狙いの適用条件は出典照合が必要",uncertain:false},
  {id:"ragnador",name:"スマスロ ラグナドール",tier:1,note:"PDFの機種別分類を参考に追加。天井・特殊狙いの適用条件は出典照合が必要",uncertain:false},
@@ -293,7 +290,7 @@ const choice=(id)=>$(id).value;
 function machine(){return machines.find(x=>x.id===choice("machine"))}
 function rebuild(){
  const selected=choice("machine");$("machine").replaceChildren();
- for(const x of machines.filter(x=>STORE_INSTALLED.has(x.id)&&(choice("tier")==="all"||String(x.tier)===choice("tier")))){
+ for(const x of machines.filter(x=>(choice("tier")==="all"||String(x.tier)===choice("tier")))){
   $("machine").add(new Option(x.name+(x.uncertain?"（名称確認待ち）":""),x.id));
  }
  if([...$("machine").options].some(o=>o.value===selected))$("machine").value=selected;
