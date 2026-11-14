@@ -16,26 +16,26 @@ button:disabled{opacity:.45;cursor:not-allowed}.tag{font-size:12px;background:#e
 <body><main>
 <nav><a href="./opportunities.html">機種一覧へ戻る</a></nav>
 <h1>機種別・期待収支の試算</h1>
-<p class="warn">検証用の独立モデルです。初期値の当選確率・獲得枚数は説明用の仮定であり、実機の期待値・打ち始め目安・有料期待値表の再現ではありません。数値を見て打つかどうかの判断はできません。</p>
+<p class="warn">検証用の独立モデルです。初当たり確率は一部機種で公開された設定1の値を使用していますが、獲得枚数・状態別当選分布は仮定であり、実機の期待値・打ち始め目安・有料期待値表の再現ではありません。数値を見て打つかどうかの判断はできません。</p>
 <section><h2>1. 台の状態を入力</h2>
 <div class="grid">
 <label>機種<select id="machine"></select></label>
 <label>状態<select id="state"></select></label>
 <label>現在のG数<input id="games" type="number" min="0" step="1" value="200"></label>
-<label>スルー回数（記録用）<input id="through" type="number" min="0" max="30" step="1" value="0"></label>
+<label>スルー回数（GGOでは計算に反映）<input id="through" type="number" min="0" max="30" step="1" value="0"></label>
 <label>当選までの上限G数（仮）<input id="ceiling" type="number" min="1" max="2000" value="900"></label>
-<label>現在のカウンター<select id="counter"><option value="at">AT間</option><option value="bonus">ボーナス間</option><option value="cz">CZ間</option><option value="cycle">周期</option></select></label>
+<label id="at-g-wrap">AT間総G数（ゴジエヴァ2用）<input id="at-g" type="number" min="0" max="1500" value="0"></label><label>現在のカウンター<select id="counter"><option value="at">AT間</option><option value="bonus">ボーナス間</option><option value="cz">CZ間</option><option value="cycle">周期</option></select></label>
 </div><p class="muted" id="state-note"></p></section>
 <section><h2>2. 店舗と計算の仮定</h2>
 <div class="grid">
-<label>通常当選確率 1／<input id="denom" type="number" min="1" max="100000" value="250"></label>
-<label>当選時の平均純獲得枚数（仮）<input id="win" type="number" min="0" max="30000" value="400"></label>
+<label>設定1の初当たり確率 1／<input id="denom" type="number" min="1" max="100000" value="250"></label>
+<label>当選時の平均純獲得枚数（仮・未確認）<input id="win" type="number" min="0" max="30000" value="400"></label>
 <label>50枚で回るG数<input id="base" type="number" min="1" max="150" value="33"></label>
 <label>貸出単価 円/枚<input id="lend" type="number" min="0.1" max="100" step=".01" value="20"></label>
 <label>交換単価 円/枚<input id="exchange" type="number" min="0.1" max="100" step=".01" value="20"></label>
 <label>持ちメダル充当率（％）<input id="owned" type="number" min="0" max="100" step="1" value="100"></label>
-</div>
-<p class="muted">上限まで当たらなければ上限Gで当選する単純な仮定です。各機種の周期・スルー・モード・引き戻し・ゾーン、閉店減算、連チャンの分布などは計算に入っていません。</p>
+</div><div class="grid"><label>ボーナス後のST/AT移行率（仮・%）<input id="entry" type="number" min="0" max="100" value="40"></label><label>ボーナス獲得枚数（仮）<input id="bonus" type="number" min="0" max="3000" value="80"></label><label>状態区間（仮説）<select id="regime"><option value="normal">通常・補正なし</option><option value="warm">優遇を仮定</option><option value="cold">冷遇を仮定</option></select></label><label>当選確率の倍率（手入力）<input id="hit-mult" type="number" min=".1" max="5" step=".05" value="1"></label><label>獲得枚数倍率（手入力）<input id="win-mult" type="number" min=".1" max="5" step=".05" value="1"></label></div><p class="muted">優遇・冷遇を確定判別する機能ではありません。初期補正は1.00倍で、ユーザーが倍率を変えたときだけ試算に反映します。</p>
+<p class="muted">上限まで当たらなければ上限Gで当選する単純な仮定です。GGOのSTスルー上限、ゴジエヴァ2のAT間とボーナス間は簡略化した状態モデルに反映します。周期分布・CZ突破率・ゾーン・引き戻し・閉店減算・連チャン分布は未反映です。</p>
 <label class="check"><input id="accept" type="checkbox">実機の期待値ではなく、仮の当選確率と獲得枚数を自分で設定する試算と理解しました</label></section>
 <section><h2>3. 試算結果</h2>
 <div class="result mono" id="result" role="status">仮定を確認すると試算します</div>
@@ -47,46 +47,81 @@ button:disabled{opacity:.45;cursor:not-allowed}.tag{font-size:12px;background:#e
 <script>
 "use strict";
 const MACHINES=[
- {id:"ggo",name:"ガンゲイル・オンライン",states:[["normal","通常／ボーナス間",975,"bonus"],["reset","設定変更後",300,"bonus"],["after","ST駆け抜け後",975,"bonus"]]},
- {id:"godeva2",name:"ゴジラ対エヴァンゲリオン2",states:[["normal","通常／ボーナス間",850,"bonus"],["reset","変更後／ボーナス間",400,"bonus"],["at","通常／AT間",1500,"at"],["at-reset","変更後／AT間",750,"at"]]},
- {id:"garo",name:"牙狼 闇を照らす者",states:[["normal","通常",999,"at"],["reset","設定変更後",777,"at"],["failed","金色になれ！敗北後",555,"at"]]},
- {id:"mahoako",name:"魔法少女にあこがれて",states:[["normal","通常／AT間",999,"at"],["reset","設定変更後／AT間",799,"at"]]},
- {id:"lycoris",name:"リコリス・リコイル",states:[["at","通常／AT間",850,"at"],["cz","通常／CZ間",600,"cz"],["reset-at","変更後／AT間",600,"at"],["reset-cz","変更後／CZ間",250,"cz"],["after-cz","上位CZ失敗後／AT間",250,"at"]]},
- {id:"vivy",name:"Vivy",states:[["normal","通常／AT間",800,"at"],["reset","設定変更後／AT間",500,"at"]]}
+ {id:"ggo",name:"ガンゲイル・オンライン",denom:192,base:31,verified:true,states:[["normal","通常／ボーナス間",975,"bonus"],["reset","設定変更後",300,"bonus"],["after","ST駆け抜け後",975,"bonus"]]},
+ {id:"godeva2",name:"ゴジラ対エヴァンゲリオン2",denom:234.2,base:32,verified:true,states:[["normal","通常／ボーナス間",850,"bonus"],["reset","変更後／ボーナス間",400,"bonus"],["at","通常／AT間",1500,"at"],["at-reset","変更後／AT間",750,"at"]]},
+ {id:"garo",name:"牙狼 闇を照らす者",denom:291.1,base:33,verified:true,states:[["normal","通常",999,"at"],["reset","設定変更後",777,"at"],["failed","金色になれ！敗北後",555,"at"]]},
+ {id:"mahoako",name:"魔法少女にあこがれて",denom:436.3,base:31.4,verified:true,states:[["normal","通常／AT間",999,"at"],["reset","設定変更後／AT間",799,"at"]]},
+ {id:"lycoris",name:"リコリス・リコイル",denom:328.8,base:31.8,verified:true,states:[["at","通常／AT間",850,"at"],["cz","通常／CZ間",600,"cz"],["reset-at","変更後／AT間",600,"at"],["reset-cz","変更後／CZ間",250,"cz"],["after-at","ST駆け抜け後／AT間",600,"at"],["after-cz","上位CZ失敗後／AT間",250,"at"]]},
+ {id:"vivy",name:"Vivy",denom:276.5,base:33,verified:true,states:[["normal","通常／AT間",800,"at"],["reset","設定変更後／AT間",500,"at"]]}
 ];
 const $=id=>document.getElementById(id);let latest=null;
 function nodeOption(value,label){const x=document.createElement("option");x.value=value;x.textContent=label;return x}
 for(const m of MACHINES)$("machine").append(nodeOption(m.id,m.name));
 const qs=new URLSearchParams(location.search),defaultId=MACHINES.some(m=>m.id===qs.get("machine"))?qs.get("machine"):"ggo";$("machine").value=defaultId;
 function active(){return MACHINES.find(m=>m.id===$("machine").value)}
-function setStates(){const m=active();$("state").replaceChildren();for(const state of m.states)$("state").append(nodeOption(state[0],state[1]));if(qs.get("state")&&m.states.some(x=>x[0]===qs.get("state")))$("state").value=qs.get("state");setCap()}
-function setCap(){const s=active().states.find(x=>x[0]===$("state").value);$("ceiling").value=s[2];$("counter").value=s[3];$("state-note").textContent="天井などの上限は入力例です。状態を確実に判別できない場合、数値に意味はありません。";render()}
+function setStates(){const m=active();$("state").replaceChildren();for(const state of m.states)$("state").append(nodeOption(state[0],state[1]));if(qs.get("state")&&m.states.some(x=>x[0]===qs.get("state")))$("state").value=qs.get("state");$("denom").value=m.denom;$("base").value=m.base;$("at-g-wrap").hidden=m.id!=="godeva2";setCap()}
+function setCap(){const m=active(),s=m.states.find(x=>x[0]===$("state").value);$("ceiling").value=s[2];$("counter").value=s[3];$("denom").value=m.id==="lycoris"&&s[3]==="cz"?198.7:m.denom;$("state-note").textContent=(m.verified?"公開の設定1初当たりを初期値にしています。":"初当たり数値は未確認の仮定です。")+(m.id==="garo"?" ※牙狼の1/291.1はボーナスの初当たりで、AT天井の確率ではありません。":"")+" 状態ごとの確率分布は未実装で、設定1の平均確率を天井まで一定と仮定します。";render()}
 function n(id){return Number($(id).value)}
 function yen(v){return (v>=0?"+":"")+Math.round(v).toLocaleString("ja-JP")+"円"}
+function waitSpins(start,cap,p){
+ const r=cap-start;if(r<0)throw Error("現在Gが設定した上限を超えています");
+ if(r===0)return 0;
+ if(p<=0)return r;
+ const pp=Math.min(.99999,p);
+ return -Math.expm1(r*Math.log1p(-pp))/pp;
+}
 function evaluate(v){
- const remain=v.ceiling-v.games;if(remain<0)throw Error("現在のG数が上限を超えています");
- // Probability of hitting a modeled bonus in any spin, with forced hit at the chosen cap.
- const chance=1/v.denom;
- const expectedGames=chance===0?remain:((1-Math.pow(1-chance,remain))/chance);
- const cost=expectedGames*50/v.base*(v.lend*(1-v.owned/100)+v.exchange*v.owned/100);
- const payout=v.win*v.exchange;
- return{expectedGames,cost,payout,ev:payout-cost};
+ const unitCost=50/v.base*(v.lend*(1-v.owned/100)+v.exchange*v.owned/100);
+ const p=Math.min(.99999,v.hitMult/v.denom),entry=v.entry/100;
+ let spins=0,bonuses=0,label="当選までの簡易モデル";
+ if(active().id==="ggo"){
+  const maxSkips=$("state").value==="normal"?6:2;
+  if(v.through>maxSkips)throw Error("スルー回数が選択した状態の上限を超えています");
+  let prob=1;
+  for(let i=0;i<=maxSkips-v.through;i++){
+   const start=i===0?v.games:0,cap=i===0?v.ceiling:975;
+   spins+=prob*waitSpins(start,cap,p);
+   bonuses+=prob;
+   if(i<maxSkips-v.through)prob*=1-entry;
+  }
+  label="スルー天井と複数ボーナスを反映したST到達までの概算";
+ }else if(active().id==="godeva2"&&$("counter").value==="at"){
+  const cap=$("state").value==="at-reset"?750:1500;
+  if(v.games>cap)throw Error("現在のAT間GがAT天井を超えています");
+  const remaining=cap-(v.atGames>0?v.atGames:v.games);
+  let progress=0,prob=1;
+  const bonusGap=waitSpins(0,$("state").value==="at-reset"?400:850,p);
+  for(let i=0;i<24&&progress<remaining&&prob>1e-8;i++){
+   const step=Math.min(bonusGap,remaining-progress);
+   spins+=prob*step;progress+=step;
+   bonuses+=prob;
+   prob*=1-entry;
+  }
+  label="AT間上限とボーナス複数回の概算。AT間入力G数（未入力時は現在G）から残りGを求め、ボーナス間隔は仮定";
+ }else{
+  spins=waitSpins(v.games,v.ceiling,p);
+  label=$("counter").selectedOptions[0].textContent+"当選までの単純モデル";
+ }
+ const cost=spins*unitCost;
+ const avgPayout=active().id==="ggo"||(active().id==="godeva2"&&$("counter").value==="at")?
+ (bonuses*v.bonus+v.win*v.winMult)*v.exchange:v.win*v.winMult*v.exchange;
+ return{expectedGames:spins,cost,payout:avgPayout,ev:avgPayout-cost,bonuses,label};
 }
 function render(){latest=null;$("memo").disabled=true;$("back").href="./opportunities.html#machine="+active().id;
  if(!$("accept").checked){$("result").textContent="仮定を確認すると試算します";$("detail").textContent="";$("warn").textContent="";return}
- try{const v={games:n("games"),through:n("through"),ceiling:n("ceiling"),denom:n("denom"),win:n("win"),base:n("base"),lend:n("lend"),exchange:n("exchange"),owned:n("owned")};
- if(Object.values(v).some(x=>!Number.isFinite(x))||v.games<0||v.ceiling<=0||v.denom<1||v.base<=0||v.lend<=0||v.exchange<=0||v.win<0||v.through<0||v.owned<0||v.owned>100)throw Error("数値の入力範囲を確認してください");
- const x=evaluate(v);latest={...v,...x,id:active().id,machine:active().name,state:$("state").selectedOptions[0].textContent,counter:$("counter").selectedOptions[0].textContent};
+ try{const v={games:n("games"),through:n("through"),atGames:n("at-g"),ceiling:n("ceiling"),denom:n("denom"),win:n("win"),base:n("base"),lend:n("lend"),exchange:n("exchange"),owned:n("owned"),entry:n("entry"),bonus:n("bonus"),hitMult:n("hit-mult"),winMult:n("win-mult")};
+ if(Object.values(v).some(x=>!Number.isFinite(x))||v.games<0||v.ceiling<=0||v.denom<1||v.base<=0||v.lend<=0||v.exchange<=0||v.win<0||v.through<0||!Number.isInteger(v.through)||!Number.isInteger(v.games)||v.owned<0||v.owned>100||v.entry<0||v.entry>100||v.hitMult<=0||v.hitMult>5||v.winMult<=0||v.winMult>5||v.bonus<0)throw Error("数値の入力範囲を確認してください");
+ const x=evaluate(v);latest={...v,...x,id:active().id,machine:active().name,state:$("state").selectedOptions[0].textContent,counter:$("counter").selectedOptions[0].textContent,regime:$("regime").value};
  $("result").textContent=yen(x.ev);$("detail").textContent="想定消化G数 "+Math.round(x.expectedGames).toLocaleString("ja-JP")+"G ／ 仮の投資 "+yen(-x.cost)+" ／ 仮の払出 ＋"+Math.round(x.payout).toLocaleString("ja-JP")+"円";
- $("warn").textContent="この試算は『当選までの平均G数×投資単価』と『仮の平均払出』の差です。スルー回数"+v.through+"回は記録に残しますが、現段階の確率計算には反映されません。";
+ $("warn").textContent=x.label+"。初当たり以外の状態別当選分布・AT獲得枚数や優遇冷遇倍率は未検証の仮定であり、実際の期待値と異なります。";
  $("memo").disabled=false;
  }catch(e){$("result").textContent=e.message;$("detail").textContent="";$("warn").textContent="";}
 }
-$("machine").addEventListener("change",()=>{setStates();render()});$("state").addEventListener("change",setCap);
+$("machine").addEventListener("change",()=>{setStates();render()});$("state").addEventListener("change",setCap);$("regime").addEventListener("change",render);
 document.querySelectorAll("input,select").forEach(el=>{if(el.id!=="state"&&el.id!=="machine")el.addEventListener("input",render)});
 $("memo").addEventListener("click",()=>{if(!latest||!$("accept").checked)return;
  const x=latest,payload={machine:x.id,ev:Math.round(x.ev),kind:"other",counter:x.counter,games:x.games,through:x.through,
- basis:"独立・試験モデル（実機の期待値ではない）｜"+x.state+"｜計算上限"+x.ceiling+"G｜仮の当選率1/"+x.denom+"｜仮の払出"+x.win+"枚｜持ちメダル充当率"+x.owned+"%｜計算日2026-11-15"};
+ basis:"独立・試験モデル（実機の期待値ではない）｜"+x.state+"｜計算上限"+x.ceiling+"G｜仮の当選率1/"+x.denom+"｜仮の払出"+x.win+"枚｜区間仮説"+x.regime+"・当選倍率"+x.hitMult+"・獲得倍率"+x.winMult+"｜持ちメダル充当率"+x.owned+"%｜計算日2026-11-15"};
  try{sessionStorage.setItem("slotintel-ev-transfer-v1",JSON.stringify(payload));location.href="./opportunities.html#machine="+encodeURIComponent(x.id)}
  catch(e){$("warn").textContent="ブラウザの一時保存が使えません。試算値と条件を手動でメモしてください。";}
 });
