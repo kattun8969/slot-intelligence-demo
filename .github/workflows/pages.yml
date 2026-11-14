@@ -25,5 +25,8 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
+      # Allow the uploaded Pages artifact metadata to become visible to the deployment API.
+      - name: Wait for Pages artifact propagation
+        run: sleep 12
       - id: deployment
         uses: actions/deploy-pages@v4
