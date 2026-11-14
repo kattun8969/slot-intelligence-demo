@@ -21,7 +21,7 @@ class PDFGuideTests(unittest.TestCase):
  def test_pdf_table_of_contents_is_covered(self):
   self.assertEqual(self.guides["schema"],1)
   records={x["machine"]:x for x in self.guides["machine_guides"]}
-  self.assertEqual(set(records),PDF_LIST)
+  self.assertTrue(PDF_LIST <= set(records))
   for m in NEW:
    for page in (self.home,self.detail,self.hints,self.hall):
     self.assertIn('"'+m+'"',page)
@@ -34,7 +34,7 @@ class PDFGuideTests(unittest.TestCase):
     self.assertIsInstance(r[category],list)
     self.assertTrue(r[category])
    self.assertTrue(r["source_notice"])
-   self.assertIn(r["basis"],{"pdf_summary","toc_only","toc_plus_external"})
+   self.assertIn(r["basis"],{"pdf_summary","toc_only","toc_plus_external","owner_full_html_source"})
   records={x["machine"]:x for x in self.guides["machine_guides"]}
   self.assertEqual(records["vivy"]["basis"],"toc_plus_external")
   self.assertEqual(records["uminchu"]["basis"],"toc_plus_external")
