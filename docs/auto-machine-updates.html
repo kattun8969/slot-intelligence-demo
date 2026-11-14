@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none';connect-src 'self';style-src 'unsafe-inline';script-src 'unsafe-inline';base-uri 'none';form-action 'none'">
+<title>新台・解析更新の自動チェック｜Slot Intelligence</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fa;color:#18364d;font:15px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{background:#112e4c;color:#fff;padding:18px 14px}header>div,main,footer{max-width:950px;margin:auto}h1{font-size:24px;margin:4px 0}h2{font-size:19px;margin:0 0 10px}
+header a{color:#dbeefd}main{padding:12px}.card{margin:12px 0;border:1px solid #d5e2ea;background:#fff;border-radius:12px;padding:15px}
+.help{color:#556e81;font-size:13px}.notice{border-left:4px solid #bc853c;background:#fff7eb;padding:12px;border-radius:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}.item{border:1px solid #dbe4eb;border-radius:10px;padding:12px;background:#fbfdff}
+.item h3{margin:4px 0;font-size:16px}.item p{margin:6px 0}.badge{font-size:11px;background:#e7f1f8;color:#245a77;padding:3px 8px;border-radius:30px}
+a{color:#155e93}a.button{display:inline-block;padding:8px 12px;border-radius:8px;background:#155f93;color:white;text-decoration:none;font-weight:650;margin:5px 5px 0 0}
+.row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+footer{padding:15px;color:#566d7d;font-size:12px}
+</style></head><body>
+<header><div><small>公開データの毎日チェック／機種・解析記事の発見</small><h1>新台・解析更新を自動チェック</h1>
+<p>新台を先に、過去機種の更新も見逃さず確認できる一覧</p>
+<a href="./opportunities.html#list">狙い目一覧へ戻る</a></div></header>
+<main>
+<section class="card"><div class="notice"><strong>ここは自動収集した一次チェック一覧です。</strong> 掲載された機種が「狙える」「設定1で期待値がある」という意味ではありません。確定解析・独自検証の結果がない段階で、開始G数や期待収支は作りません。</div>
+<p class="help">一般公開の機種名・メーカー・新着見出しを保存し、同じURLの重複を排除しています。情報源は各カードのリンクから確認できます。GitHub Actionsで毎日08:20ごろ（日本時間・遅延あり）に取得を試みます。</p>
+<p class="help" id="status" role="status">データを読み込んでいます…</p>
+<div class="row"><a class="button" href="https://github.com/kattun8969/slot-intelligence-demo/actions/workflows/auto-machine-discovery.yml" rel="noopener noreferrer">自動取得の実行履歴</a><a class="button" href="https://github.com/kattun8969/slot-intelligence-demo/pulls" rel="noopener noreferrer">狙い目・期待値の審査PR</a></div></section>
+<section class="card"><h2>新台・最近掲載の機種</h2><div class="grid" id="new-list"></div></section>
+<section class="card"><h2>過去機種も含む解析更新</h2><p class="help">更新元サイトで公開されている更新見出しだけを表示します。解析の数値そのものは、この画面では自動転載しません。</p><div class="grid" id="update-list"></div></section>
+<section class="card"><h2>情報をサイトへ取り込む基準</h2><p class="help">機種名や公開記事リンクは自動追加。狙い目・やめどき・当選率・示唆・優遇冷遇・期待値は、対象型式、G数の起点、交換率、終了条件、出典の内容を照合してから掲載します。SNSの反応は、重複投稿や未確認の噂を除いて候補として扱います。</p></section>
+</main><footer>Slot Intelligence ／ 更新情報は参照先の記事でご確認ください</footer>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const EXISTING=[
+ ["godeva2",["ゴジラ対エヴァンゲリオン","ゴジラ対エヴァ"]],
+ ["garo",["牙狼闇を照らす者","牙狼 闇を照らす者"]],
+ ["vivy",["vivy"]],
+ ["seiya",["聖闘士星矢黄金十二宮"]],
+ ["ggo",["ガンゲイル"]],
+ ["kabaneri",["カバネリ"]],
+ ["mahoako",["魔法少女にあこがれて"]],
+ ["sunbreak",["モンスターハンターライズ"]],
+ ["lycoris",["リコリス・リコイル"]],
+ ["tenma",["転生王女と天才令嬢"]],
+ ["juoh",["獣王"]],
+ ["kanokari",["彼女、お借りします"]],
+ ["aobuta",["青春ブタ野郎"]],
+ ["paripi",["パリピ孔明"]]
+];
+function simple(x){return String(x).toLocaleLowerCase("ja-JP").normalize("NFKC").replace(/[\s　\-・＿]/g,"")}
+function matchMachine(name){const normalized=simple(name);for(const [id,aliases]of EXISTING){if(aliases.some(a=>normalized.includes(simple(a))))return id}return null}
+function safeSource(url){try{const u=new URL(url);return u.protocol==="https:"&&u.hostname==="pachiseven.jp"&&u.pathname.startsWith("/machines/")?u.href:null}catch(_){return null}}
+function addA(parent,text,url,cls){const safe=safeSource(url);if(!safe)return;const a=document.createElement("a");a.href=safe;a.target="_blank";a.rel="noopener noreferrer";a.textContent=text;if(cls)a.className=cls;parent.append(a)}
+function buildCard(item,kind){
+ const card=document.createElement("article");card.className="item";
+ const title=document.createElement("h3");title.textContent=kind==="machine"?item.name:item.headline;card.append(title);
+ const note=document.createElement("p");note.className="help";
+ note.textContent=kind==="machine"?"メーカー："+(item.maker||"未記載")+" ／ 初回検出："+item.first_seen:"元サイトの更新日："+item.date;
+ card.append(note);
+ const actions=document.createElement("div");actions.className="row";
+ addA(actions,"掲載元を確認",item.url);
+ const mid=kind==="machine"?matchMachine(item.name):null;
+ if(mid){const link=document.createElement("a");link.href="./opportunities.html#machine="+encodeURIComponent(mid);link.textContent="サイト内の機種情報";actions.append(link);}
+ else if(kind==="machine"){const span=document.createElement("span");span.className="badge";span.textContent="新規掲載候補";actions.append(span);}
+ card.append(actions);return card;
+}
+async function load(){
+ try{
+  const response=await fetch("./auto-machine-discovery.json",{cache:"no-cache"});if(!response.ok)throw Error("HTTP "+response.status);
+  const data=await response.json();
+  if(data.schema!==1||!Array.isArray(data.machines)||!Array.isArray(data.updates))throw Error("データ構造");
+  const machines=data.machines.filter(x=>x&&typeof x.name==="string"&&safeSource(x.url)).slice(0,70);
+  const updates=data.updates.filter(x=>x&&typeof x.headline==="string"&&safeSource(x.url)).slice(0,45);
+  for(const row of machines)$("new-list").append(buildCard(row,"machine"));
+  for(const row of updates)$("update-list").append(buildCard(row,"update"));
+  if(!machines.length)$("new-list").textContent="まだ自動収集が完了していません。";
+  if(!updates.length)$("update-list").textContent="更新見出しの保存はこれからです。取得に失敗した場合は、前回の情報を維持します。";
+  $("status").textContent="保存済み機種："+machines.length+"件 ／ 解析更新見出し："+updates.length+"件。新着順の正確なランキングではありません。";
+ }catch(e){$("status").textContent="読み込みに失敗しました。GitHubの実行履歴を確認してください。";}
+}
+load();
+</script></body></html>
