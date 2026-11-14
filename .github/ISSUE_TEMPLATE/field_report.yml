@@ -1,0 +1,58 @@
+name: 実戦報告・狙い目情報を投稿
+description: 公開してよい実戦報告を管理者の確認用に送ります（GitHubアカウントが必要）
+title: "[実戦報告] "
+labels: ["field-report", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        これは公開のGitHub Issueです。氏名・連絡先・顔写真・会員限定の解析資料などは投稿しないでください。掲載は確約されません。投稿内容をAIと管理者が検証し、採用した場合のみサイトに反映します。
+  - type: input
+    id: machine
+    attributes:
+      label: 機種名と型式
+      placeholder: 例：モンキーターンV
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 条件
+      options:
+        - リセット後
+        - AT/CZ後
+        - 周期・ゾーン
+        - 天井
+        - 画面・アイキャッチ示唆
+        - その他
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: 観測した状況・実戦結果
+      description: 現在のG数、周期、ヘルメット、交換条件、やめどき、AT当選結果など分かる範囲で記載。推測は推測と明記してください
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: 検証用の公開情報URL（任意）
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: 根拠の種類
+      options:
+        - 自分の実戦記録
+        - メーカー・解析サイト
+        - X等の投稿
+        - 推測・未検証
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 確認
+      options:
+        - label: 公開してよい内容のみ記載し、他人の文章・画像を無断転載していません
+          required: true
