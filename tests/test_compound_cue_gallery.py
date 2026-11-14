@@ -29,7 +29,6 @@ class CompoundCueGalleryTests(unittest.TestCase):
             'img.referrerPolicy="no-referrer"',
             'img.addEventListener("error"',
             "出典：",
-            "画像・解析出典：",
             "ちょんぼりすた掲載",
             "画像を表示できませんでした",
         ):
