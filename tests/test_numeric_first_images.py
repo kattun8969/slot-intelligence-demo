@@ -31,13 +31,13 @@ class NumericFirstAndImagesTests(unittest.TestCase):
  def test_actual_numbers_and_sources_are_displayed_in_guide(self):
   self.assertEqual(self.data["schema"],1)
   rows=self.data["items"]
-  self.assertEqual(len(rows),14)
+  self.assertEqual(len(rows),16)
   self.assertEqual(len(self.sources["rows"]),63)
   for r in rows:
    self.assertTrue(r["url"].startswith("https://"))
    self.assertGreaterEqual(r["value"],0)
    self.assertIn(r["category"],("ceiling","zone","other"))
-   self.assertIn(r["unit"],("G","pt","周期"))
+   self.assertIn(r["unit"],("G","pt","周期","周期内G"))
    self.assertTrue(r["source"] and r["context"] and r["warning"])
   self.assertIn('populateTargetNumbers(machine,key,title,figures)',self.detail)
   self.assertIn('loadAdditionalLines();',self.detail)

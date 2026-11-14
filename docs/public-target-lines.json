@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "checked_at": "2026-11-14",
-  "note": "追加調査による掲載値とゾーン・示唆・天井仕様。displayがある場合は打ち始めラインとは限らず、条件名・warningを必ず表示。SNS未検証と解析サイトの確度は混在させない。",
+  "note": "掲載行は開始位置（actionable:true）と規定ポイント・天井仕様（actionable:false）を厳密に分離。出典不明のSNS案も発見・原投稿未確認なら '未検証' とし、具体値を作らない。",
   "items": [
     {
       "id": "monkey5-haienavi-table400",
@@ -150,16 +150,18 @@
       "id": "shinuchi-cycle-5",
       "machine": "yoshimune",
       "category": "zone",
-      "label": "通常A等の周期狙い",
-      "value": 5,
-      "unit": "周期",
-      "display": "5周期目〜（周期条件）",
-      "context": "液晶の周期・CZ状態を確認。周期の進行度とG数は別",
-      "source": "ジャグラーズネット",
-      "kind": "個人運営サイトの狙い目",
+      "label": "周期天井狙い：5周期目を開始した台",
+      "value": 0,
+      "unit": "周期内G",
+      "display": "5周期目の開始時点（周期内0G〜）",
+      "context": "「5周期目〜」は5周期目の開始地点からという意味。AT後0Gの台を無条件で打てるという意味ではない。",
+      "source": "なな徹",
+      "kind": "周期天井狙い（条件付き打ち始め）",
       "date": "2026-11-14確認",
-      "url": "https://jugglersnet.com/chumoku/shinnuchi-yoshimune",
-      "warning": "5周期目＝通常A想定の例。通常B/Cなら4周期が天井、天国なら1周期で異なる。"
+      "url": "https://nana-press.com/kaiseki/machine/1124/36100/",
+      "warning": "通常Aでの5周期目を想定した掲載目安。モードB/Cは4周期天井、天国は1周期天井。何周期目か不明なら適用できない。",
+      "actionable": true,
+      "startBasis": "5周期目に入ったことが確実で、まだその周期を消化していない場合"
     },
     {
       "id": "shinuchi-sword-9",
@@ -180,16 +182,18 @@
       "id": "monkey-first-cycle222",
       "machine": "monkey5",
       "category": "zone",
-      "label": "1周期目の規定激走pt到達",
-      "value": 222,
-      "unit": "pt",
-      "display": "1周期目222pt（到達濃厚）",
-      "context": "1周期目で222ptに到達した場合の規定ポイント期待度",
-      "source": "パチ＆スロ必勝本",
-      "kind": "解析・周期到達条件",
+      "label": "1周期目狙い：AT終了直後",
+      "value": 0,
+      "unit": "G",
+      "display": "AT終了後 0G〜（1周期目まで）",
+      "context": "1周期目は最大222ptで優出モードへ。目安はAT終了後の0Gから1周期目をフォローする方法で、現在222ptから打つという意味ではない。",
+      "source": "なな徹",
+      "kind": "1周期目の打ち始め（機械割100%超とするサイトの目安）",
       "date": "2026-11-14確認",
-      "url": "https://p.hisshobon.jp/machine/4185/1/99081",
-      "warning": "222ptから打ち始める狙い目ではない。規定ポイント到達の示唆であり期待値不明。"
+      "url": "https://nana-press.com/kaiseki/machine/644/23068/",
+      "warning": "なな徹は1周期目までの機械割100%超を紹介するが、見込める利益額は示されていない。店舗の交換率・打ち終わり条件・前兆などによって変わる。",
+      "actionable": true,
+      "startBasis": "前回ATが終了した直後／1周期目が未消化"
     },
     {
       "id": "monkey-short-state495",
@@ -205,6 +209,38 @@
       "date": "2026-10-11",
       "url": "https://haienavi.com/machines/monkey",
       "warning": "495Gは『打ち始めの目安』ではなく短縮後の天井。液晶とデータカウンターの約10G差に注意。"
+    },
+    {
+      "id": "monkey1-222-cycle-limit",
+      "machine": "monkey5",
+      "category": "zone",
+      "label": "1周期目の規定ポイント天井",
+      "display": "1周期目は最大222ptで優出モード",
+      "value": 222,
+      "unit": "pt",
+      "actionable": false,
+      "context": "AT終了後の最初の周期で222ptまでに優出モードに移行する仕様",
+      "source": "パチ＆スロ必勝本",
+      "kind": "規定ポイント仕様（開始ラインではない）",
+      "date": "2026-11-14",
+      "url": "https://p.hisshobon.jp/machine/4185/1/99081",
+      "warning": "現在222ptだから打ち始めるという意味ではない。目安の0G〜とセットで説明する仕様。"
+    },
+    {
+      "id": "shinuchi-mode-a-sixth-limit",
+      "machine": "yoshimune",
+      "category": "zone",
+      "label": "モードAの6周期天井",
+      "display": "モードAは6周期でCZ天井（開始ラインではない）",
+      "value": 6,
+      "unit": "周期",
+      "actionable": false,
+      "context": "通常Aは6周期天井、B/Cは4周期、天国は1周期",
+      "source": "なな徹",
+      "kind": "周期天井の仕様",
+      "date": "2026-11-14",
+      "url": "https://nana-press.com/kaiseki/machine/1124/36100/",
+      "warning": "6周期目が天井であることと、5周期目の開始0Gから打てることを区別。"
     }
   ]
 }
