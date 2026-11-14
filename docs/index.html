@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#11243a">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src 'none'; img-src 'self' https://www.daitogiken.com https://assets.hisshobon.jp https://new.sammy.co.jp https://yugi-nippon.com https://livedoor.blogimg.jp https://pachima.itembox.cloud https://item-shopping.c.yimg.jp">
 <title>Slot Intelligence｜現地メモ 仮公開デモ</title>
 <style>
 :root{color-scheme:light;--ink:#19334a;--muted:#536c80;--blue:#124f88;--bg:#eef3f8;--card:#fff;--border:#d9e2eb;--warn:#8c5300}
@@ -13,12 +13,54 @@ main{padding:18px 14px 50px}.card{background:var(--card);padding:19px;margin:14p
 label{display:block;font-weight:650;margin-top:7px}input,select,textarea{display:block;width:100%;padding:12px;margin-top:6px;border:1px solid #9bacbc;border-radius:9px;font:inherit;background:white;color:inherit}textarea{resize:vertical;min-height:85px}input[type=checkbox]{display:inline-block;width:auto;vertical-align:middle;margin:0 8px 0 0;transform:scale(1.2)}.check{font-weight:500;margin:8px 0}
 button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);color:#fff;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:#e5edf4;color:var(--ink)}button.danger{background:#884d4d}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #89b9e7;outline-offset:2px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .pills{display:flex;gap:7px;flex-wrap:wrap}.pill{font-size:12px;color:#395b75;background:#e8f0f9;padding:3px 9px;border-radius:999px}.tier1{background:#dceefb}.tier9{background:#e9e9e9}.result{padding:15px;border:1px solid #d6b77a;background:#fff9ef;border-radius:10px}.result.ok{background:#eef6ff;border-color:#9ebfdb}.result strong{font-size:17px}.list{padding-left:20px}.list li{margin:4px 0}.record{border-bottom:1px solid var(--border);padding:13px 0}.record:last-child{border-bottom:0}.hidden{display:none}.counter{font-weight:700;color:#244b6a}footer{color:var(--muted);padding:15px;font-size:12px}code{overflow-wrap:anywhere}a{color:#124f88}@media(max-width:580px){.card{padding:15px}button{flex:1;min-width:130px}}
-</style>
+
+/* Original editorial discovery design: not copied from third-party machine grids. */
+.discovery{background:#f9fbfd;border:1px solid #d7e4ee;border-radius:17px;padding:19px;margin:14px 0}
+.discovery h2{margin:0}.catalog-intro{display:flex;justify-content:space-between;gap:10px;align-items:start;flex-wrap:wrap}
+.catalog-tag{font-size:12px;padding:5px 9px;border-radius:30px;background:#ddf1f1;color:#176066;font-weight:750}
+.catalog-search{margin:12px 0}.catalog-search label{font-weight:700}.catalog-search input{background:white}
+.catalog-section{border-top:1px solid #deebf1;margin-top:20px;padding-top:15px}
+.catalog-section h3{font-size:19px}.catalog-section .meta{margin-bottom:10px}
+.catalog-rail{display:flex;gap:12px;overflow-x:auto;padding:3px 2px 13px;scroll-snap-type:x proximity}
+.catalog-rail .machine-tile{min-width:170px;max-width:190px;scroll-snap-align:start}
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.machine-tile{border:1px solid #d6e1eb;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 3px 10px #24436211}
+.machine-tile .tile-body{padding:10px}.machine-tile h4{font-size:15px;line-height:1.4;margin:7px 0;min-height:41px}
+.machine-tile p{font-size:12px;color:#607487;line-height:1.45}
+.machine-art{height:145px;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(140deg,var(--art1),var(--art2));overflow:hidden}
+.machine-art:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 80% 10%,#ffffff55,transparent 55%)}
+.cabinet-art{width:85px;height:124px;position:relative;background:#1c2b38;border:5px solid #2f3d4b;border-radius:15px 15px 7px 7px;box-shadow:7px 6px 0 #0005;transform:rotate(-3deg)}
+.cabinet-screen{height:64px;border:4px solid #c3d0d7;border-radius:9px;background:linear-gradient(135deg,var(--art2),var(--art1));display:flex;align-items:center;justify-content:center}
+.cabinet-screen:after{content:"✦";font-size:35px;color:#fff9;text-shadow:0 1px 6px #1119}
+.cabinet-reels{display:flex;gap:3px;padding:5px 5px 2px}
+.cabinet-reels span{height:19px;background:#f5f7f9;border-radius:3px;flex:1;box-shadow:inset 0 -4px #cbd1d7}
+.cabinet-buttons{display:flex;justify-content:center;gap:7px;margin-top:4px}
+.cabinet-buttons i{width:9px;height:9px;border-radius:100%;background:#eb524f;box-shadow:0 1px 4px #fd9b7c}
+.art-label{position:absolute;bottom:5px;right:8px;color:#fff;background:#10283f99;border-radius:4px;padding:2px 5px;font-size:10px}
+.tile-links{display:flex;gap:6px;flex-wrap:wrap}
+.tile-links a{font-size:12px;padding:6px 9px;background:#e5f2f8;border-radius:7px;text-decoration:none;font-weight:700}
+.catalog-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:8px}
+.catalog-list .machine-tile{display:flex;align-items:center}
+.catalog-list .machine-art{width:85px;height:92px;flex-shrink:0}
+.catalog-list .cabinet-art{transform:scale(.65);flex-shrink:0}
+.catalog-list .machine-tile h4{min-height:0}
+.catalog-list .art-label{display:none}
+.catalog-empty{padding:20px;background:#f1f5f9;border-radius:9px}
+@media(max-width:500px){.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-rail .machine-tile{min-width:165px}.catalog-list{grid-template-columns:1fr}.discovery{padding:14px}}
+.machine-art .cabinet-photo{width:100%;height:100%;object-fit:contain;display:block;position:absolute;inset:0;background:#f5f7fa}.machine-art.has-photo{background:#fff}.machine-art.has-photo .art-label{background:#0e456e;color:white}</style>
 </head><body>
 <header><div><div class="pills"><span class="pill tier1">試用版 v0.2</span><span class="pill">スマホ対応</span><span class="pill">通信なし</span></div>
 <h1>狙い目チェック</h1>
 <p>ホールで見つけた台のG数や履歴をメモ</p></div></header>
 <main>
+
+<section class="discovery" id="find-machine">
+<div class="catalog-intro"><div><span class="catalog-tag">機種を探す</span><h2>今日はどの台を調べる？</h2><p class="meta">人気・最近導入・その他から探せます。略称でも検索可能。</p></div>
+<a href="./hints.html" class="catalog-tag">終了画面・示唆を見る</a></div>
+<div class="catalog-search"><label for="catalog-query">機種名・略称で探す</label><input id="catalog-query" type="search" placeholder="例：真打吉宗、モンキー5、GGO" autocomplete="off"></div>
+<p class="meta">画像はサイト内に保存できた筐体写真を優先し、取得できなかった場合は掲載元を試します。どちらも表示できなければ仮イラストになります。順位は稼働・期待値のランキングではありません。</p>
+<div id="catalog-groups"></div><p id="catalog-no-results" hidden class="catalog-empty">該当する機種がありません。機種名の一部で検索してください。</p>
+</section>
 <section class="card"><h2>この画面でできること</h2>
 <div class="grid"><div><strong>1. 機種を選ぶ</strong><p class="meta">優先18機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 今の台をメモ</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 見落としをチェック</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
 <p class="note"><strong>この画面は台のメモ用です。</strong> 狙い目G数は一覧から確認できます。ここでは打てる・打てないを自動判定しません。</p>
@@ -26,10 +68,10 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <section class="card"><h2>狙い目のある機種を探す</h2>
 <p>ほかの台を探すなら一覧へ。打った台の期待値も記録できます。</p>
 <div class="actions"><a href="./opportunities.html#list" class="btn" style="text-decoration:none;display:inline-block">狙い目候補一覧を見る</a><a href="./opportunities.html#ledger" class="btn secondary" style="text-decoration:none;display:inline-block">期待値の記録を見る</a></div>
-<p class="meta">10機種の解析サイト別の狙い始めG数を比較できます。期待値の自動計算はまだありません。</p></section>
+<p class="meta">16機種の解析サイト別の狙い始めG数を比較できます。期待値の自動計算はまだありません。</p></section>
 <section class="card" id="entry"><h2>今の台をメモする</h2>
 <div class="grid">
-<div><label for="tier">表示する機種</label><select id="tier"><option value="all">重点14機種すべて</option><option value="1">新台（最優先）</option><option value="2">稼働機種</option><option value="3">その他重点</option></select></div>
+<div><label for="tier">表示する機種</label><select id="tier"><option value="all">重点18機種すべて</option><option value="1">新台（最優先）</option><option value="2">稼働機種</option><option value="3">その他重点</option></select></div>
 <div><label for="machine">機種を選択</label><select id="machine" required></select></div>
 </div>
 <div id="machine-description" class="note" aria-live="polite" style="margin-top:13px"></div>
@@ -67,6 +109,87 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <footer>試用版 v0.2 / 2026-11-12 / 公開デモに運用DBや未承認の実機スペックは含めていません。作者・利用者いずれの現地状況も外部送信しません。</footer>
 <script>
 "use strict";
+
+const DISCOVERY=[
+{id:"seiya",name:"L聖闘士星矢 黄金十二宮",aliases:["星矢","セイヤ","黄金十二宮"],group:"new",date:"2026-11-09",colors:["#cf651d","#6140a5"]},
+{id:"ggo",name:"L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン",aliases:["GGO","ガンゲイル","ガンゲイルオンライン"],group:"new",date:"2026-11-09",colors:["#de4c70","#514c8a"]},
+{id:"sunbreak",name:"スマスロ モンスターハンターライズ：サンブレイク",aliases:["サンブレイク","MHR:S","モンハンサンブレイク"],group:"recent",date:"2026-10-05",colors:["#99539c","#273e67"]},
+{id:"juoh",name:"スマスロ 獣王",aliases:["獣王","スマスロ獣王"],group:"recent",date:"2026-10-05",colors:["#db6d24","#326f4e"],photo:"https://assets.hisshobon.jp/data/mmgate/news/2315_1.jpg",photoSource:"https://p.hisshobon.jp/news/2315"},
+{id:"lycoris",name:"スマスロ リコリス・リコイル",aliases:["リコリコ","リコリス"],group:"recent",date:"2026-09-07",colors:["#d74c71","#7d4490"],photo:"https://assets.hisshobon.jp/data/mmgate/machine/4770_lycoreco/kyoutai.jpg",photoSource:"https://p.hisshobon.jp/machine/4770/1/115827"},
+{id:"tokyoghoul",name:"L 東京喰種",aliases:["東京喰種","トーキョーグール","グール"],group:"popular",colors:["#1a4862","#992f51"],photo:"https://livedoor.blogimg.jp/pachinkopachisro/imgs/8/7/8723257a.jpg",photoSource:"https://pachinkopachisro.com/archives/59835424.html"},
+{id:"kabaneri",name:"スマスロ 甲鉄城のカバネリ 海門決戦",aliases:["カバネリ2","カバネリ","海門決戦"],group:"popular",colors:["#a64b21","#2c465c"],photo:"https://new.sammy.co.jp/img/slot/main_banner/2025/%E3%82%B9%E3%83%9E%E3%82%B9%E3%83%AD%20%E7%94%B2%E9%89%84%E5%9F%8E%E3%81%AE%E3%82%AB%E3%83%90%E3%83%8D%E3%83%AA%20%E6%B5%B7%E9%96%80%EF%BC%88%E3%81%86%E3%81%AA%E3%81%A8%EF%BC%89%E6%B1%BA%E6%88%A6_900_506.jpg",photoSource:"https://new.sammy.co.jp/japanese/products/pachislot/"},
+{id:"monhun",name:"スマスロ モンスターハンターライズ",aliases:["モンハンライズ","初代ライズ","MHR"],group:"popular",colors:["#578369","#373c61"],photo:"https://item-shopping.c.yimg.jp/i/n/nakaiticom_21760",photoSource:"https://store.shopping.yahoo.co.jp/nakaiticom/21760.html"},
+{id:"monkey5",name:"スマスロ モンキーターンV",aliases:["モンキー5","モンキーターン5","モンキーV"],group:"popular",colors:["#256996","#47a8a7"],photo:"https://pachima.itembox.cloud/product/012/000000001268/000000001268-01.jpg?size=l&t=20250430151521&w=ODAw",photoSource:"https://www.pachima.com/c/gr67/gr109/gr162/gr163/S00545"},
+{id:"otome5",name:"戦国乙女5",aliases:["乙女5","せんごくおとめ5"],group:"other",colors:["#a6547b","#d88743"]},
+{id:"sao2",name:"SAO2（型式確認中）",aliases:["SAO2","ソードアートオンライン2"],group:"other",colors:["#4663a7","#50a3bd"]},
+{id:"sencolle5",name:"戦国コレクション5",aliases:["戦コレ5","せんこれ5"],group:"other",colors:["#7d48ad","#c66546"]},
+{id:"kanokari",name:"彼女、お借りします",aliases:["かのかり","カノカリ"],group:"other",colors:["#d95a91","#e5b46d"]},
+{id:"yoshimune",name:"真打 吉宗",aliases:["真打吉宗","L真打吉宗","しんうちよしむね"],group:"other",date:"2026-04-06",colors:["#bf763c","#4b6694"],photo:"https://www.daitogiken.com/products/slot/img/index_su-yoshimune_img02.png",photoSource:"https://www.daitogiken.com/products/slot/"},
+{id:"aobuta",name:"青春ブタ野郎（青ブタ）",aliases:["青ブタ","あおぶた"],group:"other",colors:["#a16bbb","#507ba9"]},
+{id:"world",name:"ワールドダイスター",aliases:["ワルダイ","わーるどだいすたー"],group:"other",colors:["#d4779c","#6369b0"]},
+{id:"mahoako",name:"魔法少女にあこがれて",aliases:["まほあこ","マホアコ"],group:"other",colors:["#a65ea5","#ca6466"]},
+{id:"god",name:"GOD（型式確認中）",aliases:["ゴッド"],group:"other",colors:["#a77927","#445982"]}
+];
+const CATALOG_GROUPS=[
+{key:"popular",heading:"注目されている機種",desc:"設置・検索動向などを参考に選んだ注目機種。リアルタイム順位ではありません。",style:"rail"},
+{key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種",style:"grid"},
+{key:"recent",heading:"最近導入された台",desc:"2026年9〜10月導入のピックアップ",style:"grid"},
+{key:"other",heading:"ほかの機種も探す",desc:"継続稼働機種・調査中機種。古い機種だけを集めた一覧ではありません。",style:"list"}
+];
+function normalizeMachine(text){return String(text||"").normalize("NFKC").toLowerCase().replace(/[\s・:：\-－_()（）]/g,"");}
+function makeMachineTile(m){
+ const card=document.createElement("article");card.className="machine-tile";
+ const art=document.createElement("div");art.className="machine-art";art.style.setProperty("--art1",m.colors[0]);art.style.setProperty("--art2",m.colors[1]);
+ art.setAttribute("role","group");art.setAttribute("aria-label",m.name+"の画像エリア");
+ const cabinet=document.createElement("div");cabinet.className="cabinet-art";
+ const screen=document.createElement("div");screen.className="cabinet-screen";
+ const reels=document.createElement("div");reels.className="cabinet-reels";
+ for(let n=0;n<3;n++)reels.append(document.createElement("span"));
+ const buttons=document.createElement("div");buttons.className="cabinet-buttons";
+ for(let n=0;n<3;n++)buttons.append(document.createElement("i"));
+ cabinet.append(screen,reels,buttons);
+ const note=document.createElement("span");note.className="art-label";note.textContent="仮画像";
+ if(m.photo){
+  const img=document.createElement("img");img.className="cabinet-photo";
+  img.src="./assets/machines/"+m.id+".webp";img.alt=m.name+"の筐体画像";img.loading="lazy";img.decoding="async";
+  img.referrerPolicy="no-referrer";
+  let triedSource=false;
+  img.addEventListener("load",()=>{art.classList.add("has-photo");cabinet.hidden=true;note.textContent="実機画像"});
+  img.addEventListener("error",()=>{
+   if(!triedSource){triedSource=true;img.src=m.photo;return}
+   img.remove();cabinet.hidden=false;note.textContent="仮画像";
+  });
+  art.append(img);
+ }
+ art.append(cabinet,note);
+ const body=document.createElement("div");body.className="tile-body";
+ const h=document.createElement("h4");h.textContent=m.name;
+ const meta=document.createElement("p");meta.textContent=m.date?"導入："+m.date:"機種の情報を見る";
+ const links=document.createElement("div");links.className="tile-links";
+ for(const [title,path] of [["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
+  const a=document.createElement("a");a.href=path+encodeURIComponent(m.id);a.textContent=title;links.append(a);
+ }
+ body.append(h,meta,links);card.append(art,body);return card;
+}
+function renderDiscovery(){
+ const q=normalizeMachine(document.getElementById("catalog-query").value);
+ const root=document.getElementById("catalog-groups");root.replaceChildren();
+ let total=0;
+ for(const group of CATALOG_GROUPS){
+  const records=DISCOVERY.filter(m=>m.group===group.key&&[m.name,...m.aliases].some(n=>normalizeMachine(n).includes(q)));
+  total+=records.length;if(!records.length)continue;
+  const section=document.createElement("section");section.className="catalog-section";
+  const h=document.createElement("h3");h.textContent=group.heading+"（"+records.length+"）";
+  const p=document.createElement("p");p.className="meta";p.textContent=group.desc;
+  const grid=document.createElement("div");grid.className="catalog-"+group.style;
+  for(const m of records)grid.append(makeMachineTile(m));
+  section.append(h,p,grid);root.append(section);
+ }
+ document.getElementById("catalog-no-results").hidden=total!==0;
+}
+document.getElementById("catalog-query").addEventListener("input",renderDiscovery);
+renderDiscovery();
+
 const machines=[
  {id:"seiya",name:"聖闘士星矢 黄金十二宮",tier:1,note:"2026年新台。天井・内部モードの資料は確認待ち",uncertain:false},
  {id:"ggo",name:"ガンゲイル・オンライン",tier:1,note:"2026年新台。ST・スルー回数の資料は確認待ち",uncertain:false},
@@ -74,7 +197,7 @@ const machines=[
  {id:"sao2",name:"SAO2",tier:2,note:"正確な機種型式と条件付き解析は確認待ち",uncertain:true},
  {id:"monhun",name:"モンスターハンターライズ（2024年版・初代）",tier:2,note:"正式な対象機種を同定するまで実機数値は関連付けません",uncertain:true},
  {id:"otome5",name:"戦国乙女5",tier:2,note:"状態別の解析資料は確認待ち",uncertain:false},
- {id:"yoshimune",name:"吉宗",tier:2,note:"どの世代・バージョンか確認待ち",uncertain:true},
+ {id:"yoshimune",name:"真打 吉宗（2026年）",tier:2,note:"2025年の吉宗と別。AT間・CZ間・周期・真BIG後を区別",uncertain:false},
  {id:"god",name:"GOD",tier:2,note:"どの機種のGODか確認待ち",uncertain:true},
  {id:"tokyoghoul",name:"東京喰種",tier:2,note:"内部状態と出典の確認待ち",uncertain:false},
  {id:"aobuta",name:"青ブタ",tier:3,note:"対象機種の同定と解析条件の確認待ち",uncertain:true},

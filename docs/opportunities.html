@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#122b46">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'none'; img-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
 <title>狙い目を探す・期待値メモ | Slot Intelligence</title>
 <style>
 :root{--ink:#163149;--muted:#576d80;--blue:#155c94;--border:#d7e2ec;--bg:#f2f6fa;--light:#e9f3fc}
@@ -26,7 +26,7 @@ button.secondary,.btn.secondary{background:#e4edf5;color:var(--ink)}button.dange
 .stack>*+*{margin-top:11px}.hidden{display:none!important}.num{font-variant-numeric:tabular-nums}#target-list{margin-top:15px}
 .amount{font-size:clamp(21px,4vw,29px);font-weight:800}.stat{background:#eef5fa;border-radius:10px;padding:12px}
 .log-row{padding:13px 0;border-top:1px solid var(--border)}.log-row:first-child{border-top:0}
-section[hidden]{display:none!important}summary{cursor:pointer;font-weight:650;padding:7px 0}small{color:var(--muted)}
+section[hidden]{display:none!important}.strategy-intro{background:#f4f9fd;border:1px solid #bdd5e5;border-radius:13px;padding:14px;margin:13px 0}.strategy-intro h3{font-size:19px}.strategy-line{background:#fff;border:1px solid #d5e3ed;border-radius:10px;padding:12px;margin:9px 0}.strategy-line strong{font-size:16px}.strategy-number{font-size:20px;font-weight:800;color:#145486}.strategy-inline{display:flex;flex-wrap:wrap;gap:7px;margin:9px 0}.strategy-inline a{padding:7px 10px;border-radius:8px;background:#e5eef6;text-decoration:none;font-size:13px;font-weight:700}.strategy-voice{background:#fff8e9;border-left:3px solid #ca9a4c;padding:10px;border-radius:7px}.strategy-guide-note{color:#486479;font-size:13px}.strategy-machine-photo{margin:5px 0 12px}.strategy-machine-photo img{max-width:min(100%,290px);max-height:280px;object-fit:contain;border-radius:11px;background:#fff;padding:8px}.strategy-machine-photo figcaption{font-size:12px;color:#53697c}.strategy-machine-photo[hidden]{display:none}details.detail-source summary{cursor:pointer;font-weight:700;color:#195d8a}summary{cursor:pointer;font-weight:650;padding:7px 0}small{color:var(--muted)}
 footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 @media(max-width:520px){.card{padding:14px}.actions>*{flex:1 1 140px}}
 </style>
@@ -44,9 +44,10 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </div>
 <p class="notice"><strong>注意：</strong>ここにあるのは狙い目の候補です。G数やリセット条件は自分で確認してください。期待値の合計は入力した金額で、実際の収支とは別です。</p></section>
 <section class="card"><h2>解析とXをチェック</h2>
-<p>10機種の狙い目G数・コレ数をサイト別に比較。Xの実戦報告もチェックできます。</p>
-<a class="btn" href="./alternatives.html">他の狙い目候補を探す</a>
+<p>16機種の狙い目G数・コレ数をサイト別に比較。Xの実戦報告もチェックできます。</p>
+<a class="btn" href="./alternatives.html">他の狙い目候補を探す</a><a class="btn secondary" href="./hall-compare.html">ホールの候補台を5台まで比較</a>
 <a class="btn" href="./strategy-cards.html">何Gから？ 解析サイトを比べる</a>
+<a class="btn secondary" href="./hints.html">終了画面・示唆・アイキャッチを見る</a>
 <a class="btn" href="./research.html">星矢・ガンゲイル・カバネリの解析比較を見る</a>
 <a class="btn secondary" href="./x-live.html">Xの最新投稿・リストを開く</a>
 <a class="btn secondary" href="./community-notes.html">実戦報告・反論を整理する</a>
@@ -60,7 +61,15 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 </section>
 <section id="detail-panel" class="card" hidden>
 <div class="actions"><a class="btn secondary" href="#list">← 狙い目一覧へ戻る</a><a id="detail-alternative-link" class="btn" href="./alternatives.html">この台を見送り、別の候補を探す</a><a class="btn secondary" href="./index.html">現地メモへ</a></div>
-<h2 id="detail-name"></h2><p id="detail-description"></p>
+<h2 id="detail-name"></h2>
+<section id="strategy-first" class="strategy-intro" aria-label="この機種の狙い方と現場の声">
+<h3>この機種の狙い方</h3><figure id="strategy-photo" class="strategy-machine-photo" hidden><img id="strategy-photo-img" alt="" loading="lazy"><figcaption id="strategy-photo-caption"></figcaption></figure><p class="strategy-guide-note">狙い始めの数値は解析サイトごとの掲載例です。通常・リセット・AT間・CZ間などを分け、違う前提の数値は平均しません。</p>
+<div id="strategy-source-summary" role="status"></div><div id="strategy-source-lines"></div>
+<h3>一般解析と現場の声</h3><div id="strategy-field-voice" class="strategy-voice"></div>
+<div class="strategy-inline"><a id="strategy-all-sources" href="./strategy-cards.html">出典別の狙い目を詳しく比較</a><a id="strategy-hint-guide" href="./hints.html">終了画面・アイキャッチ・示唆</a><a id="strategy-x-search" href="https://x.com/">Xの最近の投稿を探す</a></div>
+<p class="strategy-guide-note">現場の声は体験談・感想です。解析値の根拠や期待値を証明するものではありません。数字の起点と現在の状態を必ず確認してください。</p>
+</section>
+<p id="detail-description"></p>
 <div id="detail-status" class="notice"></div>
 <h3>まずチェックすること</h3><ul id="detail-checkpoints"></ul>
 <p class="help">G数や前回の当たり方をチェック。別バージョンの機種の解析を流用しないでください。</p>
@@ -131,7 +140,7 @@ const MACHINES=[
  {id:"sao2",name:"SAO2",tier:2,uncertain:true,topics:["正式な機種バージョン","天井・ゾーンの適用条件"],units:["games"],sources:[]},
  {id:"monhun",name:"モンスターハンターライズ（2024年版・初代）",tier:2,uncertain:true,topics:["ライズ／サンブレイク等の機種特定","該当機種のカウンター起点"],units:["games"],sources:[]},
  {id:"otome5",name:"戦国乙女5",tier:2,uncertain:false,topics:["天井・ゾーンの適用条件","設定変更後と通常時の違い"],units:["games"],sources:[]},
- {id:"yoshimune",name:"吉宗",tier:2,uncertain:true,topics:["機種の世代・型式","規定ゲーム数・状態の条件"],units:["games"],sources:[]},
+ {id:"yoshimune",name:"真打 吉宗（2026年）",tier:2,uncertain:false,topics:["AT間・CZ間・最大6周期を区別","変更後・真BIG後の短縮を区別","元記事でやめどきを確認"],units:["games","cycles"],sources:[]},
  {id:"god",name:"GOD",tier:2,uncertain:true,topics:["GODの対象バージョン","ゲーム数と抽選条件"],units:["games"],sources:[]},
  {id:"tokyoghoul",name:"東京喰種",tier:2,uncertain:false,topics:["通常時のゲーム数起点","前回AT後の状態","差枚・有利区間との関係"],units:["games"],sources:[]},
  {id:"aobuta",name:"青ブタ",tier:3,uncertain:true,topics:["対象機種の正式名称","モード・天井の条件"],units:["games"],sources:[]},
@@ -324,8 +333,92 @@ function showList(){
   card.append(h,flag,status,ref,p,a);list.append(card);
  }
 }
+const FIRST_MACHINE_PHOTOS=new Set(["yoshimune","lycoris","juoh","tokyoghoul","kabaneri","monkey5","monhun"]);
+function showStrategyPhoto(machine){
+ const figure=$("strategy-photo"),img=$("strategy-photo-img"),caption=$("strategy-photo-caption");
+ figure.hidden=!FIRST_MACHINE_PHOTOS.has(machine.id);
+ if(figure.hidden){img.removeAttribute("src");return}
+ img.alt=machine.name+"の筐体画像";
+ img.onerror=()=>{img.style.display="none";caption.textContent="画像の表示準備中です。機種名と型式を確認してください。";};
+ img.onload=()=>{img.style.display="block";caption.textContent="実機画像（出典・使用画像は機種一覧で確認できます）"};
+ img.src="./assets/machines/"+machine.id+".webp";
+}
+const FIELD_VOICES={
+ seiya:{text:"周期の長さやCZで小役を引けなかった体験への不満が複数見られます。感想からCZ確率や期待値は計算できません。",source:"ちょんぼりすた コメント欄（2026年11月12日時点）",url:"https://chonborista.com/slot/sanyo-slot/260304/"},
+ ggo:{text:"通常時が重い／STが伸びても獲得枚数が少ないという感想と、CZやSTの演出を評価する声の両方があります。",source:"スロ板-RUSH掲載のX実戦投稿まとめ（2026年11月3〜4日）",url:"https://fiveslot777.com/archives/63586026.html"},
+ kabaneri:{text:"サイトごとに開始G数の基準が異なり、ST後の状態・周期・交換率も前提に影響します。SNSで共有された期待値表が転載か独立調査かは未確認です。",source:"既存の一般解析・現場の声の比較メモ",url:"./research.html#kabaneri"}
+};
+let FIRST_SOURCE_ROWS=[],FIRST_SOURCE_LOADED=false;
+function fieldLink(label,href){
+ const a=document.createElement("a");a.href=href;a.textContent=label;
+ if(/^https:\/\//.test(href)){a.target="_blank";a.rel="noopener noreferrer";}
+ return a;
+}
+function renderStrategyFirst(m){
+ showStrategyPhoto(m);
+ const root=$("strategy-source-lines");root.replaceChildren();
+ $("strategy-all-sources").href="./strategy-cards.html#machine="+encodeURIComponent(m.id);
+ $("strategy-hint-guide").href="./hints.html#machine="+encodeURIComponent(m.id);
+ const searchName=m.name.replace(/（[^）]+）/g,"");
+ $("strategy-x-search").href="https://x.com/search?q="+encodeURIComponent('"'+searchName+'" 狙い目')+"&f=live";
+ $("strategy-x-search").target="_blank";$("strategy-x-search").rel="noopener noreferrer";
+ const voice=$("strategy-field-voice");voice.replaceChildren();
+ const v=FIELD_VOICES[m.id];
+ if(v){
+  const p=document.createElement("p");p.textContent=v.text;
+  const source=document.createElement("p");source.className="help";source.append("出典：",fieldLink(v.source,v.url));
+  voice.append(p,source);
+ }else{
+  const p=document.createElement("p");p.textContent="この機種の独立した現場コメントは整理中です。下の保存済み実戦メモ、またはX検索で確認できます。未調査の感想は作りません。";
+  voice.append(p);
+ }
+ const rows=FIRST_SOURCE_ROWS.filter(row=>row.machine===m.id);
+ if(!FIRST_SOURCE_LOADED){
+  $("strategy-source-summary").textContent="解析サイト別の狙い目データを読み込み中です。";return;
+ }
+ if(!rows.length){
+  $("strategy-source-summary").textContent="この機種の条件付き狙い目数値はまだ確認中です。ほかの機種から数字を流用しません。";return;
+ }
+ const uniqueConditions=[...new Set(rows.map(r=>r.condition))];
+ $("strategy-source-summary").textContent=uniqueConditions.length+"種類の狙い方／"+rows.length+"件の掲載例（独立した根拠の件数ではありません）";
+ for(const condition of uniqueConditions){
+  const group=rows.filter(r=>r.condition===condition);
+  const article=document.createElement("article");article.className="strategy-line";
+  const title=document.createElement("strong");title.textContent=group[0].basis+"（"+condition+"）";
+  article.append(title);
+  const stack=document.createElement("div");
+  for(const row of group){
+   const line=document.createElement("p");
+   const eq=row.thresholds||{};
+   const out=Object.entries(eq).map(([key,value])=>(key==="equal"?"等価":key==="medals"?"5.6枚・持ちメダル":key==="cash"?"5.6枚・現金":key)+" "+value+(row.unit||"G")+"〜");
+   const num=document.createElement("span");num.className="strategy-number";num.textContent=out.join(" ／ ");
+   line.append(num,document.createTextNode("　"+row.source));
+   const detail=document.createElement("details");detail.className="detail-source";
+   const summary=document.createElement("summary");summary.textContent="前提・注意・掲載日を見る";
+   const p=document.createElement("p");p.className="help";p.textContent=row.goal+"。"+row.warning+" ／ 掲載・確認日："+row.asof;
+   detail.append(summary,p,fieldLink("元記事で確認",row.url));
+   stack.append(line,detail);
+  }
+  article.append(stack);root.append(article);
+ }
+}
+async function loadStrategyFirstRows(){
+ try{
+  const response=await fetch("./source-thresholds.json",{cache:"no-cache"});
+  if(!response.ok)throw Error("HTTP "+response.status);
+  const snapshot=await response.json();
+  if(snapshot.schema!==1||!Array.isArray(snapshot.rows))throw Error("invalid schema");
+  FIRST_SOURCE_ROWS=snapshot.rows.filter(x=>x&&typeof x.machine==="string"&&typeof x.condition==="string"&&x.thresholds&&typeof x.url==="string"&&/^https:\/\//.test(x.url));
+  FIRST_SOURCE_LOADED=true;
+ }catch(e){
+  FIRST_SOURCE_LOADED=true;
+  $("strategy-source-summary").textContent="解析の読み込みに失敗しました。元記事へのリンクをご利用ください。";
+ }
+ const m=selected();if(m)renderStrategyFirst(m);
+}
 function showDetail(m){
  $("detail-alternative-link").href="./alternatives.html#skip="+encodeURIComponent(m.id);
+ renderStrategyFirst(m);
  renderCommunity(m);
  renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
@@ -482,6 +575,7 @@ $("kind-filter").addEventListener("change",showList);
 $("condition-check").addEventListener("change",()=>{const m=selected();if(m)updateConditionEvidence(m)});
 $("ledger-machine").addEventListener("change",updateLedger);
 window.addEventListener("hashchange",navigate);
+loadStrategyFirstRows();
 $("load-hall-note").addEventListener("click",()=>{
  const m=selected();if(!m)return;
  try{

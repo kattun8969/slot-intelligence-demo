@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "notes": "Explicit source URLs for credited, permission-reviewed cache. Confirm rights before deployment; failed images fall back to source-link or placeholder.",
+  "images": [
+    {
+      "id": "monkey5-cabinet",
+      "path": "machines/monkey5.webp",
+      "url": "https://pachima.itembox.cloud/product/012/000000001268/000000001268-01.jpg?size=l&t=20250430151521&w=ODAw",
+      "source": "https://www.pachima.com/c/gr67/gr109/gr162/gr163/S00545"
+    },
+    {
+      "id": "monhun-cabinet",
+      "path": "machines/monhun.webp",
+      "url": "https://item-shopping.c.yimg.jp/i/n/nakaiticom_21760",
+      "source": "https://store.shopping.yahoo.co.jp/nakaiticom/21760.html"
+    },
+    {
+      "id": "shinuchi-cabinet",
+      "path": "machines/yoshimune.webp",
+      "url": "https://www.daitogiken.com/products/slot/img/index_su-yoshimune_img02.png",
+      "source": "https://www.daitogiken.com/products/slot/"
+    },
+    {
+      "id": "lycoris-cabinet",
+      "path": "machines/lycoris.webp",
+      "url": "https://assets.hisshobon.jp/data/mmgate/machine/4770_lycoreco/kyoutai.jpg",
+      "source": "https://p.hisshobon.jp/machine/4770/1/115827"
+    },
+    {
+      "id": "juoh-cabinet",
+      "path": "machines/juoh.webp",
+      "url": "https://assets.hisshobon.jp/data/mmgate/news/2315_1.jpg",
+      "source": "https://p.hisshobon.jp/news/2315"
+    },
+    {
+      "id": "tokyo-cabinet",
+      "path": "machines/tokyoghoul.webp",
+      "url": "https://livedoor.blogimg.jp/pachinkopachisro/imgs/8/7/8723257a.jpg",
+      "source": "https://pachinkopachisro.com/archives/59835424.html"
+    },
+    {
+      "id": "kabaneri-cabinet",
+      "path": "machines/kabaneri.webp",
+      "url": "https://new.sammy.co.jp/img/slot/main_banner/2025/%E3%82%B9%E3%83%9E%E3%82%B9%E3%83%AD%20%E7%94%B2%E9%89%84%E5%9F%8E%E3%81%AE%E3%82%AB%E3%83%90%E3%83%8D%E3%83%AA%20%E6%B5%B7%E9%96%80%EF%BC%88%E3%81%86%E3%81%AA%E3%81%A8%EF%BC%89%E6%B1%BA%E6%88%A6_900_506.jpg",
+      "source": "https://new.sammy.co.jp/japanese/products/pachislot/"
+    },
+    {
+      "id": "lycoris-screen",
+      "path": "hints/lycoris-ending.webp",
+      "url": "https://image.nana-press.com/kaiseki/machine/1166/20260903165052_6a9926dcc6929.jpg",
+      "source": "https://nana-press.com/kaiseki/machine/1166/38774/"
+    },
+    {
+      "id": "aobuta-screen",
+      "path": "hints/aobuta-ending.webp",
+      "url": "https://images.1geki.jp/machines/slot/l_ao_buta/l_ao_buta_ekishou73.png?f=webp",
+      "source": "https://1geki.jp/slot/l_ao_buta/0/"
+    },
+    {
+      "id": "shinuchi-screen",
+      "path": "hints/yoshimune-setting.webp",
+      "url": "https://img.altema.jp/pachimo/uploads/2026/03/2026y03m13d_1134593086.jpg",
+      "source": "https://altema.jp/pachimo/lsinyosimunesubgamen"
+    }
+  ]
+}

@@ -26,11 +26,11 @@ details.source-detail summary{font-size:14px;font-weight:650;color:#195e93}
 summary{cursor:pointer;padding:5px 0}.row-state{font-size:13px;font-weight:650;margin:8px 0}.row-state.warn{color:#815a21}.row-state.no{color:#9b3e3e}.row-state.yes{color:#195d50}
 footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 </style></head><body>
-<header><div><small style="color:#d7e6f4">試用版 v1.6 ・ 2026年11月13日時点の掲載例</small>
+<header><div><small style="color:#d7e6f4">試用版 v1.6 ・ 2026年11月14日時点の掲載例</small>
 <h1>この台、何Gから狙える？</h1><p>機種と交換率を選んで、解析サイトの目安をチェック</p></div></header>
 <main>
 <section class="card">
-<div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧へ</a><a id="switch-alternatives" class="btn" href="./alternatives.html">この台はパス！ 次の候補へ</a><a class="btn secondary" href="./research.html">解析と現場の声</a></div>
+<div class="actions"><a class="btn secondary" href="./opportunities.html#list">狙い目一覧へ</a><a id="switch-alternatives" class="btn" href="./alternatives.html">この台はパス！ 次の候補へ</a><a class="btn secondary" href="./research.html">解析と現場の声</a><a class="btn secondary" id="hints-link" href="./hints.html">終了画面・示唆を見る</a></div>
 <p class="notice"><strong>注意：</strong>解析サイトによって狙い始めのG数は違います。<strong>通常時かリセット後か、今の台の状態</strong>を確認してください。この画面の数字だけでは打てるか判断できません。</p>
 <div class="grid">
 <div><label for="machine">機種</label><select id="machine"></select></div>
@@ -75,7 +75,7 @@ footer{padding:12px 15px 26px;color:#566d80;font-size:12px}
 <ul id="checks"></ul>
 <div class="actions"><a id="machine-page" class="btn" href="./opportunities.html#list">台のメモ・期待値記録へ</a>
 <a id="x-page" class="btn secondary" href="./x-live.html">Xの最新投稿を見る</a></div>
-<p class="muted">今は10機種に対応。ほかの機種も順次追加します。</p>
+<p class="muted">今は16機種に対応。型式が不明な2機種は調査中です。</p>
 </details>
 </main>
 <footer>掲載数値の正確性・適用条件・実際の収支を保証するものではありません。入力情報は外部送信されず、期待値記録にも自動入力しません。リンク先の記述・更新日は後から変わることがあります。</footer>
@@ -91,6 +91,12 @@ const MACHINES=[
  ["sunbreak","モンスターハンターライズ：サンブレイク（2026年）"],
  ["monkey5","モンキーターンV"],
  ["sencolle5","戦国コレクション5"],
+ ["aobuta","青春ブタ野郎（青ブタ）"],
+ ["world","ワールドダイスター"],
+ ["lycoris","リコリス・リコイル"],
+ ["mahoako","魔法少女にあこがれて"],
+ ["juoh","スマスロ獣王（2026年）"],
+ ["yoshimune","真打 吉宗（2026年）"],
  ["kanokari","彼女、お借りします（かのかり）"]
 ];
 const CONDITIONS={
@@ -117,6 +123,12 @@ const CONDITIONS={
  sunbreak:[["at_ceiling","サンブレイク：AT間天井"],["cz_ceiling","サンブレイク：CZ間天井"],["reset_ceiling","設定変更後のAT間"],["cz_through","CZスルー・オトモ潜水艇"]],
  monkey5:[["normal_ceiling","通常時のAT間G数"],["reset_ceiling","変更後・青島VS波多野敗北後"],["cycle","周期・激走ポイント"]],
  sencolle5:[["normal_collection","通常：コレポイント天井"],["reset_collection","設定変更後：コレポイント"],["zone","128コレなどのゾーン"]],
+ aobuta:[["normal_ceiling","ボーナス間・通常"],["short_ceiling","設定変更・ST駆け抜け後"]],
+ world:[["normal_ceiling","通常時ボーナス間"],["short_ceiling","設定変更・上位ST後"]],
+ lycoris:[["at_normal","AT間・通常"],["cz_normal","CZ間・通常"],["at_short","AT間・変更/駆け抜け後"],["cz_short","CZ間・変更/駆け抜け後"],["upper_cz_fail","上位CZ失敗後AT間"]],
+ mahoako:[["normal_ceiling","AT間・通常"],["reset_ceiling","設定変更後AT間"]],
+ juoh:[["normal_ceiling","サバ連なし・通常"],["reset_ceiling","変更後・短縮継続時"]],
+ yoshimune:[["at_normal","通常AT間G"],["cz_normal","通常CZ間G"],["at_reset","設定変更後のAT間G"],["at_shinbig","真BIG後のAT間G"]],
  kanokari:[["bonus_after","かのかりBONUS（BIG）後"],["reg_after","REGULAR BONUS後"],["reset_ceiling","設定変更後のG数天井"],["reg_through","REG単発回数・ゾーン"]]
 };
 const CHECKS={
@@ -159,6 +171,12 @@ const CHECKS={
  sunbreak:["2026年サンブレイク。初代ライズ（2024年版）とは別","AT間999G+α、CZ間333G+α、CZ6スルーの次CZ、リプレイ最大5周期を別々に確認","設定変更後もAT天井999G+αは短縮なし","AT後1Gのエンタチャンスとリプレイ蓄積を確認"],
  monkey5:["通常795G+α／6周期、設定変更・青島VS波多野敗北後495G+α／4周期","AT間G数、周期、激走ポイントとヘルメットを確認","データ表示機と液晶のG数がずれることがある","AT後1G・前兆・ライバルモード示唆を確認"],
  sencolle5:["戦国コレクション5（2023年・6.5号機）。戦国乙女5と別機種","天井は最大1280コレ。G数でなく液晶のコレポイントを見る","天国は128コレ、モードCは384コレ天井の掲載例","AT後の128コレや終了画面示唆を確認"],
+ aobuta:["ボーナス間とCZ間・思春期ポイントは別に確認","設定変更後とST駆け抜け後は短縮の根拠が必要","CZスルー履歴や終了後の示唆を確認"],
+ world:["通常999G天井と短縮600Gは別条件","おみくじ・ラッキーモード・上位ST後の挙動を確認","ポイントとゲーム数を混同しない"],
+ lycoris:["CZ間600GとAT間850Gは異なるカウンター","変更・AT駆け抜け・上位CZ失敗は別条件","上位AT後の引き戻し区間を確認"],
+ mahoako:["液晶AT間G数はボーナスでリセットしない","変更後799G短縮はリセット根拠が必要","終了後の会話演出・百合メーター・前兆を確認"],
+ juoh:["2026年スマスロ獣王と旧シリーズを区別","リセット後の599G短縮が続いているかサバ連履歴を確認","SC後潜伏・サバ連後前兆を確認"],
+ yoshimune:["2026年導入の真打 吉宗。2025年の吉宗と完全に別機種","通常AT間1500G・CZ間1000G・最大6周期を別々に数える","設定変更後AT間1000G・真BIG後700Gへ短縮","真BIG後128G以内の引き戻しや1周期目・終了画面を確認"],
  kanokari:["かのかりBONUS後1000G+α、REG後800G+α、変更後600G+α","直前のボーナス種別とREG単発回数を確認","1Gレンチャンスと66G引き戻しゾーン・ユメカノ示唆を確認","BIG後とREG後の狙い始めを混ぜない"]
 };
 // Every threshold below is a published author's illustrative starting line,
@@ -203,7 +221,30 @@ const EXAMPLES=[
  {"id":"kanokari-big-tennabi","machine":"kanokari","condition":"bonus_after","source":"天井・やめ時ナビ","url":"https://tennabi.jp/kanokari/","asof":"2026-10-15","thresholds":{"equal":700},"basis":"かのかりBONUS後の実G","goal":"等価の掲載目安","warning":"道具箱の250Gと前提が異なる。平均しない"},
  {"id":"kanokari-reg-toolbox","machine":"kanokari","condition":"reg_after","source":"スロッターの道具箱","url":"https://slot-toolbox.com/kanokari-tenjo/","asof":"2026-10-12","thresholds":{"equal":200,"medals":200,"cash":250},"basis":"REG後の実G","goal":"REG後800G+α天井の掲載目安","warning":"REG連続単発回数・引き戻し区間を確認"},
  {"id":"kanokari-reg-tennabi","machine":"kanokari","condition":"reg_after","source":"天井・やめ時ナビ","url":"https://tennabi.jp/kanokari/","asof":"2026-10-15","thresholds":{"equal":300},"basis":"REG後の実G","goal":"等価の掲載目安","warning":"道具箱の200Gと基準・前提が異なる"},
- {"id":"kanokari-reset-toolbox","machine":"kanokari","condition":"reset_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/kanokari-tenjo/","asof":"2026-10-12","thresholds":{"equal":0,"medals":0,"cash":0},"basis":"設定変更後の実G","goal":"変更後600G+α天井の掲載目安","warning":"リセット確認が必要。朝一0Gだけでは断定しない"}
+ {"id":"kanokari-reset-toolbox","machine":"kanokari","condition":"reset_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/kanokari-tenjo/","asof":"2026-10-12","thresholds":{"equal":0,"medals":0,"cash":0},"basis":"設定変更後の実G","goal":"変更後600G+α天井の掲載目安","warning":"リセット確認が必要。朝一0Gだけでは断定しない"},
+ {"id":"aobuta-normal-toolbox","machine":"aobuta","condition":"normal_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/ao-buta-tenjo/","asof":"2026-10-25","thresholds":{"equal":240,"medals":250,"cash":390},"basis":"通常・ボーナス間実G","goal":"等価／持ちメダル／現金の掲載目安","warning":"CZ間560Gや思春期ポイントとは別。現在のボーナス間を確認"},
+ {"id":"aobuta-short-toolbox","machine":"aobuta","condition":"short_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/ao-buta-tenjo/","asof":"2026-10-25","thresholds":{"equal":40,"medals":50,"cash":190},"basis":"設定変更またはST駆け抜け後のボーナス間実G","goal":"短縮699G天井の掲載目安","warning":"設定変更・ST駆け抜けが未確認なら使わない"},
+ {"id":"aobuta-normal-slobase","machine":"aobuta","condition":"normal_ceiling","source":"スロベース","url":"https://slobase.jp/machines/aobuta","asof":"2026-11-06","thresholds":{"equal":450},"basis":"通常・ボーナス間G","goal":"サイト独自の掲載目安","warning":"道具箱の240Gと基準が異なる。平均しない"},
+ {"id":"world-normal-toolbox","machine":"world","condition":"normal_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/world-dai-star-tenjo/","asof":"2026-10-12","thresholds":{"equal":360,"medals":370,"cash":530},"basis":"通常時のボーナス間G","goal":"交換条件別の掲載目安","warning":"999G+α天井。ラッキーモード・上位ST後の短縮条件を除く"},
+ {"id":"world-short-toolbox","machine":"world","condition":"short_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/world-dai-star-tenjo/","asof":"2026-10-12","thresholds":{"equal":0,"medals":0,"cash":130},"basis":"設定変更・上位ST後のボーナス間G","goal":"短縮600G天井の掲載目安","warning":"短縮の根拠を確認。0Gでも自動的に着席推奨しない"},
+ {"id":"world-normal-slobase","machine":"world","condition":"normal_ceiling","source":"スロベース","url":"https://slobase.jp/machines/world-dai-star","asof":"2026-11-04","thresholds":{"equal":550},"basis":"通常・ボーナス間G","goal":"サイト独自の狙い目","warning":"道具箱の360Gと基準が異なるため平均しない"},
+ {"id":"lycoris-at-tenjocalc","machine":"lycoris","condition":"at_normal","source":"天井電卓","url":"https://tenjocalc.com/machines/lycoris","asof":"2026-10-18","thresholds":{"equal":420},"basis":"通常・AT間G","goal":"通常AT間850G天井の掲載目安","warning":"CZ間とは別カウンター。換金条件別の数字は未確認"},
+ {"id":"lycoris-at-slobase","machine":"lycoris","condition":"at_normal","source":"スロベース","url":"https://slobase.jp/machines/lycoris-recoil","asof":"2026-10-23","thresholds":{"equal":480},"basis":"AT連チャン後・AT間G","goal":"サイト掲載の狙い目","warning":"AT駆け抜け後とは異なる条件"},
+ {"id":"lycoris-cz-tenjocalc","machine":"lycoris","condition":"cz_normal","source":"天井電卓","url":"https://tenjocalc.com/machines/lycoris","asof":"2026-10-18","thresholds":{"equal":390},"basis":"通常・CZ間G","goal":"CZ間600G天井の掲載目安","warning":"AT間とは別カウンター"},
+ {"id":"lycoris-atshort-tenjocalc","machine":"lycoris","condition":"at_short","source":"天井電卓","url":"https://tenjocalc.com/machines/lycoris","asof":"2026-10-18","thresholds":{"equal":170},"basis":"設定変更・AT駆け抜け後のAT間G","goal":"短縮AT間600G天井の掲載目安","warning":"短縮状態が確認できる場合に限る"},
+ {"id":"lycoris-atshort-slobase","machine":"lycoris","condition":"at_short","source":"スロベース","url":"https://slobase.jp/machines/lycoris-recoil","asof":"2026-10-23","thresholds":{"equal":70},"basis":"設定変更・AT駆け抜け後のAT間G","goal":"サイト掲載の狙い目","warning":"天井電卓と基準が異なる。短縮の確認が必要"},
+ {"id":"lycoris-czshort-tenjocalc","machine":"lycoris","condition":"cz_short","source":"天井電卓","url":"https://tenjocalc.com/machines/lycoris","asof":"2026-10-18","thresholds":{"equal":40},"basis":"変更・駆け抜け後のCZ間G","goal":"短縮CZ間250G天井の掲載目安","warning":"CZ間とAT間を混同しない"},
+ {"id":"lycoris-upperfail-slobase","machine":"lycoris","condition":"upper_cz_fail","source":"スロベース","url":"https://slobase.jp/machines/lycoris-recoil","asof":"2026-10-23","thresholds":{"equal":0},"basis":"上位CZ失敗後のAT間G","goal":"AT間250G短縮のサイト掲載例","warning":"上位CZの失敗を目撃・確実に確認した場合のみ。外見や0G表示で断定しない"},
+ {"id":"mahoako-normal-toolbox","machine":"mahoako","condition":"normal_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/mahoako-tenjo/","asof":"2026-11-03","thresholds":{"equal":330},"basis":"通常AT間の液晶G","goal":"AT間999G天井の掲載目安","warning":"疑似ボーナスを挟んでもAT間を引き継ぐ"},
+ {"id":"mahoako-normal-chon","machine":"mahoako","condition":"normal_ceiling","source":"ちょんぼりすた","url":"https://chonborista.com/slot/newgin-slot/264698/","asof":"2026-11-11","thresholds":{"equal":570,"medals":590,"cash":660},"basis":"通常AT間の液晶G","goal":"出玉率106%等の掲載目安","warning":"道具箱の330Gと基準が異なるため平均しない"},
+ {"id":"mahoako-reset-toolbox","machine":"mahoako","condition":"reset_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/mahoako-tenjo/","asof":"2026-11-03","thresholds":{"equal":130},"basis":"設定変更後・AT間の液晶G","goal":"短縮799G天井の掲載目安","warning":"リセットの根拠が必要"},
+ {"id":"mahoako-reset-chon","machine":"mahoako","condition":"reset_ceiling","source":"ちょんぼりすた","url":"https://chonborista.com/slot/newgin-slot/264698/","asof":"2026-11-11","thresholds":{"equal":370,"medals":390,"cash":460},"basis":"設定変更後・AT間の液晶G","goal":"通常条件から200G差し引いたサイト目安","warning":"設定変更後の独立実戦値ではなく通常の目安からの調整値"},
+ {"id":"juoh-normal-toolbox","machine":"juoh","condition":"normal_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/juoh-tenjo/","asof":"2026-10-26","thresholds":{"equal":440,"medals":450,"cash":560},"basis":"2026年スマスロ獣王・サバ連なし通常G","goal":"通常999G天井の掲載目安","warning":"他の獣王シリーズとは別。SC/サバ連履歴を確認"},
+ {"id":"juoh-reset-toolbox","machine":"juoh","condition":"reset_ceiling","source":"スロッターの道具箱","url":"https://slot-toolbox.com/juoh-tenjo/","asof":"2026-10-26","thresholds":{"equal":130,"medals":140,"cash":220},"basis":"変更後・最初のサバ連までのG","goal":"599G短縮天井の掲載目安","warning":"短縮継続はSC単発後もありうる。サバ連履歴の根拠を確認"},
+ {"id":"shinuchi-at-slobase","machine":"yoshimune","condition":"at_normal","source":"スロベース","url":"https://slobase.jp/machines/yoshimune","asof":"2026-10-13","thresholds":{"equal":680},"basis":"真打 吉宗・通常AT間G数","goal":"等価のAT間狙い目掲載例","warning":"CZ間や周期とは異なる。現地のAT間カウンター起点を確認"},
+ {"id":"shinuchi-cz-slobase","machine":"yoshimune","condition":"cz_normal","source":"スロベース","url":"https://slobase.jp/machines/yoshimune","asof":"2026-10-13","thresholds":{"equal":460},"basis":"真打 吉宗・通常CZ間G数","goal":"等価のCZ間狙い目掲載例","warning":"周期進行・CZ履歴によって期待度が変化する。AT間と混同しない"},
+ {"id":"shinuchi-reset-slobase","machine":"yoshimune","condition":"at_reset","source":"スロベース","url":"https://slobase.jp/machines/yoshimune","asof":"2026-10-13","thresholds":{"equal":350},"basis":"真打 吉宗・設定変更後のAT間G数","goal":"等価のリセット後狙い目掲載例","warning":"変更後の証拠が必要。変更後はAT天井1000G+α"},
+ {"id":"shinuchi-big-slobase","machine":"yoshimune","condition":"at_shinbig","source":"スロベース","url":"https://slobase.jp/machines/yoshimune","asof":"2026-10-13","thresholds":{"equal":180},"basis":"真打 吉宗・真BIG後AT間G数","goal":"等価の真BIG後狙い目掲載例","warning":"真BIG終了後128Gまでの引き戻し・月下ノ花道中の状態を確認"}
 ];
 // Scenario-specific requirements are prompts for human source checking,
 // never a claim that the particular machine satisfies that requirement.
@@ -244,6 +285,29 @@ const SOURCE_REQUIREMENTS={
  "kanokari-big-tennabi":"前回かのかりBONUS",
  "kanokari-reg-toolbox":"前回REGULAR BONUS",
  "kanokari-reg-tennabi":"前回REGULAR BONUS",
+ "aobuta-normal-toolbox":"通常・ボーナス間実Gを確認。CZ間560Gや思春期ポイントとは別。現在のボーナス間を確認 ",
+ "aobuta-short-toolbox":"設定変更またはST駆け抜け後のボーナス間実Gを確認。設定変更・ST駆け抜けが未確認なら使わない ",
+ "aobuta-normal-slobase":"通常・ボーナス間Gを確認。道具箱の240Gと基準が異なる。平均しない ",
+ "world-normal-toolbox":"通常時のボーナス間Gを確認。999G+α天井。ラッキーモード・上位ST後の短縮条件を除く ",
+ "world-short-toolbox":"設定変更・上位ST後のボーナス間Gを確認。短縮の根拠を確認。0Gでも自動的に着席推奨しない ",
+ "world-normal-slobase":"通常・ボーナス間Gを確認。道具箱の360Gと基準が異なるため平均しない ",
+ "lycoris-at-tenjocalc":"通常・AT間Gを確認。CZ間とは別カウンター。換金条件別の数字は未確認 ",
+ "lycoris-at-slobase":"AT連チャン後・AT間Gを確認。AT駆け抜け後とは異なる条件 ",
+ "lycoris-cz-tenjocalc":"通常・CZ間Gを確認。AT間とは別カウンター ",
+ "lycoris-atshort-tenjocalc":"設定変更・AT駆け抜け後のAT間Gを確認。短縮状態が確認できる場合に限る ",
+ "lycoris-atshort-slobase":"設定変更・AT駆け抜け後のAT間Gを確認。天井電卓と基準が異なる。短縮の確認が必要 ",
+ "lycoris-czshort-tenjocalc":"変更・駆け抜け後のCZ間Gを確認。CZ間とAT間を混同しない ",
+ "lycoris-upperfail-slobase":"上位CZ失敗後のAT間Gを確認。上位CZの失敗を目撃・確実に確認した場合のみ。外見や0G表示で断定しない ",
+ "mahoako-normal-toolbox":"通常AT間の液晶Gを確認。疑似ボーナスを挟んでもAT間を引き継ぐ ",
+ "mahoako-normal-chon":"通常AT間の液晶Gを確認。道具箱の330Gと基準が異なるため平均しない ",
+ "mahoako-reset-toolbox":"設定変更後・AT間の液晶Gを確認。リセットの根拠が必要 ",
+ "mahoako-reset-chon":"設定変更後・AT間の液晶Gを確認。設定変更後の独立実戦値ではなく通常の目安からの調整値 ",
+ "juoh-normal-toolbox":"2026年スマスロ獣王・サバ連なし通常Gを確認。他の獣王シリーズとは別。SC/サバ連履歴を確認 ",
+ "juoh-reset-toolbox":"変更後・最初のサバ連までのGを確認。短縮継続はSC単発後もありうる。サバ連履歴の根拠を確認 ",
+ "shinuchi-at-slobase":"真打 吉宗・通常AT間G数の起点と状態を確認。CZ間や周期とは異なる。現地のAT間カウンター起点を確認",
+ "shinuchi-cz-slobase":"真打 吉宗・通常CZ間G数の起点と状態を確認。周期進行・CZ履歴によって期待度が変化する。AT間と混同しない",
+ "shinuchi-reset-slobase":"真打 吉宗・設定変更後のAT間G数の起点と状態を確認。変更後の証拠が必要。変更後はAT天井1000G+α",
+ "shinuchi-big-slobase":"真打 吉宗・真BIG後AT間G数の起点と状態を確認。真BIG終了後128Gまでの引き戻し・月下ノ花道中の状態を確認",
  "kanokari-reset-toolbox":"設定変更済みである"
 };
 const SUPPORTED_CHECKS=["unknown","yes","no"];
@@ -266,6 +330,12 @@ const INFO_CONDITIONS={
 };
 // Short, independently attributed gameplay context. This is not an EV model.
 const FIELD_GUIDES={
+ aobuta:{"url":"https://slot-toolbox.com/ao-buta-tenjo/","source":"スロッターの道具箱／スロベース","items":[["天井","ボーナス間899G・短縮699G。CZ間560G、ポイント天井1000ptは別カウンター。"],["狙い目","通常240Gと450Gなど掲載サイトで異なります。現在の履歴を確認。"],["やめどき","思春期ポイント・CZスルー・アイキャッチを確認。"]]},
+ world:{"url":"https://slot-toolbox.com/world-dai-star-tenjo/","source":"スロッターの道具箱／スロベース","items":[["天井","通常999G・設定変更等で600Gへ短縮。"],["狙い目","通常360Gと550Gなどサイトで異なります。"],["やめどき","おみくじ・ラッキーモード・上位ST後を確認。"]]},
+ lycoris:{"url":"https://slobase.jp/machines/lycoris-recoil","source":"天井電卓／スロベース","items":[["天井","通常AT間850G／CZ間600G。変更・駆け抜け後の短縮は別。"],["狙い目","AT間とCZ間・上位CZ失敗後を分けて確認。"],["やめどき","上位AT後の引き戻し区間やアイキャッチを確認。"]]},
+ mahoako:{"url":"https://chonborista.com/slot/newgin-slot/264698/","source":"ちょんぼりすた／スロッターの道具箱","items":[["天井","AT間999G・変更後799G。疑似ボーナスでAT間はリセットしません。"],["狙い目","通常330Gと570Gなど出典で異なるため前提を確認。"],["やめどき","会話演出・百合メーター・前兆を確認。"]]},
+ juoh:{"url":"https://slot-toolbox.com/juoh-tenjo/","source":"スロッターの道具箱","items":[["天井","通常999G・変更後は初回サバ連まで599G短縮。"],["狙い目","通常440G・短縮130G等の等価目安。"],["やめどき","SC後の潜伏とサバ連後の高確・前兆を確認。"]]},
+ yoshimune:{"url":"https://slobase.jp/machines/yoshimune","source":"スロベース／パチ＆スロ必勝本","items":[["天井","真打 吉宗（2026年）は通常AT間1500G・CZ間1000G・最大6周期。"],["狙い目","通常AT間680G・CZ間460G・変更後AT間350G・真BIG後180Gの等価掲載例。"],["やめどき","AT後の1周期・真BIG後128Gの引き戻しを出典で確認。2025年吉宗の情報を流用しない。"]]},
  sunbreak:{source:"スロッターの道具箱／一撃（2026年10月確認）",url:"https://slot-toolbox.com/mhrsb-tenjo/",
   items:[["天井","AT間999G+α、CZ間333G+α。CZ6スルーなら次回CZ成功濃厚。リプレイ最大5周期も別に確認。"],
    ["狙い目","AT間400Gから、CZ間250Gから等はサイト掲載例。交換率とCZスルー数で変わります。"],
@@ -347,6 +417,7 @@ function renderFieldGuide(mid){
  a.textContent="掲載元で確認する";
  note.textContent="参考："+data.source+" ／ ";note.append(a);root.append(note);
  $("quick-x-feed").href="./x-live.html#machine="+encodeURIComponent(mid);
+ $("hints-link").href="./hints.html#machine="+encodeURIComponent(mid);
 }
 const $=id=>document.getElementById(id);
 function showRelevantFields(){

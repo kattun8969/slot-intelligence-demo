@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none';style-src 'unsafe-inline';script-src 'unsafe-inline';connect-src 'none';img-src 'self' https://image.nana-press.com https://images.1geki.jp https://img.altema.jp;base-uri 'none';form-action 'none'">
+<title>終了画面・アイキャッチ・示唆の早見 | Slot Intelligence</title>
+<style>
+*{box-sizing:border-box}body{font:16px/1.65 system-ui,-apple-system,"Noto Sans JP",sans-serif;color:#17344c;background:#f0f5f9;margin:0}
+header{background:#112f4a;color:white;padding:22px 15px}header>div,main,footer{max-width:920px;margin:auto}main{padding:14px}
+h1{font-size:25px;margin:0}h2{font-size:19px;margin:0 0 10px}.card{background:white;border:1px solid #d7e3ed;border-radius:13px;padding:16px;margin:13px 0}
+.notice{background:#fff7e7;border-left:4px solid #c28a31;border-radius:7px;padding:11px}
+select{width:100%;border:1px solid #9eafbf;background:white;color:inherit;border-radius:9px;font:inherit;padding:12px}
+label{display:block;font-weight:700;margin:10px 0 5px}.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+button,.btn{display:inline-block;border:0;background:#e7edf5;color:#1c4565;border-radius:9px;padding:10px 12px;cursor:pointer;font:inherit;text-decoration:none;font-weight:700}
+button[aria-pressed="true"]{background:#165b8b;color:white}a{color:#125d91}.result{border-top:1px solid #dce6ee;padding:13px 0}.result strong{font-size:17px}
+.muted,small{color:#516b80;font-size:13px}.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.links>*{flex:1 1 180px}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #89bbe3;outline-offset:2px}
+footer{padding:14px;color:#536d80;font-size:12px}
+.sample-figure{margin:12px 0;background:#f4f7fa;padding:12px;border-radius:10px}.sample-figure img{display:block;max-width:100%;width:min(100%,330px);height:auto;margin:0 auto 10px;border-radius:7px}.sample-figure figcaption{font-size:13px;color:#506c80;margin-bottom:7px}.sample-figure a{font-size:13px}</style></head><body>
+<header><div><small style="color:#dbe9f5">ホールでサッと見る</small><h1>終了画面・アイキャッチ・示唆</h1><p>画像掲載元と意味をすぐ確認。機種名を選ぶだけ。</p></div></header>
+<main>
+<section class="card"><div class="links"><a class="btn" href="./strategy-cards.html">何Gから狙う？</a><a class="btn" href="./hall-compare.html">候補台を見る</a></div>
+<p class="notice"><strong>一部の機種には出典付きの画面画像例を掲載しました。</strong> この画面は画面の意味を短く整理した早見表です。出現契機が違うと意味が変わります。設定示唆と次回モード示唆は別物で、SNS情報だけで設定を確定しません。</p></section>
+<section class="card"><label for="machine">機種を選ぶ</label><select id="machine"></select>
+<div class="tabs" id="tabs" role="group" aria-label="確認する示唆の種類">
+<button type="button" data-kind="ending" aria-pressed="true">終了画面</button>
+<button type="button" data-kind="eyecatch" aria-pressed="false">アイキャッチ</button>
+<button type="button" data-kind="setting" aria-pressed="false">設定示唆</button>
+<button type="button" data-kind="voice" aria-pressed="false">ボイス・その他</button></div>
+<h2 id="heading"></h2><p id="count" class="muted" role="status"></p><div id="results"></div>
+<div class="links" id="fallback"></div>
+</section></main>
+<footer>記事公開後に解析が更新される場合があります。画面の画像例には掲載元を明記し、別の示唆パターンと取り違えないよう区別しています。Xは検索ページへ移動する方式で、API・投稿自動収集は行いません。</footer>
+<script>
+"use strict";
+const MACHINES=[
+["seiya","聖闘士星矢 黄金十二宮"],["ggo","ガンゲイル・オンライン"],["kabaneri","カバネリ 海門決戦"],
+["sao2","SAO2（型式調査中）"],["monhun","モンスターハンターライズ（初代）"],["otome5","戦国乙女5"],
+["yoshimune","真打 吉宗（2026年）"],["god","GOD（型式調査中）"],["tokyoghoul","東京喰種"],
+["aobuta","青春ブタ野郎（青ブタ）"],["world","ワールドダイスター"],["lycoris","リコリス・リコイル"],
+["mahoako","魔法少女にあこがれて"],["juoh","スマスロ獣王（2026年）"],
+["sunbreak","モンスターハンターライズ：サンブレイク"],["monkey5","モンキーターンV"],
+["sencolle5","戦国コレクション5"],["kanokari","彼女、お借りします"]
+];
+const GUIDES=[
+{machine:"yoshimune",kind:"ending",title:"AT終了画面（大岡越前・柳生・大奥・吉宗）",meaning:"2026年の真打 吉宗。吉宗の画面は設定6濃厚、大奥は設定5以上濃厚とする解析。2025年吉宗と混同しない。",url:"https://tennabi.jp/shinuchi-yoshimune/",asof:"2026-10-30"},
+{cached:"./assets/hints/yoshimune-setting.webp",machine:"yoshimune",kind:"setting",title:"コパンダトロフィー・AT終了画面",meaning:"設定示唆は出現画面・トロフィーの色を区別して元記事で照合。",url:"https://hisshobon.com/machineinfo/185957/",asof:"2026-11-13"},
+{cached:"./assets/hints/aobuta-ending.webp",machine:"aobuta",kind:"ending",title:"ST終了・吉／良／優／極スタンプ",meaning:"かえで「吉」は設定3以上、翔子「良」は4以上、バニー麻衣「優」は5or6、集合「極」は6濃厚の掲載例。キャラだけの画面は別扱い。",url:"https://hisshobon.com/machineinfo/185935/",asof:"2026-11-13"},
+{machine:"aobuta",kind:"eyecatch",title:"CZ・ST終了後の赤ワイプ",meaning:"次の規定思春期ポイントが100pt以下濃厚とする解析。設定6確定ではなく、次のポイントまでの示唆。",url:"https://nana-press.com/kaiseki/machine/1214/38929/",asof:"2026-09-07以降"},
+{machine:"aobuta",kind:"eyecatch",title:"かえで・翔子／青ワイプ",meaning:"かえで・翔子は対応する不可思議モード示唆、青ワイプは次回500pt以内のチャンス。",url:"https://nana-press.com/kaiseki/machine/1214/38929/",asof:"2026-09-07以降"},
+{machine:"aobuta",kind:"voice",title:"ドリームコレクション終了後のボイス",meaning:"終了時PUSHによる規定ポイントまでの残り示唆。セリフごとに意味が異なるため元記事の一覧を確認。",url:"https://hisshobon.com/machineinfo/185935/",asof:"2026-11-13"},
+{machine:"world",kind:"ending",title:"カトリナ＆ここな／3人集合",meaning:"高設定示唆（弱）／（強）の掲載例。画面単体で設定を確定しません。",url:"https://hisshobon.com/machineinfo/185927/",asof:"2026-11-13"},
+{machine:"world",kind:"setting",title:"コパンダトロフィー",meaning:"銅=設定2以上／銀=3以上／金=4以上／イナズマ柄=5or6／虹=6濃厚の掲載例。",url:"https://hisshobon.com/machineinfo/185927/",asof:"2026-11-13"},
+{machine:"world",kind:"voice",title:"エンディング中のPUSHボイス・サイン",meaning:"ボイス／サインに設定示唆あり。サインと色の組み合わせを元記事で確認。",url:"https://hisshobon.com/machineinfo/185927/",asof:"2026-11-13"},
+{cached:"./assets/hints/lycoris-ending.webp",machine:"lycoris",kind:"ending",title:"ハワイ／ロボ太／押上の風景",meaning:"ハワイ=設定6、ロボ太=4以上、押上の風景=2以上濃厚の掲載例。",url:"https://hisshobon.com/machineinfo/185644/",asof:"2026-11-10"},
+{machine:"lycoris",kind:"ending",title:"千束・たきなの私服",meaning:"どちらのラッシュ終了後かで示唆が変わる。逆キャラ私服で設定4以上濃厚の掲載例。",url:"https://hisshobon.com/machineinfo/185644/",asof:"2026-11-10"},
+{machine:"lycoris",kind:"eyecatch",title:"CZ後アイキャッチ（たきな・クルミ・千束）",meaning:"たきな／クルミのBパターンは短縮天井期待度の示唆、千束BはCZ復活濃厚とする解析。終了画面の設定示唆と別。",url:"https://slobase.jp/machines/lycoris-recoil",asof:"2026-10-23"},
+{machine:"lycoris",kind:"setting",title:"サミートロフィー・ラッシュ終了画面",meaning:"出現状況とラッシュの種類を確認。トロフィー色の設定示唆は元記事の画像で照合。",url:"https://hisshobon.com/machineinfo/185644/",asof:"2026-11-10"},
+{machine:"mahoako",kind:"ending",title:"AT・ボーナス終了画面",meaning:"キャラ紹介・AT終了・ボーナス終了を混同しない。示唆の個別画像は原記事で確認。",url:"https://chonborista.com/slot/newgin-slot/264698/",asof:"2026-11-11"},
+{machine:"mahoako",kind:"setting",title:"ギンちゃんトロフィー・獲得枚数",meaning:"設定示唆演出の存在を確認。具体的な色・枚数と対応設定は元記事で照合。",url:"https://chonborista.com/slot/newgin-slot/264698/",asof:"2026-11-11"},
+{machine:"mahoako",kind:"voice",title:"AT終了後の会話演出",meaning:"特定キャラ会話で百合メーター到達まで様子見とする掲載例。会話と天井短縮を混同しない。",url:"https://hisshobon.com/machineinfo/185940/",asof:"2026-11-13"},
+{machine:"juoh",kind:"setting",title:"サミートロフィー",meaning:"銅で設定2以上／金4以上／キリン柄5以上／虹6濃厚とする掲載例。",url:"https://pachimo.altema.jp/lzyuogamen",asof:"2026-10-13"},
+{machine:"juoh",kind:"ending",title:"終了画面・トロフィー",meaning:"2026年のスマスロ獣王の画面を確認。旧獣王シリーズの画像は流用しない。",url:"https://pachimo.altema.jp/lzyuogamen",asof:"2026-10-13"}
+];
+// Verified representative screen images only. Do not interpret an example image as an exact
+// match for a separate named hint; the original article provides variant-by-variant comparisons.
+const SCREEN_SAMPLES=[
+{machine:"lycoris",kind:"ending",caption:"リコリコのAT終了画面の一例（2000枚表示）。ハワイ・ロボ太などの確定系とは別です。",src:"https://image.nana-press.com/kaiseki/machine/1166/20260903165052_6a9926dcc6929.jpg",source:"https://nana-press.com/kaiseki/machine/1166/38774/"},
+{machine:"aobuta",kind:"ending",caption:"青ブタの画面画像例。吉・良・極スタンプそのものではありません。",src:"https://images.1geki.jp/machines/slot/l_ao_buta/l_ao_buta_ekishou73.png?f=webp",source:"https://1geki.jp/slot/l_ao_buta/0/"},
+{machine:"yoshimune",kind:"setting",caption:"真打 吉宗の御白州ビジョンの画像例。個別の設定示唆は元記事で確認してください。",src:"https://img.altema.jp/pachimo/uploads/2026/03/2026y03m13d_1134593086.jpg",source:"https://altema.jp/pachimo/lsinyosimunesubgamen"}
+];
+const $=id=>document.getElementById(id);
+let kind="ending";
+const requested=new URLSearchParams(location.hash.replace(/^#/,"")).get("machine");
+for(const [id,name] of MACHINES)$("machine").add(new Option(name,id));
+$("machine").value=MACHINES.some(m=>m[0]===requested)?requested:"aobuta";
+function xLink(machine,term){
+ const name=MACHINES.find(row=>row[0]===machine)?.[1]||"";
+ return "https://x.com/search?q="+encodeURIComponent('"'+name+'" '+term)+"&f=live";
+}
+function render(){
+ const machine=$("machine").value,root=$("results");root.replaceChildren();
+ const label={ending:"終了画面",eyecatch:"アイキャッチ",setting:"設定示唆",voice:"ボイス・その他"}[kind];
+ $("heading").textContent=label+"の早見";
+ const samples=SCREEN_SAMPLES.filter(x=>x.machine===machine&&x.kind===kind);
+ for(const sample of samples){
+  const figure=document.createElement("figure");figure.className="sample-figure";
+  const img=document.createElement("img");img.src=sample.cached||sample.src;img.alt=sample.caption;
+  img.loading="lazy";img.decoding="async";img.referrerPolicy="no-referrer";
+  const caption=document.createElement("figcaption");caption.textContent=sample.caption;
+  const source=document.createElement("a");source.href=sample.source;source.target="_blank";source.rel="noopener noreferrer";source.textContent="この画像の掲載元を開く";
+  let sourceTried=false;img.addEventListener("error",()=>{if(!sourceTried&&sample.cached){sourceTried=true;img.src=sample.src;return}img.remove();caption.textContent="画像を読み込めません。元記事で確認してください。";});
+  figure.append(img,caption,source);root.append(figure);
+ }
+ const rows=GUIDES.filter(x=>x.machine===machine&&x.kind===kind);
+ $("count").textContent=rows.length?rows.length+"件の掲載元を確認":"この機種・カテゴリの意味はまだ未登録です。推測では埋めません。";
+ for(const x of rows){
+  const section=document.createElement("article");section.className="result";
+  const h=document.createElement("strong");h.textContent=x.title;
+  const p=document.createElement("p");p.textContent=x.meaning;
+  const cite=document.createElement("small");cite.textContent="確認元の掲載日・確認時点："+x.asof;
+  const link=document.createElement("a");link.href=x.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="全パターンを掲載元で確認";
+  section.append(h,p,cite,document.createElement("div"),link);root.append(section);
+ }
+ const nav=$("fallback");nav.replaceChildren();
+ const x=document.createElement("a");x.className="btn";x.href=xLink(machine,label);x.target="_blank";x.rel="noopener noreferrer";x.textContent="Xで「機種名＋"+label+"」を検索";
+ const strategy=document.createElement("a");strategy.className="btn";strategy.href="./strategy-cards.html#machine="+encodeURIComponent(machine);strategy.textContent="狙い目・やめどきも見る";
+ nav.append(x,strategy);
+}
+for(const button of $("tabs").querySelectorAll("button"))button.addEventListener("click",()=>{
+ kind=button.dataset.kind;
+ for(const b of $("tabs").querySelectorAll("button"))b.setAttribute("aria-pressed",String(b===button));
+ render();
+});
+$("machine").addEventListener("change",render);render();
+</script></body></html>
