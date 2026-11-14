@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "checked_at": "2026-11-14",
+  "description": "機種固有の狙い方・示唆。設定推測と期待収支を区別し、少数実戦値を確定値として扱わない。",
+  "machines": [
+    {
+      "machine": "otome5",
+      "title": "AT後1周期目を狙う",
+      "intro": "AT後は百花繚乱チャンス（5G）を確認。1周期目は最大200Gで到達し、設定1で当選期待度は約40％。終了画面・アイキャッチで優先度を変える。",
+      "conditions": [
+        {
+          "label": "乙女集合（赤・金）",
+          "decision": "次回1周期以内のATが期待できる。終了画面を確認して続行候補",
+          "confidence": "天国濃厚",
+          "ev_yen": null,
+          "basis": "次回ATまでの実測収支は条件別で要照合",
+          "source": "ちょんぼりすた",
+          "url": "https://chonborista.com/slot/orinpia-slot/256147/"
+        },
+        {
+          "label": "マサムネ＆ヒデヨシ",
+          "decision": "AT後0Gから1周期目まで候補。ただし示唆の強さと巫女pt・周期内G数を確認",
+          "confidence": "条件付き期待値表",
+          "ev_yen": 810,
+          "ev_at": "0Gから1周期目の結果まで／5枚等価／サンプル192件",
+          "basis": "公開の実戦補正表：0G +810円、50G +520円。同じ示唆でも開始G数とアイキャッチで変動",
+          "source": "スロパチ期待値ノート",
+          "url": "https://slopachi-note.com/sengoku-otome5-shuki"
+        },
+        {
+          "label": "ノブナガ（デフォルト）",
+          "decision": "0Gなら無条件に1周期目まで追わない。周期内150Gなどは条件別に再確認",
+          "confidence": "条件付き期待値表",
+          "ev_yen": -260,
+          "ev_at": "0Gから1周期目の結果まで／5枚等価／サンプル283件",
+          "basis": "公開の実戦補正表：0G -260円、150G +400円（同じ終了画面でも開始G数が異なる）",
+          "source": "スロパチ期待値ノート",
+          "url": "https://slopachi-note.com/sengoku-otome5-shuki"
+        },
+        {
+          "label": "乙女3人・4人、敵集合",
+          "decision": "3人以上は強い示唆、敵集合はヨシテルモード濃厚。該当画面を実機で確認し、ATまで追う条件か1周期目のみか分ける",
+          "confidence": "示唆別に要判断",
+          "ev_yen": null,
+          "basis": "終了画面の周期・恩恵を確認。数字は少数実戦値に偏るため未採用",
+          "source": "ちょんぼりすた",
+          "url": "https://chonborista.com/slot/orinpia-slot/256147/"
+        }
+      ],
+      "note": "『AT後1周期目を狙う』と『ATまで打ち切る』は別。前兆・周期の到達を確認し、終了条件を変えない。期待収支は実戦値を補正した外部試算であり保証値ではない。"
+    },
+    {
+      "machine": "kabaneri",
+      "title": "ボイス・ST到達状況で設定を推測",
+      "intro": "ST初当り・ボーナス初当り、ボイス・終了画面・下段ベルなどを総合して見る。設定推測と短期ゾーン狙いは別の判断。",
+      "conditions": [
+        {
+          "label": "ボーナス中の逆押し成功ボイス",
+          "decision": "男性は設定3・5示唆、女性は偶数設定示唆。景之の特殊ボイスは高設定示唆（弱／中／強）",
+          "confidence": "解析示唆",
+          "ev_yen": null,
+          "basis": "一撃・必勝本に掲載。ボイスだけで設定を断定しない",
+          "source": "パチ&スロ必勝本",
+          "url": "https://hisshobon.com/machineinfo/185643/"
+        },
+        {
+          "label": "無名の特定ボイス／ボイスなし",
+          "decision": "無名『やっぱりこの台…普通じゃないね』は設定2以上濃厚。逆押し成功でボイスなしは設定5or6濃厚",
+          "confidence": "設定示唆",
+          "ev_yen": null,
+          "basis": "ボイスが発生する抽選場面でのみ適用。通常会話を混同しない",
+          "source": "パチ&スロ必勝本",
+          "url": "https://hisshobon.com/machineinfo/185643/"
+        },
+        {
+          "label": "駿城ボーナスとSTの到達状況",
+          "decision": "駿城ボーナスが少なく、STが軽い台は高設定を疑う材料にはなる。ただし駿城回数だけでは判定できず、エピソードボーナスの比率・総通常G数・ボーナス/ST初当りを合わせて確認",
+          "confidence": "編集部考察（単独では未検証）",
+          "ev_yen": null,
+          "basis": "設定1：ボーナス1/254.2・ST1/422.5、設定6：ボーナス1/195.1・ST1/318.5。駿城単独回数の設定別分布は未確認。駿城中単チャンス目の3000pt獲得にも設定差",
+          "source": "HAZUSE DATA",
+          "url": "https://data.hazuse.com/index.php?genre=208&machine_code=5S1358"
+        },
+        {
+          "label": "ST終了画面・トロフィー",
+          "decision": "キャラ集合は高設定示唆、無名＆菖蒲（水着）は設定6濃厚。金以上のサミートロフィーは設定4以上などを示唆",
+          "confidence": "解析示唆",
+          "ev_yen": null,
+          "basis": "水着画面は総消化G数によって出現率が変わる。時間帯だけで判定しない",
+          "source": "一撃",
+          "url": "https://1geki.jp/slot/l_kabaneri2/0/"
+        },
+        {
+          "label": "3・4周期目の当選率",
+          "decision": "設定1は3周期18.4%、4周期33.6%。設定6は3周期37.1%、4周期46.9%。周期ごとの初当り回数と試行数を数える",
+          "confidence": "解析値",
+          "ev_yen": null,
+          "basis": "短い稼働・少数試行で確定判断しない",
+          "source": "HAZUSE DATA",
+          "url": "https://data.hazuse.com/index.php?genre=208&machine_code=5S1358"
+        }
+      ],
+      "note": "『駿城ボーナスが少ない＝高設定』と断定しない。1回のSTまでに何回駿城を経たかも記録。出玉の波だけでは設定を決められない。"
+    }
+  ]
+}
