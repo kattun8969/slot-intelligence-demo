@@ -35,7 +35,7 @@ jobs:
             const html=fs.readFileSync(file,'utf8');
             const blocks=html.split('<script>').slice(1).map(part=>part.split('</script>')[0]);
             if(!blocks.length)throw Error(file+': no inline script');
-            for(const [,code] of blocks){
+            for(const code of blocks){
               const result=spawnSync('node',['--check','--input-type=commonjs'],{input:code,encoding:'utf8'});
               if(result.status!==0)throw Error(file+': '+result.stderr);
             }
