@@ -33,7 +33,7 @@ jobs:
           const {spawnSync}=require('child_process');
           for(const file of ['docs/index.html','docs/opportunities.html']){
             const html=fs.readFileSync(file,'utf8');
-            const blocks=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)];
+            const blocks=html.split('<script>').slice(1).map(part=>part.split('</script>')[0]);
             if(!blocks.length)throw Error(file+': no inline script');
             for(const [,code] of blocks){
               const result=spawnSync('node',['--check','--input-type=commonjs'],{input:code,encoding:'utf8'});
