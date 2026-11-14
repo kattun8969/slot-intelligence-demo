@@ -64,12 +64,13 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <h2 id="detail-name"></h2>
 <section id="strategy-first" class="strategy-intro" aria-label="この機種の狙い方と現場の声">
 <h3>この機種の狙い方</h3><figure id="strategy-photo" class="strategy-machine-photo" hidden><img id="strategy-photo-img" alt="" loading="lazy"><figcaption id="strategy-photo-caption"></figcaption></figure><p class="strategy-guide-note">狙い始めの数値は解析サイトごとの掲載例です。通常・リセット・AT間・CZ間などを分け、違う前提の数値は平均しません。</p>
-<div id="strategy-source-summary" role="status"></div><div id="strategy-source-lines"></div>
 <section id="targeting-categories" class="strategy-category-block">
 <h3>狙い方の全体像</h3><p class="strategy-guide-note">PDFの整理方法を参考に独自編集。①天井狙い・②ゾーン狙い・③その他（特殊狙い）を分けて、通常/リセット/スルー数などの確認事項を先に把握できます。</p>
 <p id="category-status" class="strategy-guide-note" role="status"></p>
 <div id="category-guide-content"></div>
 </section>
+<div id="strategy-source-summary" role="status"></div><div id="strategy-source-lines"></div>
+
 <h3>一般解析と現場の声</h3><div id="strategy-field-voice" class="strategy-voice"></div>
 <h3>動画・X・編集部考察（未検証）</h3>
 <p class="strategy-guide-note">投稿者の考察や個別のホール実績を保存した調査メモです。元動画の概要欄・記事などから論点を抽出しており、検証済みの狙い目や最新投稿の自動集計ではありません。</p>
@@ -465,7 +466,13 @@ function renderStrategyFirst(m){
  showTargetingCategories(m);
  renderFieldReports(m);
  const root=$("strategy-source-lines");root.replaceChildren();
- $("strategy-all-sources").href="./strategy-cards.html#machine="+encodeURIComponent(m.id);
+ const sourceComparison=$("strategy-all-sources");
+ const newIds=new Set(["godeva2","garo","ragnador","vivy","uminchu"]);
+ const isNew=newIds.has(m.id);
+ sourceComparison.href=isNew?(m.sources[0]?.[1]||"./strategy-cards.html"):"./strategy-cards.html#machine="+encodeURIComponent(m.id);
+ sourceComparison.textContent=isNew?"機種解析・メーカー情報を開く":"出典別の狙い目を詳しく比較";
+ sourceComparison.target=isNew?"_blank":"_self";
+ sourceComparison.rel=isNew?"noopener noreferrer":"";
  $("strategy-hint-guide").href="./hints.html#machine="+encodeURIComponent(m.id);
  const searchName=m.name.replace(/（[^）]+）/g,"");
  $("strategy-x-search").href="https://x.com/search?q="+encodeURIComponent('"'+searchName+'" 狙い目')+"&f=live";
