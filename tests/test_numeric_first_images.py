@@ -47,8 +47,11 @@ class NumericFirstAndImagesTests(unittest.TestCase):
 
  def test_conflicting_sites_are_not_averaged(self):
   monkey={r["id"]:r["value"] for r in self.data["items"] if r["machine"]=="monkey5"}
-  self.assertEqual(monkey["monkey5-haienavi-equal"],300)
+  self.assertEqual(monkey["monkey5-haienavi-table400"],400)
   self.assertEqual(monkey["monkey5-setting-equal"],500)
+  table=next(x for x in self.data["items"] if x["id"]=="monkey5-haienavi-table400")
+  self.assertIn("表の一例",table["display"])
+  self.assertIn("開始ボーダーではない",table["kind"])
   tokyo={(r["source"],r["label"]):r["value"] for r in self.data["items"] if r["machine"]=="tokyoghoul"}
   self.assertEqual(tokyo[("なな徹","AT間狙い・等価")],550)
   self.assertEqual(tokyo[("スロベース","AT間狙い・等価")],650)
