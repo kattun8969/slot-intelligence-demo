@@ -342,7 +342,7 @@ function showList(){
  const term=$("search").value.trim().toLowerCase(),tier=$("tier-filter").value;
  const kind=$("kind-filter").value;
  const items=MACHINES.filter(m=>(tier==="all"||String(m.tier)===tier)&&
-   m.name.toLowerCase().includes(term)&&
+   (m.name.toLowerCase().includes(term)||(m.aliases||[]).some(a=>a.toLowerCase().includes(term)))&&
    (kind==="all"||PUBLISHED_RULES.some(rule=>rule.machine_id===m.id&&rule.kind===kind)));
 
  const list=$("target-list");list.replaceChildren();
@@ -486,7 +486,7 @@ function renderStrategyFirst(m){
  const root=$("strategy-source-lines");root.replaceChildren();
  const sourceComparison=$("strategy-all-sources");
  const newIds=new Set(["godeva2","garo","ragnador","vivy","uminchu","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
- const isNew=newIds.has(m.id);
+ const isNew=newIds.has(m.id)||m.id.startsWith("note-");
  sourceComparison.href=isNew?(m.sources[0]?.[1]||"./strategy-cards.html"):"./strategy-cards.html#machine="+encodeURIComponent(m.id);
  sourceComparison.textContent=isNew?"機種解析・原典を開く":"出典別の狙い目を詳しく比較";
  sourceComparison.target=isNew?"_blank":"_self";
@@ -556,7 +556,7 @@ function showDetail(m){
  renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
  $("detail-description").textContent="機種の狙い方は解析・原典と照合してください。登録内容は機種固有の条件で確認します。";
- $("detail-status").textContent=m.uncertain?
+ $("detail-status").textContent=m.id.startsWith("note-")?"提供されたnoteで見出しを確認しました。正確な型式・解析・狙い目・示唆は未調査です。別機種の数値は流用しません。":m.uncertain?
   "対象機種の正式な同定がまだ済んでいません。別バージョンの解析を流用せず、記録を先に残してください。":
   "狙い目の条件・期待値の検証が完了していません。確認する項目と掲載元への参照だけを提供しています。";
  const ul=$("detail-checkpoints");ul.replaceChildren();
@@ -580,7 +580,8 @@ function showDetail(m){
  const xsearch=document.createElement("p");xsearch.id="x-search-shortcut";
  document.getElementById("x-search-shortcut")?.remove();
  const xlink=document.createElement("a");
- xlink.href="./x-live.html#machine="+m.id;
+ xlink.href=m.id.startsWith("note-")?"https://x.com/search?q="+encodeURIComponent('"'+m.name+'" 狙い目')+"&f=live":"./x-live.html#machine="+m.id;
+ if(m.id.startsWith("note-")){xlink.target="_blank";xlink.rel="noopener noreferrer";}
  xlink.textContent="Xでこの機種の最新投稿を見る";
  xsearch.append(xlink);$("detail-checkpoints").after(xsearch);
  document.getElementById("community-notes-shortcut")?.remove();
@@ -814,6 +815,27 @@ $("clear-ledger").addEventListener("click",()=>{
  if(persist([])){updateLedger();$("ledger-status").textContent="すべての記録を削除しました"}
 });
 showList();updateLedger();navigate();
+async function loadNoteMachineBacklog(){
+ try{
+  const res=await fetch("./note-machine-backlog.json",{cache:"no-cache"});
+  if(!res.ok)throw Error("HTTP "+res.status);
+  const data=await res.json();
+  if(data.schema!==1||!Array.isArray(data.machines))throw Error("bad schema");
+  const seen=new Set(MACHINES.map(m=>m.id));
+  for(const entry of data.machines){
+   if(!entry||!/^note-[0-9]{3}$/.test(entry.id)||typeof entry.name!=="string"||seen.has(entry.id))continue;
+   MACHINES.push({id:entry.id,name:entry.name,tier:9,uncertain:true,
+     topics:["提供noteの機種見出しのみ登録。天井・ゾーン・特殊狙いの根拠は調査中","同名の別スペック、メダル機・スマスロなど型式の違いを要確認"],
+     aliases:[],units:["games"],sources:[["元記事（購入済みnote）","https://note.com/velmot_toushi/n/nf83f0a04ca68"]]});
+   seen.add(entry.id);
+  }
+  showList();
+  if(selected())navigate();
+ }catch(e){
+  $("list-summary").textContent="追加調査中の機種データの読み込みに失敗しました。既存の機種は利用できます。";
+ }
+}
+loadNoteMachineBacklog();
 window.addEventListener("pageshow",()=>{
  const m=selected();if(m){renderCommunity(m);updateConditionEvidence(m);}
 });
