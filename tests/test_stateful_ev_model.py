@@ -20,7 +20,6 @@ class StatefulEvModelTests(unittest.TestCase):
   self.assertIn('id="at-g"',HTML)
   self.assertIn('id="hit-mult"',HTML)
   self.assertIn('id="win-mult"',HTML)
-  self.assertIn('mode==="warm"?"1.15"',HTML if False else 'ignore') if False else None
   self.assertIn('$("regime").addEventListener("change",render)',HTML)
   self.assertIn("優遇・冷遇を確定判別する機能ではありません",HTML)
  def test_ledger_handoff_contains_assumption(self):
