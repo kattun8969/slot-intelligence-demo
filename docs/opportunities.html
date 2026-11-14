@@ -408,7 +408,7 @@ function scenarioOf(row){
  return row.label||row.basis||"条件別";
 }
 function usableEqualValue(row){
- if(typeof row.value==="number"&&!row.display?.includes("天井"))return {number:row.value,unit:row.unit||"G",exchange:row.label?.includes("等価")?"等価":"掲載条件"};
+ if(typeof row.value==="number"&&!/(天井|以内|到達濃厚)/.test(row.display||""))return {number:row.value,unit:row.unit||"G",exchange:row.label?.includes("等価")?"等価":"掲載条件"};
  if(typeof row.thresholds?.equal==="number")return {number:row.thresholds.equal,unit:row.unit||"G",exchange:"等価"};
  return null;
 }
@@ -427,7 +427,7 @@ function bestCompactGroup(lines){
 function compactRange(group){
  const values=group.values,low=Math.min(...values),high=Math.max(...values);
  const prefix=group.exchange==="等価"?"等価 ":"";
- return prefix+(low===high?low:low+"〜"+high)+group.unit+"〜";
+ return prefix+(low===high?low+group.unit+"〜":low+"〜"+high+group.unit+"（掲載幅）");
 }
 function populateTargetNumbers(machine,sectionKey,summary,root){
  const lines=[...FIRST_SOURCE_ROWS,...ADDITIONAL_LINES].filter(r=>r.machine===machine.id&&sourceSectionFor(r)===sectionKey);
@@ -447,7 +447,7 @@ function populateTargetNumbers(machine,sectionKey,summary,root){
  const label=document.createElement("div");label.className="compact-scenario";
  label.textContent=group.scenario+" ／ "+group.exchange+"（"+group.sources.size+"媒体）";
  const main=document.createElement("div");main.className="compact-value";
- main.textContent=compactRange(group);
+ main.textContent=group.rows.length===1&&group.rows[0].display?group.rows[0].display:compactRange(group);
  top.append(label,main);
  const context=document.createElement("p");context.className="compact-context";
  context.textContent=group.values.length>1&&new Set(group.values).size>1?"同じ起点・交換条件での掲載目安に差があります。推奨範囲を確定したものではありません。":"サイト掲載の代表的な参考値です。実機の条件と一致する場合のみ参照してください。";
@@ -473,7 +473,7 @@ function populateTargetNumbers(machine,sectionKey,summary,root){
  details.append(sourceLink);
  top.append(details);root.append(top);
  const marker=document.createElement("span");marker.className="target-summary-num";
- marker.textContent=compactRange(group);summary.append(marker);
+ marker.textContent=group.rows.length===1&&group.rows[0].display?group.rows[0].display:compactRange(group);summary.append(marker);
 }
 
 async function loadAdditionalLines(){
