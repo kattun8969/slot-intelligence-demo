@@ -422,6 +422,26 @@
       "confidence": "出典付き・現場候補",
       "source": "https://slobase.jp/machines/yoshimune",
       "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "otome5",
+      "id": "otome5-after-at-first-cycle",
+      "name": "AT後・終了画面別の1周期狙い",
+      "type": "zone",
+      "condition": "AT後の百花繚乱チャンス5G消化後、初回周期が未消化。終了画面『マサムネ＆ヒデヨシ』など示唆を確認",
+      "check": [
+        "AT終了画面（ノブナガはデフォルト、マサムネ＆ヒデヨシは通常B以上チャンス）",
+        "液晶の1周期目が未消化か、周期内G数と巫女ポイント",
+        "ATまで続行するのか、1周期目までの狙いかを区別"
+      ],
+      "stop": "1周期目の前兆結果を確認してやめどきを再判断。乙女集合・敵集合など強い示唆は次回ATまでの続行条件を別途確認",
+      "ev_yen": 810,
+      "ev_basis": "公開の実戦補正表：『マサムネ＆ヒデヨシ』終了画面、5枚等価、AT後0G〜1周期目の結果まで＋810円（192件）。50Gからなら＋520円。同画面・同条件以外には流用しない。",
+      "availability": "AT終了直後の空き台を探す候補。頻度は未計測",
+      "assessment": "終了画面・AT履歴の確認が必須。ロゴなし0Gは掲載表でマイナスの例",
+      "confidence": "少数実戦値・条件付き候補",
+      "source": "https://slopachi-note.com/sengoku-otome5-shuki",
+      "reviewed_at": "2026-11-14"
     }
   ]
 }
