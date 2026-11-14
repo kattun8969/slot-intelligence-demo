@@ -35,7 +35,7 @@ class CompactTargetingTests(unittest.TestCase):
   self.assertIn('出典不明のSNS情報も調査対象',a)
   self.assertIn('||{ceiling:[],zone:[],other:[]}',a)
   self.assertIn('row.display',a)
-  self.assertIn('/(天井|以内|到達濃厚|期待値|時点|表の一例)/',a)
+  self.assertIn('/(天井|以内|到達濃厚|期待値|時点|表の一例|規定|仕様)/',a)
 
  def test_no_mixed_conditions_or_units_for_ranges(self):
   a=self.html
