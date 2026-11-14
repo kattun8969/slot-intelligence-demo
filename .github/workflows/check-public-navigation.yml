@@ -6,6 +6,11 @@ on:
       - 'docs/opportunities.html'
       - 'docs/field-reports.json'
       - 'docs/targeting-categories.json'
+      - 'docs/shop-inventory.json'
+      - 'docs/shop-note-extras.json'
+      - 'docs/strategy-cards.html'
+      - 'docs/alternatives.html'
+      - 'tests/test_shop_filtered_guides.py'
       - 'docs/hints.html'
       - 'docs/hall-compare.html'
       - 'tests/test_pdf_targeting_guides.py'
@@ -18,6 +23,11 @@ on:
       - 'docs/opportunities.html'
       - 'docs/field-reports.json'
       - 'docs/targeting-categories.json'
+      - 'docs/shop-inventory.json'
+      - 'docs/shop-note-extras.json'
+      - 'docs/strategy-cards.html'
+      - 'docs/alternatives.html'
+      - 'tests/test_shop_filtered_guides.py'
       - 'docs/hints.html'
       - 'docs/hall-compare.html'
       - 'tests/test_pdf_targeting_guides.py'
@@ -39,7 +49,7 @@ jobs:
           node - <<'NODE'
           const fs=require('fs');
           const {spawnSync}=require('child_process');
-          for(const file of ['docs/index.html','docs/opportunities.html','docs/hints.html','docs/hall-compare.html']){
+          for(const file of ['docs/index.html','docs/opportunities.html','docs/hints.html','docs/hall-compare.html','docs/strategy-cards.html','docs/alternatives.html']){
             const html=fs.readFileSync(file,'utf8');
             const blocks=html.split('<script>').slice(1).map(part=>part.split('</script>')[0]);
             if(!blocks.length)throw Error(file+': no inline script');
