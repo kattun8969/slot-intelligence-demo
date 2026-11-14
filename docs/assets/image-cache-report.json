@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "checked_at": "2026-11-14T03:26:58.471713+00:00",
+  "checked_at": "2026-11-14T06:55:12.834026+00:00",
   "results": [
     {
       "id": "monkey5-cabinet",
@@ -60,6 +60,18 @@
       "id": "shinuchi-screen",
       "path": "hints/yoshimune-setting.webp",
       "bytes": 68858,
+      "ok": true
+    },
+    {
+      "id": "tensei2-cabinet",
+      "path": "machines/tensei2.webp",
+      "bytes": 56798,
+      "ok": true
+    },
+    {
+      "id": "otome5-cabinet",
+      "path": "machines/otome5.webp",
+      "bytes": 126940,
       "ok": true
     }
   ]
