@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>ホールの候補台を比べる | Slot Intelligence</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fa;color:#19344b;font:16px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{background:#102f4b;color:white;padding:22px 15px}header>div,main,footer{max-width:980px;margin:auto}
+main{padding:14px}h1{margin:0;font-size:25px}h2{font-size:19px;margin:0 0 10px}h3{font-size:17px;margin:0}
+.card{background:white;border:1px solid #dce5ed;border-radius:13px;padding:16px;margin:14px 0}
+.notice{background:#fff7e8;border-left:4px solid #b98635;padding:12px;border-radius:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+label{font-weight:650;display:block;margin-top:8px}input,select,textarea{display:block;width:100%;font:inherit;padding:10px;border:1px solid #9db3c3;border-radius:9px;background:white;color:inherit}
+textarea{min-height:65px;resize:vertical}button,.btn{display:inline-block;font:inherit;font-weight:700;padding:10px 14px;border:0;border-radius:9px;text-decoration:none;background:#195e93;color:white;cursor:pointer}
+.secondary{background:#e7eef5;color:#214763}.danger{background:#8c3c44}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.actions>*{flex:1 1 155px}.entry{border:1px solid #d8e3ed;border-radius:11px;padding:14px;margin:12px 0;background:#fbfdff}.entry>summary{cursor:pointer;list-style:none}.entry>summary::-webkit-details-marker{display:none}.entry>summary:after{content:"▼";float:right;color:#526d81}.entry[open]>summary:after{content:"▲"}.entry>summary:focus-visible{outline:3px solid #7ab4e5;outline-offset:2px}.entry-content{padding-top:12px}.x-keywords{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.x-keywords a{font-size:14px;padding:8px 10px}
+.muted,small{font-size:13px;color:#526d81}.source{border-top:1px solid #dce5ed;padding:10px 0}.source strong{font-size:17px}.source a{display:inline-block;margin-top:5px}.comparison{background:#eff5fa;border-radius:9px;padding:11px;margin:10px 0}.editor{border-top:1px solid #cddde9;margin-top:12px;padding-top:12px}.editor summary{cursor:pointer;font-weight:700}.checklist label{display:flex;align-items:flex-start;gap:9px;font-weight:500}.checklist input{width:auto;margin-top:7px}.ready-note{background:#fff7e8;border-radius:7px;padding:10px;margin:10px 0}.pill{display:inline-block;background:#e9f0f6;border-radius:18px;padding:3px 9px;font-size:13px}
+a{color:#155f95}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #7ab4e5;outline-offset:2px}
+footer{padding:12px 16px 28px;color:#526d81;font-size:12px}
+</style></head><body>
+<header><div><small style="color:#d9e9f7">ホール用・端末内だけで保存</small><h1>今ある候補台を比べる</h1>
+<p>空いている台を最大5台メモして、見落としを減らそう</p></div></header>
+<main>
+<section class="card"><div class="actions"><a class="btn secondary" href="./alternatives.html">他の機種を探す</a><a class="btn secondary" href="./strategy-cards.html">何Gから？ 出典別に確認</a><a class="btn secondary" href="./index.html">現地メモへ</a></div>
+<p class="notice"><strong>これは比較メモです。</strong> G数・コレ数・周期は異なる単位です。入力した台を期待値や勝率で自動ランキングしません。解析条件、やめどき、リセットの根拠は必ず掲載元で確認してください。</p></section>
+<section class="card"><h2>候補を追加する</h2><div class="grid">
+<div><label for="new-machine">機種</label><select id="new-machine"></select></div>
+<div><label for="new-unit">見る数字の種類</label><select id="new-unit"><option value="games">G数</option><option value="collection">コレ数</option><option value="cycles">周期</option><option value="throughs">スルー回数</option><option value="points">ポイント</option><option value="unknown">分からない</option></select></div>
+<div><label for="new-value">今の数値（任意）</label><input id="new-value" type="text" inputmode="numeric" maxlength="6" placeholder="例：500"></div>
+<div><label for="new-condition">どの狙い方の条件？</label><select id="new-condition"><option value="">未確認・選ばない</option></select></div>
+<div><label for="new-exchange">交換条件</label><select id="new-exchange"><option value="equal">等価</option><option value="medals">5.6枚・持ちメダル</option><option value="cash">5.6枚・現金投資</option></select></div>
+<div><label for="new-status">自分で確認した状態</label><select id="new-status"><option value="unchecked">まだ未確認</option><option value="checking">確認中</option><option value="checked">条件を確認した</option><option value="skip">見送る</option></select></div>
+</div>
+<label for="new-note">履歴・条件メモ（任意）</label><textarea id="new-note" maxlength="300" placeholder="例：AT間、リセット不明、前兆あり、終了画面など"></textarea>
+<div class="actions"><button type="button" id="add">候補に追加</button><button type="button" id="clear" class="danger">候補をすべて削除</button></div><p id="feedback" role="status" class="muted"></p></section>
+<section class="card"><h2>候補台の比較 <span id="count" class="pill">0 / 5台</span></h2>
+<p class="muted">並び順は追加順です。「条件を確認した」は本人のチェック状況で、期待値プラスを意味しません。数値比較は<strong>同じ条件と単位の出典だけ</strong>行います。入力の前提が間違っていれば比較も成立しません。</p>
+<div id="entries"></div><p id="empty">候補台はまだありません。上から追加してください。</p></section>
+</main>
+<footer>入力した情報はブラウザのlocalStorage内のみ。共有端末では使用後に削除してください。端末のデータ削除で記録が消える場合があります。個人の現地観測と解析サイト情報は混同しません。</footer>
+<script>
+"use strict";
+const KEY="slotintel.hallCandidates.v1",MAX=5;
+let sourceRows=[];
+const EXCHANGES={equal:"等価",medals:"5.6枚・持ちメダル",cash:"5.6枚・現金投資"};
+const unitFor=row=>row.unit==="コレ"?"collection":"games";
+const MACHINES=[
+["seiya","聖闘士星矢 黄金十二宮"],["ggo","ガンゲイル・オンライン"],
+["kabaneri","カバネリ 海門決戦"],["sao2","SAO2"],
+["monhun","モンスターハンターライズ（2024年版・初代）"],["otome5","戦国乙女5"],
+["yoshimune","真打 吉宗（2026年）"],["god","GOD"],["tokyoghoul","東京喰種"],
+["aobuta","青ブタ"],["world","ワールドダイスター"],["lycoris","リコリコ"],
+["mahoako","まほあこ"],["juoh","獣王"],
+["sunbreak","モンスターハンターライズ：サンブレイク（2026年）"],
+["monkey5","モンキーターンV"],["sencolle5","戦国コレクション5"],
+["kanokari","彼女、お借りします（かのかり）"]
+];
+const SOURCED=new Set(["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun","sunbreak","monkey5","sencolle5","kanokari","aobuta","world","lycoris","mahoako","juoh","yoshimune"]);
+const UNITS={games:"G",collection:"コレ",cycles:"周期",throughs:"スルー",points:"ポイント",unknown:"単位未確認"};
+const STATUSES={unchecked:"まだ未確認",checking:"確認中",checked:"条件を確認した",skip:"見送る"};
+const $=id=>document.getElementById(id);
+const validValue=s=>s===""||(/^[0-9]{1,6}$/.test(s)&&Number(s)<=99999);
+const validRecord=x=>x&&typeof x==="object"&&MACHINES.some(m=>m[0]===x.machine)&&Object.hasOwn(UNITS,x.unit)&&
+ typeof x.value==="string"&&validValue(x.value)&&Object.hasOwn(STATUSES,x.status)&&
+ typeof x.note==="string"&&x.note.length<=300&&
+ (x.condition===undefined||typeof x.condition==="string"&&x.condition.length<=60)&&
+ (x.exchange===undefined||Object.hasOwn(EXCHANGES,x.exchange))&&
+ (x.preflight===undefined||(x.preflight&&typeof x.preflight==="object"&&
+ ["basis","state","stop"].every(k=>typeof x.preflight[k]==="boolean")));
+let entries=[];
+let openIndex=0;
+const X_TERMS=["アイキャッチ","示唆","狙い目","実戦"];
+// Trial only: explicitly reviewed labels for one machine. Never infer aliases for sequels.
+const X_REVIEWED_ALIASES={monkey5:["モンキーターンV","モンキーターン5","モンキー5"]};
+function xSearchQuery(machine,term,includeAliases=true){
+ const name=MACHINES.find(row=>row[0]===machine)?.[1]||"";
+ const names=includeAliases&&Object.hasOwn(X_REVIEWED_ALIASES,machine)
+  ?X_REVIEWED_ALIASES[machine]:[name];
+ // Quote names to avoid false hits from a different machine; do not use unreviewed nicknames.
+ return (names.length>1?"("+names.map(v=>'"'+v+'"').join(" OR ")+")":'"'+names[0]+'"')+" "+term;
+}
+function xSearchHref(machine,term,includeAliases=true){
+ return "https://x.com/search?q="+encodeURIComponent(xSearchQuery(machine,term,includeAliases))+"&src=typed_query&f=live";
+}
+function renderXSearch(x){
+ const container=document.createElement("div");
+ const title=document.createElement("strong");title.textContent="Xで今の投稿を調べる（APIなし）";container.append(title);
+ const note=document.createElement("p");note.className="muted";note.textContent="検索結果はXで開きます。検索結果の自動埋め込みではありません。表示順や新しさはX側の仕様によります。";container.append(note);
+ if(Object.hasOwn(X_REVIEWED_ALIASES,x.machine)){
+  const aliasNote=document.createElement("p");aliasNote.className="muted";
+  aliasNote.textContent="試験対応：正式名に加えて「モンキーターン5」「モンキー5」も対象。検索結果に別機種が混じる可能性があります。";
+  container.append(aliasNote);
+ }
+ const guide=document.createElement("a");guide.href="./hints.html#machine="+encodeURIComponent(x.machine);guide.textContent="終了画面・アイキャッチ・示唆の早見を見る";container.append(guide);
+ const links=document.createElement("div");links.className="x-keywords";
+ for(const term of X_TERMS){const a=document.createElement("a");a.className="btn secondary";a.href=xSearchHref(x.machine,term);a.target="_blank";a.rel="noopener noreferrer";a.textContent=term+"の投稿を見る";links.append(a)}
+ container.append(links);
+ if(Object.hasOwn(X_REVIEWED_ALIASES,x.machine)){
+  const narrow=document.createElement("a");narrow.href=xSearchHref(x.machine,"示唆",false);
+  narrow.target="_blank";narrow.rel="noopener noreferrer";narrow.textContent="正式名だけで「示唆」を検索";
+  container.append(narrow);
+ }
+ return container;
+}
+function conditionsFor(machine){
+ const found=new Map();
+ for(const row of sourceRows.filter(x=>x.machine===machine))if(!found.has(row.condition))found.set(row.condition,row.basis);
+ return found;
+}
+function updateConditions(){
+ const machine=$("new-machine").value,old=$("new-condition").value;
+ const conditions=conditionsFor(machine);
+ $("new-condition").replaceChildren(new Option("未確認・選ばない",""));
+ for(const [key,label] of conditions)$("new-condition").add(new Option(label+"（"+key+"）",key));
+ if(conditions.has(old))$("new-condition").value=old;
+}
+async function loadSources(){
+ try{
+  const response=await fetch("./source-thresholds.json",{cache:"no-cache"});
+  if(!response.ok)throw Error("HTTP "+response.status);
+  const data=await response.json();
+  if(data.schema!==1||!Array.isArray(data.rows))throw Error("invalid schema");
+  sourceRows=data.rows.filter(row=>row&&typeof row.id==="string"&&typeof row.machine==="string"&&typeof row.condition==="string"&&typeof row.source==="string"&&typeof row.url==="string"&&/^https:\/\//.test(row.url)&&row.thresholds&&typeof row.thresholds==="object");
+  updateConditions();render();
+ }catch(e){$("feedback").textContent="解析目安を読み込めませんでした。候補の記録は引き続き利用できます。";}
+}
+function load(){
+ try{const data=JSON.parse(localStorage.getItem(KEY)||"[]");
+  if(Array.isArray(data)&&data.length<=MAX&&data.every(validRecord))entries=data;
+ }catch(e){$("feedback").textContent="保存済みデータを読み込めませんでした。新規入力はできます。";}
+}
+function persist(){
+ try{localStorage.setItem(KEY,JSON.stringify(entries));return true}
+ catch(e){$("feedback").textContent="端末に保存できませんでした。ブラウザの保存設定を確認してください。";return false}
+}
+function safeLink(href,title){
+ const a=document.createElement("a");a.className="btn secondary";a.href=href;a.textContent=title;return a;
+}
+function renderComparison(x){
+ const panel=document.createElement("div");panel.className="comparison";
+ const heading=document.createElement("strong");heading.textContent="解析サイトの狙い始め（数値だけの比較）";
+ panel.append(heading);
+ const message=msg=>{const p=document.createElement("p");p.className="muted";p.textContent=msg;panel.append(p);return panel};
+ if(!sourceRows.length)return message("解析目安をまだ読み込めていません。");
+ if(!x.condition)return message("通常・リセット・AT間など、狙い方の条件が未確認です。候補登録時に条件を選んでください。");
+ const matching=sourceRows.filter(row=>row.machine===x.machine&&row.condition===x.condition);
+ if(!matching.length)return message("この機種と条件の掲載例はありません。");
+ const exchange=x.exchange||"equal";
+ const rows=matching.filter(row=>Number.isFinite(row.thresholds[exchange]));
+ if(!rows.length)return message(EXCHANGES[exchange]+"に対応する掲載例はありません。別条件の数値を流用しません。");
+ if(x.value==="")message("今の数字は未入力です。以下は掲載元の狙い始めの目安です。");
+ for(const row of rows){
+  const section=document.createElement("div");section.className="source";
+  const unit=unitFor(row),measure=row.unit||"G";
+  const h=document.createElement("strong");h.textContent=row.source+"： "+row.thresholds[exchange]+measure+"〜（掲載例）";
+  const basis=document.createElement("p");basis.className="muted";basis.textContent="見る数字："+row.basis+" ／ 確認日："+row.asof;
+  const caution=document.createElement("p");caution.className="muted";caution.textContent="前提："+row.goal+"。注意："+row.warning;
+  const compare=document.createElement("p");
+  if(x.value==="")compare.textContent="今の台との数値比較は未実施です。";
+  else if(x.unit!==unit)compare.textContent="単位が違います（入力："+UNITS[x.unit]+"）。換算せず比較対象外。";
+  else if(Number(x.value)>=row.thresholds[exchange])
+   compare.textContent="数値は目安以上。ただし台の状態・カウンター起点・やめどきの照合が必要です。";
+  else compare.textContent="数値はこの掲載元の目安未満です。";
+  const link=document.createElement("a");link.href=row.url;link.rel="noopener noreferrer";link.target="_blank";link.textContent="出典の記事を確認";
+  section.append(h,basis,compare,caution,link);panel.append(section);
+ }
+ const label=document.createElement("p");label.className="muted";
+ label.textContent="手動ステータス："+STATUSES[x.status]+"。数値比較と本人の確認状況を合わせても、自動で着席を推奨しません。";
+ panel.append(label);return panel;
+}
+function renderPreflight(x){
+ const p=document.createElement("p");p.className="ready-note";
+ const fields=x.preflight||{basis:false,state:false,stop:false};
+ const count=["basis","state","stop"].filter(k=>fields[k]===true).length;
+ p.textContent="着席前チェック："+count+"/3件確認済み。"+
+  (count===3?"3項目の自己確認が完了（期待値・打つ判断は別）。":
+  "カウンター起点・今の状態・やめどきを確認してください。");
+ return p;
+}
+function buildEditor(x,i){
+ const details=document.createElement("details");details.className="editor";
+ const summary=document.createElement("summary");summary.textContent="G数・状態・メモを修正する";
+ details.append(summary);
+ const grid=document.createElement("div");grid.className="grid";
+ function inputField(title,value,limit){
+  const label=document.createElement("label");label.textContent=title;
+  const input=document.createElement("input");input.type="text";input.value=value;input.maxLength=limit;
+  label.append(input);grid.append(label);return input;
+ }
+ function selectField(title,options,value){
+  const label=document.createElement("label");label.textContent=title;
+  const sel=document.createElement("select");
+  for(const [key,text] of options)sel.add(new Option(text,key));
+  sel.value=value;label.append(sel);grid.append(label);return sel;
+ }
+ const value=inputField("今の数字（0〜99999）",x.value,6);value.inputMode="numeric";
+ const unit=selectField("数値の単位",Object.entries(UNITS),x.unit);
+ const conditions=[["","未確認・選ばない"],...conditionsFor(x.machine).entries()].map(([key,txt])=>[key,key?txt+"（"+key+"）":txt]);
+ const condition=selectField("どの条件か",conditions,x.condition||"");
+ const exchange=selectField("交換率",Object.entries(EXCHANGES),x.exchange||"equal");
+ const status=selectField("確認ステータス",Object.entries(STATUSES),x.status);
+ const noteLabel=document.createElement("label");noteLabel.textContent="履歴・条件のメモ";
+ const note=document.createElement("textarea");note.maxLength=300;note.value=x.note;noteLabel.append(note);
+ const checks=document.createElement("div");checks.className="checklist";
+ const heading=document.createElement("strong");heading.textContent="着席前の自己確認（チェックは収益性の保証ではありません）";
+ checks.append(heading);
+ const prev=x.preflight||{basis:false,state:false,stop:false};
+ const checkItems=[
+  ["basis","表示数字がAT間・CZ間など、記事と同じ起点か確認した"],
+  ["state","通常・設定変更後・AT後など、記事の状態と合うか確認した"],
+  ["stop","やめどきと引き戻し・示唆の確認方法を元記事で確認した"]
+ ];
+ const controls={};
+ for(const [key,title] of checkItems){
+  const label=document.createElement("label"),tick=document.createElement("input");
+  tick.type="checkbox";tick.checked=prev[key]===true;controls[key]=tick;
+  const description=document.createElement("span");description.textContent=title;
+  label.append(tick,description);checks.append(label);
+ }
+ const result=document.createElement("p");result.className="muted";result.setAttribute("role","status");
+ const save=document.createElement("button");save.type="button";save.textContent="この台の修正を保存";
+ save.addEventListener("click",()=>{
+  const next={...x,value:value.value.trim(),unit:unit.value,condition:condition.value,
+   exchange:exchange.value,status:status.value,note:note.value.trim(),
+   preflight:Object.fromEntries(Object.entries(controls).map(([key,tick])=>[key,tick.checked]))};
+  if(!validRecord(next)){result.textContent="修正できませんでした。数値は0〜99999、メモは300文字以内です。";return}
+  // Editing a count, counter unit, strategy condition or exchange invalidates old checks.
+  const changed=next.value!==x.value||next.unit!==x.unit||next.condition!==(x.condition||"")||next.exchange!==(x.exchange||"equal");
+  if(changed){next.preflight={basis:false,state:false,stop:false};next.status="unchecked";}
+  entries[i]=next;
+  persist();render();
+  $("feedback").textContent=changed?"数値や条件を変更したので、確認チェックを未確認に戻しました。":"候補台の変更を保存しました。";
+ });
+ details.append(grid,noteLabel,checks,save,result);
+ return details;
+}
+function render(){
+ $("entries").replaceChildren();$("count").textContent=entries.length+" / "+MAX+"台";
+ $("empty").hidden=entries.length!==0;$("add").disabled=entries.length>=MAX;
+ entries.forEach((x,i)=>{
+  const box=document.createElement("details");box.className="entry";box.open=i===openIndex;
+  const summary=document.createElement("summary");
+  const h=document.createElement("h3");h.style.display="inline";h.textContent=(i+1)+"台目： "+MACHINES.find(m=>m[0]===x.machine)[1];
+  summary.append(h);
+  const compact=document.createElement("span");compact.className="muted";compact.style.display="block";
+  compact.textContent=(x.value===""?"数値未入力":x.value+UNITS[x.unit])+" ／ "+STATUSES[x.status];
+  summary.append(compact);box.append(summary);
+  box.addEventListener("toggle",()=>{
+   if(!box.open)return;
+   openIndex=i;
+   for(const peer of $("entries").children)if(peer!==box&&peer.open)peer.open=false;
+  });
+  const content=document.createElement("div");content.className="entry-content";
+  const status=document.createElement("p");status.className="pill";status.textContent=STATUSES[x.status];
+  const number=document.createElement("p");number.textContent="表示値： "+(x.value===""?"未入力":x.value+UNITS[x.unit]);
+  const note=document.createElement("p");note.textContent="メモ： "+(x.note||"なし");
+  const warning=document.createElement("p");warning.className="muted";
+  warning.textContent=x.machine==="sencolle5"&&x.unit==="games"?"注意：戦コレ5の天井はコレ数です。G数との換算はしません。":"台ごとにカウンター起点・状態・やめどきを確認してください。";
+  const actions=document.createElement("div");actions.className="actions";
+  const comparison=renderComparison(x);
+  content.append(comparison);
+  content.append(renderPreflight(x),buildEditor(x,i),renderXSearch(x));
+  if(SOURCED.has(x.machine)){
+   actions.append(safeLink("./strategy-cards.html#machine="+encodeURIComponent(x.machine),
+    x.machine==="sencolle5"?"コレ数の目安を見る":"G数の目安を見る"));
+  }else{
+   const p=document.createElement("p");p.className="muted";
+   p.textContent="この機種は狙い始めの出典別数値を調査中です。";content.append(p);
+  }
+  const state=document.createElement("select");state.setAttribute("aria-label",(i+1)+"台目の確認状況");
+  for(const [k,v] of Object.entries(STATUSES))state.add(new Option(v,k));
+  state.value=x.status;
+  state.addEventListener("change",()=>{entries[i].status=state.value;persist();render()});
+  const remove=document.createElement("button");remove.type="button";remove.className="danger";remove.textContent="この候補を削除";
+  remove.addEventListener("click",()=>{entries.splice(i,1);if(openIndex>=entries.length)openIndex=Math.max(0,entries.length-1);else if(i<openIndex)openIndex--;persist();render()});
+  actions.append(remove);content.append(status,number,note,warning,state,actions);
+  box.append(content);$("entries").append(box);
+ });
+}
+for(const [id,name] of MACHINES)$("new-machine").add(new Option(name,id));
+function chooseDefaultUnit(){if($("new-machine").value==="sencolle5")$("new-unit").value="collection";else $("new-unit").value="games"}
+$("new-machine").addEventListener("change",()=>{chooseDefaultUnit();updateConditions()});
+$("add").addEventListener("click",()=>{
+ if(entries.length>=MAX){$("feedback").textContent="5台まで登録できます。";return}
+ const x={machine:$("new-machine").value,unit:$("new-unit").value,
+  condition:$("new-condition").value,exchange:$("new-exchange").value,
+  value:$("new-value").value.trim(),status:$("new-status").value,note:$("new-note").value.trim()};
+ if(!validRecord(x)){$("feedback").textContent="数値は0〜99999の整数、メモは300文字以内で入力してください。";return}
+ entries.push(x);openIndex=entries.length-1;persist();render();
+ $("feedback").textContent="候補を追加しました。";
+ $("new-value").value="";$("new-note").value="";$("new-status").value="unchecked";
+});
+$("clear").addEventListener("click",()=>{
+ if(!entries.length)return;
+ if(!confirm("候補台をすべて削除しますか？"))return;
+ entries=[];openIndex=0;persist();render();$("feedback").textContent="候補台を削除しました。";
+});
+load();chooseDefaultUnit();render();loadSources();
+</script></body></html>

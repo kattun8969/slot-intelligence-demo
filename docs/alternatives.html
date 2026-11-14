@@ -19,8 +19,8 @@ footer{font-size:12px;color:#50697e;padding:15px}p{margin:8px 0}
 </style></head><body>
 <header><div><small style="color:#d4e7f4">試用版 v1.6 / 現地で次の候補を探す</small><h1>ほかに狙える台はある？</h1><p>今の台が微妙なら、別の機種を探してみよう</p></div></header>
 <main>
-<section class="card"><div class="actions"><a class="btn secondary" href="./opportunities.html#list">18機種の一覧</a><a class="btn secondary" href="./strategy-cards.html">10機種の出典別比較</a></div>
-<p class="notice">ここに出るのは<strong>狙い目の情報がある機種</strong>です。実際に空いている台やG数は分かりません。期待値・勝率ランキングではなく、入力した条件で絞り込む一覧です。</p></section>
+<section class="card"><div class="actions"><a class="btn secondary" href="./opportunities.html#list">18機種の一覧</a><a class="btn secondary" href="./hall-compare.html">ホールの候補台を5台まで比較</a><a class="btn secondary" href="./strategy-cards.html">16機種の出典別比較</a></div>
+<p class="notice">ここに出るのは<strong>出典付きの狙い目がある機種</strong>です。実際に空いている台やG数は分かりません。期待値・勝率ランキングではなく、入力した条件で絞り込む一覧です。</p></section>
 <section class="card"><h2>どんな台を探す？</h2><div class="grid">
 <div><label for="skip-machine">さっき見送った機種</label><select id="skip-machine"><option value="">指定なし</option></select></div>
 <div><label for="kind">狙い目の種類</label><select id="kind"><option value="all">すべて</option><option value="ceiling">天井・G数狙い</option><option value="reset">リセット・短縮</option><option value="zone">周期・ゾーン</option><option value="through">スルー回数</option></select></div>
@@ -33,8 +33,8 @@ footer{font-size:12px;color:#50697e;padding:15px}p{margin:8px 0}
 </main><footer>出典・更新日・状態はリンク先で確認してください。検索条件や空台状況はサーバーに送信・保存されません。既存の実戦期待値記録にも影響しません。</footer>
 <script>
 "use strict";
-// All 14 user-requested IDs. The six with sourced comparison are
-// separated from research-only machines; there is no EV ranking.
+// All 18 user-requested IDs. Sixteen have sourced comparisons;
+// the remaining two are research-only, not EV-ranked.
 const MACHINES=[
  ["seiya","聖闘士星矢 黄金十二宮"],
  ["ggo","ガンゲイル・オンライン"],
@@ -43,7 +43,7 @@ const MACHINES=[
  ["otome5","戦国乙女5"],
  ["monhun","モンスターハンターライズ（2024年版・初代）"],
  ["sao2","SAO2"],
- ["yoshimune","吉宗"],["god","GOD"],["aobuta","青ブタ"],
+ ["yoshimune","真打 吉宗（2026年）"],["god","GOD"],["aobuta","青ブタ"],
  ["world","ワールドダイスター"],["lycoris","リコリコ"],
  ["mahoako","まほあこ"],["juoh","獣王"],
  ["sunbreak","モンスターハンターライズ：サンブレイク（2026年）"],["monkey5","モンキーターンV"],["sencolle5","戦国コレクション5"],["kanokari","彼女、お借りします（かのかり）"]
@@ -52,6 +52,23 @@ const MACHINES=[
 // Exchange conditions refer to the same explicitly sourced exchange keys
 // as the strategy comparison page; do not synthesize missing exchanges.
 const SOURCED=[
+ {id:"aobuta",kind:"ceiling",condition:"normal_ceiling",label:"通常・ボーナス間",exchange:["equal","medals","cash"]},
+ {id:"aobuta",kind:"reset",condition:"short_ceiling",label:"変更後・ST駆け抜け後",exchange:["equal","medals","cash"]},
+ {id:"world",kind:"ceiling",condition:"normal_ceiling",label:"通常ボーナス間",exchange:["equal","medals","cash"]},
+ {id:"world",kind:"reset",condition:"short_ceiling",label:"設定変更等の短縮",exchange:["equal","medals","cash"]},
+ {id:"lycoris",kind:"ceiling",condition:"at_normal",label:"AT間・通常",exchange:["equal"]},
+ {id:"lycoris",kind:"ceiling",condition:"cz_normal",label:"CZ間・通常",exchange:["equal"]},
+ {id:"lycoris",kind:"reset",condition:"at_short",label:"AT間・変更/駆け抜け",exchange:["equal"]},
+ {id:"lycoris",kind:"reset",condition:"cz_short",label:"CZ間・変更/駆け抜け",exchange:["equal"]},
+ {id:"lycoris",kind:"reset",condition:"upper_cz_fail",label:"上位CZ失敗後",exchange:["equal"]},
+ {id:"mahoako",kind:"ceiling",condition:"normal_ceiling",label:"AT間・通常",exchange:["equal","medals","cash"]},
+ {id:"mahoako",kind:"reset",condition:"reset_ceiling",label:"変更後AT間",exchange:["equal","medals","cash"]},
+ {id:"juoh",kind:"ceiling",condition:"normal_ceiling",label:"サバ連なし通常",exchange:["equal","medals","cash"]},
+ {id:"juoh",kind:"reset",condition:"reset_ceiling",label:"設定変更後の短縮",exchange:["equal","medals","cash"]},
+ {id:"yoshimune",kind:"ceiling",condition:"at_normal",label:"真打 吉宗：通常AT間",exchange:["equal"]},
+ {id:"yoshimune",kind:"ceiling",condition:"cz_normal",label:"真打 吉宗：CZ間",exchange:["equal"]},
+ {id:"yoshimune",kind:"reset",condition:"at_reset",label:"真打 吉宗：設定変更後AT間",exchange:["equal"]},
+ {id:"yoshimune",kind:"ceiling",condition:"at_shinbig",label:"真打 吉宗：真BIG後AT間",exchange:["equal"]},
  {id:"seiya",kind:"ceiling",condition:"at_gap",label:"AT間G数",exchange:["equal","medals","cash"]},
  {id:"seiya",kind:"ceiling",condition:"cz_gap",label:"CZ間G数",exchange:["equal","medals","cash"]},
  {id:"seiya",kind:"reset",condition:"reset_cz",label:"設定変更後CZ間",exchange:["equal","medals","cash"]},
