@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none';style-src 'unsafe-inline';script-src 'unsafe-inline';connect-src 'none';img-src 'none';base-uri 'none';form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none';style-src 'unsafe-inline';script-src 'unsafe-inline';connect-src 'self';img-src 'none';base-uri 'none';form-action 'none'">
 <title>別の狙い目候補を探す | Slot Intelligence</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f2f6fa;color:#19344b;font:15px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif}
@@ -15,7 +15,7 @@ button,.btn{display:inline-block;border:0;border-radius:9px;background:#195e93;c
 .muted{font-size:13px;color:#586e80}.option{border:1px solid #d9e3ec;border-radius:11px;padding:13px}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.actions>*{flex:1 1 145px}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7bb6e4;outline-offset:2px}
-footer{font-size:12px;color:#50697e;padding:15px}p{margin:8px 0}
+.picked-label{font-size:12px;font-weight:700;color:#0c6e72;margin-top:9px}.picked-option{background:#eff7f8;border-left:3px solid #2b8b8b;padding:8px;margin:6px 0;border-radius:4px}.picked-option strong{font-size:13px}.picked-option p{font-size:12px}.picked-option span{font-size:12px;color:#426c73}.option>.btn{margin-top:9px}.more-conditions{margin-top:10px;font-size:13px}footer{font-size:12px;color:#50697e;padding:15px}p{margin:8px 0}
 </style></head><body>
 <header><div><small style="color:#d4e7f4">試用版 v1.6 / 現地で次の候補を探す</small><h1>ほかに狙える台はある？</h1><p>今の台が微妙なら、別の機種を探してみよう</p></div></header>
 <main>
@@ -27,7 +27,7 @@ footer{font-size:12px;color:#50697e;padding:15px}p{margin:8px 0}
 <div><label for="exchange">交換条件</label><select id="exchange"><option value="equal">等価</option><option value="medals">5.6枚・持ちメダル</option><option value="cash">5.6枚・現金投資</option></select></div>
 <div><label for="text-query">機種名検索（任意）</label><input id="text-query" type="search" placeholder="例：東京喰種"></div>
 </div><p id="status" role="status" class="muted"></p><div class="actions"><button type="button" id="reset-filters" class="secondary">条件をクリア</button></div></section>
-<section class="card"><h2>狙い目の情報がある機種</h2><p class="muted">選んだ交換率で目安が載っている機種だけを表示。実際に打てるかは次の画面で確認してください。</p><div class="grid" id="available"></div>
+<section class="card"><h2>現場で探す候補・狙い目一覧</h2><p class="muted">現場候補を整理済みの機種を先に掲載。その他は出典付き条件を比較できます。人気順・空き台率のランキングではありません。</p><div class="grid" id="available"></div>
 <p id="available-empty" class="muted"></p></section>
 <section class="card"><h2>まだ調査中の機種</h2><p class="muted">狙い始めのG数は調査中。機種のメモ画面には進めます。</p><div class="grid" id="pending"></div></section>
 </main><footer>出典・更新日・状態はリンク先で確認してください。検索条件や空台状況はサーバーに送信・保存されません。既存の実戦期待値記録にも影響しません。</footer>
@@ -96,6 +96,8 @@ const SOURCED=[
  {"id":"kanokari","kind":"reset","condition":"reset_ceiling","label":"リセット後","exchange":["equal","medals","cash"]}
 ];
 const $=id=>document.getElementById(id);
+let PRACTICAL=[];
+const COUNTER_TIPS={monkey5:"通常795G＋α／6周期。変更・青島VS波多野敗北後495G＋α／4周期。ヘルメットと1周期目を確認。",kabaneri:"ST間の通常と短縮条件を分け、周期・前兆も確認。",seiya:"AT間・CZ間・リセット後の起点を別々に確認。",tokyoghoul:"AT間実GとCZ間液晶Gを混同しない。",sunbreak:"AT間・CZ間の別カウンターを確認。",sencolle5:"コレ数・周期の単位を確認。",kanokari:"BIG後・REG後・変更後で天井が異なる。"};
 const KIND_LABEL={ceiling:"天井・G数",reset:"リセット",zone:"周期・ゾーン",through:"スルー"};
 function getCandidates(skip,kind,exchange,term){
  const name=new Map(MACHINES);
@@ -116,24 +118,34 @@ function createCandidate(machine){
  const item=document.createElement("article");item.className="option";
  const h=document.createElement("h3");h.textContent=machine.name;item.append(h);
  const p=document.createElement("p");p.className="muted";
- p.textContent=machine.conditions.length+"種類の掲載例へのリンクがあります。G数・適用条件・更新日は比較先で確認してください。";
+ p.textContent=(COUNTER_TIPS[machine.id]||"通常・短縮など状態別の狙い目を確認。")+" 比較できる条件："+machine.conditions.length+"件。";
  item.append(p);
- for(const condition of machine.conditions){
-  const a=document.createElement("a");a.className="btn secondary";
-  a.style.margin="3px 5px 3px 0";
-  a.href="./strategy-cards.html#machine="+encodeURIComponent(machine.id)+
-    "&condition="+encodeURIComponent(condition.condition)+
-    "&exchange="+encodeURIComponent($("exchange").value);
-  a.textContent=condition.label+"を比較";
-  item.append(a);
+ const picks=PRACTICAL.filter(row=>row.machine===machine.id);
+ if(picks.length){
+  const label=document.createElement("div");label.className="picked-label";label.textContent="現場で探す候補（検証中）";item.append(label);
+  for(const pick of picks){
+   const group=document.createElement("div");group.className="picked-option";
+   const name=document.createElement("strong");name.textContent=pick.name;
+   const detail=document.createElement("p");detail.textContent=pick.condition;
+   const ev=document.createElement("span");ev.textContent=pick.ev_yen===null?"期待収支：未確認":"掲載例：約＋"+Number(pick.ev_yen).toLocaleString("ja-JP")+"円";
+   group.append(name,detail,ev);item.append(group);
+  }
  }
- return item;
+ const machineLink=document.createElement("a");machineLink.className="btn";machineLink.href="./opportunities.html#machine="+encodeURIComponent(machine.id);machineLink.textContent="狙い目・やめどきを見る";item.append(machineLink);
+ const detail=document.createElement("details");detail.className="more-conditions";
+ const sum=document.createElement("summary");sum.textContent="出典別の条件を比較（"+machine.conditions.length+"件）";detail.append(sum);
+ for(const condition of machine.conditions){
+  const a=document.createElement("a");a.className="btn secondary";a.style.margin="3px 5px 3px 0";
+  a.href="./strategy-cards.html#machine="+encodeURIComponent(machine.id)+"&condition="+encodeURIComponent(condition.condition)+"&exchange="+encodeURIComponent($("exchange").value);
+  a.textContent=condition.label;detail.append(a);
+ }
+ item.append(detail);return item;
 }
 function render(){
  const values=getCandidates($("skip-machine").value,$("kind").value,
   $("exchange").value,$("text-query").value);
  $("available").replaceChildren();$("pending").replaceChildren();
- for(const m of values.available)$("available").append(createCandidate(m));
+ for(const m of values.available.sort((a,b)=>Number(PRACTICAL.some(x=>x.machine===b.id))-Number(PRACTICAL.some(x=>x.machine===a.id))))$("available").append(createCandidate(m));
  for(const m of values.pending){
   const article=document.createElement("article");article.className="option";
   const h=document.createElement("h3");h.textContent=m[1];
@@ -164,5 +176,7 @@ $("reset-filters").addEventListener("click",()=>{
  $("skip-machine").value="";$("kind").value="all";$("exchange").value="equal";
  $("text-query").value="";render();
 });
+async function loadPractical(){try{const res=await fetch("./practical-picks.json",{cache:"no-cache"});if(!res.ok)throw Error("fetch");const data=await res.json();if(data.schema!==1||!Array.isArray(data.items))throw Error("schema");PRACTICAL=data.items.filter(x=>x&&typeof x.machine==="string"&&typeof x.condition==="string"&&(x.ev_yen===null||Number.isFinite(x.ev_yen)));}catch(_){PRACTICAL=[]}render();}
+loadPractical();
 render();
 </script></body></html>

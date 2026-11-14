@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "checked_at": "2026-11-14",
+  "description": "Only human-approved verified field reports. Never import raw GitHub Issues or private/local notes directly. This initial file intentionally contains no accepted reports.",
+  "items": []
+}

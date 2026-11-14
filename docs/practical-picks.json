@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "checked_at": "2026-11-14",
+  "description": "編集部が検討する『現場で探す候補』。空き台の実測頻度や人気順位を示すデータではない。期待収支未確認の条件はnull。個別の根拠と実機での確認事項を併記。",
+  "items": [
+    {
+      "machine": "monkey5",
+      "id": "monkey-reset",
+      "name": "設定変更後の短縮状態",
+      "type": "reset",
+      "condition": "変更後と判断できる台・AT間495G+α／4周期に短縮",
+      "check": [
+        "店の変更傾向・据え置きの可能性",
+        "液晶G数と周期",
+        "前兆・激走ポイント"
+      ],
+      "stop": "AT終了後にヘルメット・1G目を確認し、続行条件がなければ再判定",
+      "ev_yen": null,
+      "ev_basis": "変更後だけの期待値は未登録",
+      "availability": "店の据え置き状況次第",
+      "assessment": "朝一の候補",
+      "confidence": "条件付き候補",
+      "source": "https://haienavi.com/machines/monkey",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "monkey5",
+      "id": "monkey-after-at",
+      "name": "AT後即ヤメ・ヘルメット未確認",
+      "type": "zone",
+      "condition": "AT後0G付近・ヘルメットと初回周期の消化状況を確認できる台",
+      "check": [
+        "ロゴなしでも天国否定ではない",
+        "初回周期が未消化か",
+        "残りの激走ポイント・前兆"
+      ],
+      "stop": "1周期目の前兆を確認して再判断。示唆次第でATまで続行",
+      "ev_yen": null,
+      "ev_basis": "デフォルト限定の期待収支は未検証。0G即打ちが常にプラスとは限らない",
+      "availability": "即ヤメ台を探す候補",
+      "assessment": "拾いやすさは現場検証待ち",
+      "confidence": "条件付き候補",
+      "source": "https://slobase.jp/machines/monkey-turn",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "monkey5",
+      "id": "monkey-400",
+      "name": "通常400G前後の天井検討",
+      "type": "ceiling",
+      "condition": "通常状態のAT間400G時点・等価・AT連チャン終了まで",
+      "check": [
+        "現在の周期数と激走ポイント",
+        "リセット・短縮条件の有無",
+        "交換率とやめどき"
+      ],
+      "stop": "AT終了後のヘルメットと1G目を確認",
+      "ev_yen": 1227,
+      "ev_basis": "ハイエナビ公開期待値表の400G行（等価／通常状態）。開始推奨ラインと別",
+      "availability": "出現頻度データなし",
+      "assessment": "高いハマり台に限定しない参考例",
+      "confidence": "公開表の例",
+      "source": "https://haienavi.com/machines/monkey",
+      "reviewed_at": "2026-11-14"
+    }
+  ]
+}
