@@ -23,6 +23,8 @@ class PracticalAndModerationTests(unittest.TestCase):
    self.assertTrue(row["stop"])
    self.assertTrue(row["ev_yen"] is None or isinstance(row["ev_yen"],int))
   self.assertIn("空き台の見つけやすさは未集計",self.detail)
+  self.assertGreaterEqual(len(rows),20)
+  self.assertGreaterEqual(len({x["machine"] for x in rows}),12)
   self.assertIn("人気順・空き台率のランキングではありません",self.alts)
  def test_checklist_explains_ceiling_and_memo_is_unified(self):
   self.assertIn("打つ前のチェック項目（天井・周期・示唆）",self.detail)
@@ -37,8 +39,9 @@ class PracticalAndModerationTests(unittest.TestCase):
   self.assertEqual(self.reviewed["items"],[])
   self.assertIn("reviewed-field-reports.json",self.detail)
   self.assertIn('REVIEWED_REPORTS=data.items.filter',self.detail)
-  self.assertIn("実戦報告を投稿する",self.detail)
-  self.assertTrue((ROOT/".github"/"ISSUE_TEMPLATE"/"field_report.yml").exists())
+  self.assertIn("一般向けの報告受付は現在休止中",self.detail)
+  self.assertNotIn("issues/new?template=field_report.yml",self.detail)
+  self.assertFalse((ROOT/".github"/"ISSUE_TEMPLATE"/"field_report.yml").exists())
   self.assertIn('schema:1', (DOCS/"EDITORIAL_MODERATION.md").read_text(encoding="utf-8"))
  def test_alternative_cards_have_machine_detail_links(self):
   self.assertIn("COUNTER_TIPS",self.alts)

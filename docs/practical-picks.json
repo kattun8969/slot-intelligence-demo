@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "checked_at": "2026-11-14",
-  "description": "編集部が検討する『現場で探す候補』。空き台の実測頻度や人気順位を示すデータではない。期待収支未確認の条件はnull。個別の根拠と実機での確認事項を併記。",
+  "description": "現場候補（掲載目安）。実際に落ちている頻度・人気順位の実測値ではなく、各サイトの開始ラインを比較可能に整理したもの。期待収支未確認はnull。条件とやめどき・出典を確認して適用。",
   "items": [
     {
       "machine": "monkey5",
@@ -61,6 +61,366 @@
       "assessment": "高いハマり台に限定しない参考例",
       "confidence": "公開表の例",
       "source": "https://haienavi.com/machines/monkey",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "kabaneri",
+      "id": "kabaneri-reset",
+      "name": "リセット後の短縮天井を確認",
+      "type": "reset",
+      "condition": "設定変更が確認でき、ST間60G〜（等価・スロベース掲載例）",
+      "check": [
+        "据え置きではない根拠",
+        "ST間のG数・最大4周期の短縮",
+        "CZアイコン・ST後の状態"
+      ],
+      "stop": "ST後の高確・引き戻しや短縮状態を確認して再判定",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "朝一・変更後候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slobase.jp/articles/kabaneri-unato-reset",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "kabaneri",
+      "id": "kabaneri-through-st",
+      "name": "ST駆け抜け後の短縮を確認",
+      "type": "reset",
+      "condition": "ST駆け抜け後90G〜（等価・掲載例）。上位ST後80G〜とは区別",
+      "check": [
+        "駆け抜けか上位ST後か",
+        "履歴で短縮の条件が追えるか",
+        "現在周期と前兆"
+      ],
+      "stop": "ST後の高確・引き戻し示唆を確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "ST直後の見切り台候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slobase.jp/articles/kabaneri-unato-reset",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "kabaneri",
+      "id": "kabaneri-cycle",
+      "name": "1周期手前・2周期手前を確認",
+      "type": "zone",
+      "condition": "周期未消化の130G前後／270G前後を検討（等価・掲載例）",
+      "check": [
+        "何周期目か",
+        "ポイントによる早期周期到達の有無",
+        "通常ST後か短縮中か"
+      ],
+      "stop": "該当周期の前兆を確認後に再判断",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "短時間ゾーン候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slobase.jp/articles/kabaneri-unato-reset",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "otome5",
+      "id": "otome5-reset",
+      "name": "設定変更後・短縮状態",
+      "type": "reset",
+      "condition": "設定変更後AT間10G〜（等価・スロッターの道具箱掲載目安。期待値額は未確認）",
+      "check": [
+        "設定変更の根拠",
+        "650G+α／4周期短縮の適用",
+        "巫女ポイント・周期"
+      ],
+      "stop": "AT後の引き戻しモードを確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "朝一条件付き",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slot-toolbox.com/sengoku-otome5-tenjo/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "tokyoghoul",
+      "id": "tokyoghoul-reset-cz",
+      "name": "設定変更後CZ天井の短縮",
+      "type": "reset",
+      "condition": "変更後CZ間液晶60G〜（等価・なな徹掲載例）",
+      "check": [
+        "変更後である根拠",
+        "CZ間液晶GとAT間実Gの違い",
+        "前兆・アイキャッチ"
+      ],
+      "stop": "CZ終了後・AT後の状態を再確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "変更後の浅め候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://nana-press.com/kaiseki/machine/889/27251/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "tokyoghoul",
+      "id": "tokyoghoul-arima",
+      "name": "有馬ジャッジメント失敗後",
+      "type": "zone",
+      "condition": "失敗直後〜100G＋αのフォロー条件（一般のCZ間100G狙いとは別）",
+      "check": [
+        "失敗を確認できたか",
+        "液晶Gの起点",
+        "対象となる特殊条件"
+      ],
+      "stop": "失敗後の天国フォロー区間を確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "特殊状況が見えている台",
+      "confidence": "出典付き・現場候補",
+      "source": "https://nana-press.com/kaiseki/machine/889/27251/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "seiya",
+      "id": "seiya-reset-cz",
+      "name": "設定変更後のCZ間",
+      "type": "reset",
+      "condition": "変更後CZ間140G〜（等価・ちょんぼりすた掲載例）",
+      "check": [
+        "設定変更の裏付け",
+        "現在CZ間の起点",
+        "AT間の履歴と混同していないか"
+      ],
+      "stop": "CZ後の状態を見て再判定",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "変更後CZ間候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://chonborista.com/slot/sanyo-slot/260304/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "ggo",
+      "id": "ggo-reset",
+      "name": "設定変更後・ボーナス間短縮",
+      "type": "reset",
+      "condition": "変更後ボーナス間150G〜（等価・スロベース掲載例）",
+      "check": [
+        "変更後と確認できるか",
+        "データ表示器のボーナス間G数",
+        "SJスルー回数"
+      ],
+      "stop": "ボーナス・SJ終了時の示唆を再確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "変更後候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slobase.jp/articles/sao-alternative-ggo-yamedoki",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "ggo",
+      "id": "ggo-through",
+      "name": "SJスルー回数が深い台",
+      "type": "through",
+      "condition": "5スルー以上、または駆け抜け後2スルーの50G〜（等価・掲載例）",
+      "check": [
+        "スルー履歴の起点",
+        "駆け抜け後か",
+        "データ表示G数"
+      ],
+      "stop": "SJ当選後の状態を再判定",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "履歴が確認できる台",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slobase.jp/articles/sao-alternative-ggo-yamedoki",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "aobuta",
+      "id": "aobuta-short",
+      "name": "変更・ST駆け抜け後の短縮天井",
+      "type": "reset",
+      "condition": "変更後またはST駆け抜け後40G〜（等価・道具箱掲載例）",
+      "check": [
+        "変更・駆け抜けの証拠",
+        "ボーナス間実G",
+        "思春期ポイントとCZ間の違い"
+      ],
+      "stop": "ST終了後の短縮・引き戻し条件を再確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "ST後の条件付き候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slot-toolbox.com/ao-buta-tenjo/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "lycoris",
+      "id": "lycoris-cz-short",
+      "name": "変更・駆け抜け後のCZ間短縮",
+      "type": "reset",
+      "condition": "短縮CZ間40G〜（等価・天井電卓掲載例）",
+      "check": [
+        "変更または駆け抜け後と確認",
+        "CZ間とAT間のカウンター",
+        "短縮終了条件"
+      ],
+      "stop": "CZ後とAT後で状態を分けて再判定",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "CZ後の短縮候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://tenjocalc.com/machines/lycoris",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "lycoris",
+      "id": "lycoris-upper-fail",
+      "name": "上位CZ失敗後の短縮",
+      "type": "other",
+      "condition": "上位CZ失敗後AT間0G〜（等価・スロベース掲載例）",
+      "check": [
+        "上位CZ失敗を実際に確認",
+        "通常CZ失敗と混同していないか",
+        "AT間天井短縮の適用"
+      ],
+      "stop": "AT当選後の状態を確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "目撃・履歴確認が必要",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slobase.jp/machines/lycoris-recoil",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "sunbreak",
+      "id": "sunbreak-cz-gap",
+      "name": "CZ間カウンターの浅め候補",
+      "type": "zone",
+      "condition": "CZ間200〜250G付近（等価・サイト間で掲載差あり）",
+      "check": [
+        "初代ライズと間違えていないか",
+        "CZ間実GとAT間実G",
+        "スルー回数・周期"
+      ],
+      "stop": "CZ後の状態を再確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "CZ履歴が追える台",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slot-toolbox.com/mhrsb-tenjo/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "sencolle5",
+      "id": "sencolle5-reset",
+      "name": "設定変更後コレ数狙い",
+      "type": "reset",
+      "condition": "変更後448コレ〜（等価・天井ナビ掲載例。G数ではない）",
+      "check": [
+        "変更後を確認",
+        "液晶コレ数を確認",
+        "モード別の規定コレ数"
+      ],
+      "stop": "AT後のコレ数・モードを確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "ポイント管理できる台",
+      "confidence": "出典付き・現場候補",
+      "source": "https://tennabi.jp/sengoku-collection-5/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "kanokari",
+      "id": "kanokari-reset",
+      "name": "設定変更後の短縮天井",
+      "type": "reset",
+      "condition": "変更後0G〜（等価・スロッターの道具箱掲載例）",
+      "check": [
+        "設定変更の根拠",
+        "BONUS後とREG後を区別",
+        "引き戻し状態"
+      ],
+      "stop": "BONUS・REG後の引き戻し区間を確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "朝一条件付き候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slot-toolbox.com/kanokari-tenjo/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "kanokari",
+      "id": "kanokari-reg",
+      "name": "REG後の短縮天井",
+      "type": "other",
+      "condition": "REG後200G〜（等価・道具箱掲載例。BIG後とは別）",
+      "check": [
+        "REG後だと確認できる履歴",
+        "REG連続単発回数",
+        "現在の引き戻し区間"
+      ],
+      "stop": "REG・BONUS当選後に再判定",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "REG後の履歴候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slot-toolbox.com/kanokari-tenjo/",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "yoshimune",
+      "id": "yoshimune-reset",
+      "name": "設定変更後AT間狙い",
+      "type": "reset",
+      "condition": "真打吉宗2026年版・変更後AT間350G〜（等価・スロベース掲載例）",
+      "check": [
+        "2026年版の型式",
+        "設定変更を確認",
+        "AT間とCZ間を区別"
+      ],
+      "stop": "AT後の引き戻し・特殊状態を確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "変更後候補",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slobase.jp/machines/yoshimune",
+      "reviewed_at": "2026-11-14"
+    },
+    {
+      "machine": "yoshimune",
+      "id": "yoshimune-shinbig",
+      "name": "真BIG後の短縮状態",
+      "type": "other",
+      "condition": "真BIG後AT間180G〜（等価・スロベース掲載例）",
+      "check": [
+        "真BIG終了を確認",
+        "通常BIGと混同しない",
+        "128Gの引き戻し区間を確認"
+      ],
+      "stop": "AT後・月下ノ花道中の状態を確認",
+      "ev_yen": null,
+      "ev_basis": "この開始条件・交換率・終了条件での期待収支額は未照合。数値は掲載元の狙い目目安であり期待収支ではない",
+      "availability": "空き台出現頻度・実測データなし",
+      "assessment": "直前ボーナス履歴が必要",
+      "confidence": "出典付き・現場候補",
+      "source": "https://slobase.jp/machines/yoshimune",
       "reviewed_at": "2026-11-14"
     }
   ]
