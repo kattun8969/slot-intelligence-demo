@@ -1,4 +1,4 @@
-"""Static regressions for helmet cue gallery and source-safe popup."""
+"""Static checks for attributed image popups and transparent fallback."""
 from pathlib import Path
 import unittest
 
@@ -22,12 +22,18 @@ class CompoundCueGalleryTests(unittest.TestCase):
         ):
             self.assertIn(marker, self.html)
 
-    def test_gallery_marks_illustrations_not_actual_machine_photos(self):
-        self.assertIn("識別用の模式図（実機画像ではありません）", self.html)
-        self.assertIn("実機画像の転載は許諾・引用要件の確認後", self.html)
-        self.assertIn("解析出典：", self.html)
-        self.assertIn("https://nana-press.com/kaiseki/machine/644/18217/", self.html)
-        self.assertIn("https://1geki.jp/slot/l_monkeyturn5/47/", self.html)
+    def test_source_images_and_attribution(self):
+        for marker in (
+            "https://chonborista.com/wp-content/uploads/2023/09/l_monkey_heru1.jpg",
+            "https://chonborista.com/wp-content/uploads/2023/09/l_monkey_heru2.jpg",
+            'img.referrerPolicy="no-referrer"',
+            'img.addEventListener("error"',
+            "出典：",
+            "画像・解析出典：",
+            "ちょんぼりすた掲載",
+            "画像を表示できませんでした",
+        ):
+            self.assertIn(marker, self.html)
 
     def test_profit_example_remains_hypothetical(self):
         self.assertIn("各狙い目の投資・利益予想ではありません", self.html)
