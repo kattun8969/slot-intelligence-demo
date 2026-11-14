@@ -49,16 +49,19 @@ class ShopFilteredGuidesTests(unittest.TestCase):
    entry=expanded[machine_id]
    self.assertTrue(entry["ceiling"] and entry["zone"] and entry["other"],msg=machine_id)
 
- def test_shop_gate_applies_to_each_visible_selector(self):
-  home=self.pages["index.html"]; detail=self.pages["opportunities.html"]
-  self.assertIn('STORE_INSTALLED.has(m.id)&&m.group',home)
-  self.assertIn('STORE_INSTALLED.has(x.id)',home)
-  self.assertIn('SHOP_INSTALLED.has(m.id)',detail)
-  self.assertIn('&&SHOP_INSTALLED.has(x.id)',detail)
-  self.assertIn('STORESHOP.has(x[0])',self.pages["hints.html"])
-  self.assertIn('STORESHOP.has(x[0])',self.pages["hall-compare.html"])
-  self.assertIn('STORE_INSTALLED.has(x[0])',self.pages["strategy-cards.html"])
-  self.assertIn('STORE_INSTALLED.has(x[0])',self.pages["alternatives.html"])
+ def test_shop_snapshot_is_reference_only_not_a_global_gate(self):
+  for p in PAGES:
+   page=self.pages[p]
+   for banned in ("STORE_INSTALLED.has(","STORESHOP.has(","SHOP_INSTALLED.has("):
+    self.assertNotIn(banned,page,msg=p)
+  home=self.pages["index.html"]
+  detail=self.pages["opportunities.html"]
+  self.assertIn('function loadNoteMachineBacklog()',home)
+  self.assertIn('function loadNoteMachineBacklog()',detail)
+  self.assertIn('note-machine-backlog.json',home)
+  self.assertIn('note-machine-backlog.json',detail)
+  self.assertNotIn('楽園大宮店の機種名・略称で探す',home)
+  self.assertNotIn('楽園大宮店での掲載台数',detail)
 
  def test_original_paid_content_not_copied(self):
   summary=(DOCS/"shop-note-extras.json").read_text(encoding="utf-8")
