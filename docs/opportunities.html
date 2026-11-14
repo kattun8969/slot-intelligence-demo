@@ -398,6 +398,7 @@ function showTargetingCategories(machine){
   section.append(title,list);panel.append(section);
  }
  const note=document.createElement("p");note.className="targeting-source";note.textContent="出典の扱い："+entry.source_notice;panel.append(note);
+ if(entry.basis==="owner_full_html_source")panel.append(fieldLink("この考察の掲載元noteを見る（詳細・有料部分あり）","https://note.com/velmot_toushi/n/nf83f0a04ca68"));
  if(entry.reference)panel.append(fieldLink("関連するメーカー・解析ページを見る",entry.reference));
 }
 async function loadTargetingCategories(){
