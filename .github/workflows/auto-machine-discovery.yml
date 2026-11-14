@@ -1,0 +1,40 @@
+name: Update public slot machine discovery
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/auto-machine-discovery.yml' # one immediate initial run after installation
+  schedule:
+    - cron: '20 23 * * *' # about 08:20 JST (GitHub schedules may be delayed)
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: machine-discovery
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Collect public machine names and update headlines
+        run: python3 scripts/collect_machine_updates.py --output docs/auto-machine-discovery.json
+      - name: Validate snapshot and test parser
+        run: |
+          python3 -m unittest tests/test_machine_discovery.py -v
+          python3 -m json.tool docs/auto-machine-discovery.json > /dev/null
+      - name: Commit metadata-only snapshot if changed
+        run: |
+          git add docs/auto-machine-discovery.json
+          if git diff --cached --quiet; then
+            echo "No new machine information today"
+            exit 0
+          fi
+          git -c user.name='slot-research-bot' -c user.email='slot-research-bot@users.noreply.github.com' commit -m 'Auto-update public slot-machine discovery (metadata only)'
+          git push origin HEAD:main

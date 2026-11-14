@@ -18,7 +18,7 @@ class CalculatorTests(unittest.TestCase):
   self.assertIn('id="accept"',self.lab)
   self.assertIn('if(!$("accept").checked)',self.lab)
   self.assertIn("当選確率",self.lab)
-  self.assertIn("仮の平均払出",self.lab)
+  self.assertIn("仮の払出",self.lab)
  def test_trial_handoff_not_auto_save(self):
   self.assertIn("sessionStorage.setItem",self.lab)
   self.assertIn("slotintel-ev-transfer-v1",self.site)

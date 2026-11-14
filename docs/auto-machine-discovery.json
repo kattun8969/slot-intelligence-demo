@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "source": "パチ7（一般公開の機種カタログ・更新見出し）",
+  "catalog_url": "https://pachiseven.jp/machines/list_machine/slot.html",
+  "news_url": "https://pachiseven.jp/machines/index.html",
+  "note": "公開情報のタイトル・メーカー名・更新見出しを自動収集。狙い目、当選確率、期待値、設定差、優遇・冷遇を自動推定しません。記事本文は転載しません。",
+  "machines": [
+    {
+      "id": "7463",
+      "name": "スマート沖スロ ハイハイシオサイRe",
+      "maker": "パイオニア",
+      "url": "https://pachiseven.jp/machines/7463",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7493",
+      "name": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２",
+      "maker": "ビスティ",
+      "url": "https://pachiseven.jp/machines/7493",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7490",
+      "name": "L牙狼 闇を照らす者",
+      "maker": "サンセイアールアンドディ",
+      "url": "https://pachiseven.jp/machines/7490",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7489",
+      "name": "スロット Vivy -Fluorite Eye’s Song-",
+      "maker": "大都技研",
+      "url": "https://pachiseven.jp/machines/7489",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7455",
+      "name": "スマスロ ラグナドール",
+      "maker": "ミズホ / ユニバーサルエンターテインメント",
+      "url": "https://pachiseven.jp/machines/7455",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7450",
+      "name": "L聖闘士星矢 黄金十二宮",
+      "maker": "サンスリー",
+      "url": "https://pachiseven.jp/machines/7450",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7446",
+      "name": "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン",
+      "maker": "京楽産業.",
+      "url": "https://pachiseven.jp/machines/7446",
+      "first_seen": "2026-11-15"
+    }
+  ],
+  "updates": [
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe：天井機能の解析更新",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe：ボーナス後のフェザーランプによる設定示唆",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe：初当りREGからの天国移行率",
+      "url": "https://pachiseven.jp/machines/7463"
+    }
+  ]
+}
