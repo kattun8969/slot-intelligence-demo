@@ -435,7 +435,7 @@ function bestCompactGroup(lines){
   const group=groups.get(key)||{scenario,unit:value.unit,exchange:value.exchange,rows:[],values:[],sources:new Set()};
   group.rows.push(row);group.values.push(value.number);group.sources.add(row.source);groups.set(key,group);
  }
- return [...groups.values()].sort((a,b)=>b.sources.size-a.sources.size||b.rows.length-a.rows.length||a.scenario.localeCompare(b.scenario))[0]||null;
+ return [...groups.values()].sort((a,b)=>Number(b.rows.some(r=>r.actionable===true))-Number(a.rows.some(r=>r.actionable===true))||b.sources.size-a.sources.size||b.rows.length-a.rows.length||a.scenario.localeCompare(b.scenario))[0]||null;
 }
 function compactRange(group){
  const values=group.values,low=Math.min(...values),high=Math.max(...values);
