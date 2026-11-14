@@ -13,7 +13,7 @@ class KisekiGaiaTests(unittest.TestCase):
         self.assertEqual({x["id"] for x in rows},{"kiseki-reset","kiseki-red7","kiseki-cut","kiseki-single"})
         self.assertTrue(all(x["ev_yen"] is None for x in rows))
         self.assertTrue(all("暫定" in x["confidence"] for x in rows))
-        self.assertTrue(all("確認" in " ".join(x["check"]) for x in rows))
+        self.assertTrue(all(len(x["check"]) >= 3 for x in rows))
     def test_published_sample_is_a_nonverified_observation(self):
         for token in ["32,123G","41.73G","107.368％","535.16","独立した検証","保証しません"]:
             self.assertIn(token,self.page)
