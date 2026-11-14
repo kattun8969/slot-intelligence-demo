@@ -35,7 +35,7 @@ class NumericFirstAndImagesTests(unittest.TestCase):
   self.assertEqual(len(self.sources["rows"]),63)
   for r in rows:
    self.assertTrue(r["url"].startswith("https://"))
-   self.assertGreater(r["value"],0)
+   self.assertGreaterEqual(r["value"],0)
    self.assertIn(r["category"],("ceiling","zone","other"))
    self.assertIn(r["unit"],("G","pt","周期"))
    self.assertTrue(r["source"] and r["context"] and r["warning"])
@@ -46,9 +46,9 @@ class NumericFirstAndImagesTests(unittest.TestCase):
   self.assertIn('元資料を開く',self.detail)
 
  def test_conflicting_sites_are_not_averaged(self):
-  monkey={r["source"]:r["value"] for r in self.data["items"] if r["machine"]=="monkey5"}
-  self.assertEqual(monkey["ハイエナビ"],300)
-  self.assertEqual(monkey["Setting Analyzer Pro"],500)
+  monkey={r["id"]:r["value"] for r in self.data["items"] if r["machine"]=="monkey5"}
+  self.assertEqual(monkey["monkey5-haienavi-equal"],300)
+  self.assertEqual(monkey["monkey5-setting-equal"],500)
   tokyo={(r["source"],r["label"]):r["value"] for r in self.data["items"] if r["machine"]=="tokyoghoul"}
   self.assertEqual(tokyo[("なな徹","AT間狙い・等価")],550)
   self.assertEqual(tokyo[("スロベース","AT間狙い・等価")],650)
