@@ -41,7 +41,7 @@ class PracticalAndModerationTests(unittest.TestCase):
   self.assertIn('REVIEWED_REPORTS=data.items.filter',self.detail)
   self.assertIn("一般向けの報告受付は現在休止中",self.detail)
   self.assertNotIn("issues/new?template=field_report.yml",self.detail)
-  self.assertTrue((ROOT/".github"/"ISSUE_TEMPLATE"/"field_report.yml").exists())
+  self.assertFalse((ROOT/".github"/"ISSUE_TEMPLATE"/"field_report.yml").exists())
   self.assertIn('schema:1', (DOCS/"EDITORIAL_MODERATION.md").read_text(encoding="utf-8"))
  def test_alternative_cards_have_machine_detail_links(self):
   self.assertIn("COUNTER_TIPS",self.alts)
