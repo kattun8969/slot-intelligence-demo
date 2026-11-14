@@ -173,7 +173,7 @@ function makeMachineTile(m){
  const meta=document.createElement("p");meta.textContent=m.date?"導入："+m.date:"機種の情報を見る";
  const links=document.createElement("div");links.className="tile-links";
  for(const [title,path] of [["機種詳細","./opportunities.html#machine="],["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
-  const a=document.createElement("a");a.href=path+encodeURIComponent(m.id);a.textContent=title;links.append(a);
+  const a=document.createElement("a");const newGuide=["godeva2","garo","ragnador","vivy","uminchu"].includes(m.id);const linkBase=title==="狙い目"&&newGuide?"./opportunities.html#machine=":path;a.href=linkBase+encodeURIComponent(m.id);a.textContent=title;links.append(a);
  }
  body.append(h,meta,links);
  const entry=document.createElement("a");entry.className="tile-hit";entry.href="./opportunities.html#machine="+encodeURIComponent(m.id);entry.setAttribute("aria-label",m.name+"の機種詳細・狙い方を開く");
