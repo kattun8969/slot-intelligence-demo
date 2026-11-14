@@ -53,12 +53,113 @@
       "maker": "京楽産業.",
       "url": "https://pachiseven.jp/machines/7446",
       "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7486",
+      "name": "Lウミンチュ",
+      "maker": "岡崎産業",
+      "url": "https://pachiseven.jp/machines/7486",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7441",
+      "name": "L魔法少女にあこがれて",
+      "maker": "ニューギン",
+      "url": "https://pachiseven.jp/machines/7441",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7479",
+      "name": "スマスロ モンスターハンターライズ：サンブレイク",
+      "maker": "アデリオン",
+      "url": "https://pachiseven.jp/machines/7479",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7458",
+      "name": "L転生王女と天才令嬢の魔法革命",
+      "maker": "オリンピアエステート / 平和",
+      "url": "https://pachiseven.jp/machines/7458",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7432",
+      "name": "スマスロ 獣王",
+      "maker": "タイヨーエレック/サミー",
+      "url": "https://pachiseven.jp/machines/7432",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7429",
+      "name": "スマスロパリピ孔明",
+      "maker": "山佐ネクスト",
+      "url": "https://pachiseven.jp/machines/7429",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7422",
+      "name": "マイジャグラーⅥ",
+      "maker": "北電子",
+      "url": "https://pachiseven.jp/machines/7422",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7465",
+      "name": "パチスロ見える子ちゃん",
+      "maker": "ピーセカンド／パイオニア",
+      "url": "https://pachiseven.jp/machines/7465",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7440",
+      "name": "Ｌ青春ブタ野郎はバニーガール先輩の夢を見ない",
+      "maker": "オリンピア",
+      "url": "https://pachiseven.jp/machines/7440",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7438",
+      "name": "Lパチスロ 彼女、お借りします",
+      "maker": "SANKYO",
+      "url": "https://pachiseven.jp/machines/7438",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7431",
+      "name": "モグモグ風林火山 大海戦の巻",
+      "maker": "オーゼキ / ネット",
+      "url": "https://pachiseven.jp/machines/7431",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7420",
+      "name": "スマスロ タコスロ",
+      "maker": "ユニバーサルブロス / ユニバーサルエンターテインメント",
+      "url": "https://pachiseven.jp/machines/7420",
+      "first_seen": "2026-11-15"
+    },
+    {
+      "id": "7419",
+      "name": "スマスロリコリス・リコイル",
+      "maker": "銀座 / サミー",
+      "url": "https://pachiseven.jp/machines/7419",
+      "first_seen": "2026-11-15"
     }
   ],
   "updates": [
     {
+      "date": "2026-11-16",
+      "headline": "スマート沖スロ ハイハイシオサイRe メーカー名：パイオニア",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
       "date": "2026-11-13",
       "headline": "スマート沖スロ ハイハイシオサイRe：天井機能の解析更新",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe：初当りREGからの天国移行率",
       "url": "https://pachiseven.jp/machines/7463"
     },
     {
@@ -68,8 +169,78 @@
     },
     {
       "date": "2026-11-13",
-      "headline": "スマート沖スロ ハイハイシオサイRe：初当りREGからの天国移行率",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「規定ゲーム数」などをアップしました。",
       "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「天国＆ハイシオ天国の示唆演出」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「天井機能」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「初当りREGからの天国移行率」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「ボーナス絵柄揃いラインによる示唆」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「ボーナス後のフェザーランプによる設定示唆」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-13",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「REG後の示唆」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-12",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「通常時の演出」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-12",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「通常時のプレミアム演出」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-12",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「天井機能」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-12",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「リプレイSPフラッシュ」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-06",
+      "headline": "スマート沖スロ ハイハイシオサイRe の「基本スペック」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7463"
+    },
+    {
+      "date": "2026-11-02",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ メーカー名：ビスティ",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-02",
+      "headline": "L牙狼 闇を照らす者 メーカー名：サンセイアールアンドディ",
+      "url": "https://pachiseven.jp/machines/7490"
+    },
+    {
+      "date": "2026-11-02",
+      "headline": "スロット Vivy -Fluorite Eye’s Song- メーカー名：大都技研",
+      "url": "https://pachiseven.jp/machines/7489"
     }
   ]
 }
