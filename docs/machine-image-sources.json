@@ -61,6 +61,18 @@
       "path": "hints/yoshimune-setting.webp",
       "url": "https://img.altema.jp/pachimo/uploads/2026/03/2026y03m13d_1134593086.jpg",
       "source": "https://altema.jp/pachimo/lsinyosimunesubgamen"
+    },
+    {
+      "id": "tensei2-cabinet",
+      "path": "machines/tensei2.webp",
+      "url": "https://item-shopping.c.yimg.jp/i/l/nakaiticom_22015",
+      "source": "https://store.shopping.yahoo.co.jp/nakaiticom/22015.html"
+    },
+    {
+      "id": "otome5-cabinet",
+      "path": "machines/otome5.webp",
+      "url": "https://image.nana-press.com/kaiseki/machine/1160/20260605112633_6a2233d955a1e.jpg",
+      "source": "https://nana-press.com/kaiseki/machine/1160/37342/"
     }
   ]
 }

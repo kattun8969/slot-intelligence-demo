@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- Public build includes local cabinet and hint photos, cached 2026-11-14. -->
 <meta name="theme-color" content="#11243a">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src 'self'; img-src 'self' https://www.daitogiken.com https://assets.hisshobon.jp https://new.sammy.co.jp https://yugi-nippon.com https://livedoor.blogimg.jp https://pachima.itembox.cloud https://item-shopping.c.yimg.jp">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src 'self'; img-src 'self' https://www.daitogiken.com https://assets.hisshobon.jp https://new.sammy.co.jp https://yugi-nippon.com https://livedoor.blogimg.jp https://pachima.itembox.cloud https://item-shopping.c.yimg.jp https://image.nana-press.com">
 <title>Slot Intelligence｜現地メモ 仮公開デモ</title>
 <style>
 :root{color-scheme:light;--ink:#19334a;--muted:#536c80;--blue:#124f88;--bg:#eef3f8;--card:#fff;--border:#d9e2eb;--warn:#8c5300}
@@ -59,20 +59,12 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <div class="catalog-intro"><div><span class="catalog-tag">機種を探す</span><h2>今日はどの台を調べる？</h2><p class="meta">人気・最近導入・その他から探せます。略称でも検索可能。</p></div>
 <a href="./hints.html" class="catalog-tag">終了画面・示唆を見る</a></div>
 <div class="catalog-search"><label for="catalog-query">機種名・略称で探す</label><input id="catalog-query" type="search" placeholder="例：真打吉宗、モンキー5、GGO" autocomplete="off"></div>
-<p class="meta">画像はサイト内に保存できた筐体写真を優先し、取得できなかった場合は掲載元を試します。どちらも表示できなければ仮イラストになります。順位は稼働・期待値のランキングではありません。</p>
+<p class="meta">実機画像が確認できた機種は写真を表示します。確認中の機種は仮表示です。画像は機種名・型式を照合して追加します。</p>
 <div id="catalog-groups"></div><p id="catalog-no-results" hidden class="catalog-empty">該当する機種がありません。機種名の一部で検索してください。</p>
 </section>
-<section class="card"><h2>この画面でできること</h2>
-<div class="grid"><div><strong>1. 機種を選ぶ</strong><p class="meta">優先23機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 今の台をメモ</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 見落としをチェック</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
-<p class="note"><strong>この画面は台のメモ用です。</strong> 狙い目G数は一覧から確認できます。ここでは打てる・打てないを自動判定しません。</p>
-</section>
-<section class="card"><h2>狙い目のある機種を探す</h2>
-<p>ほかの台を探すなら一覧へ。打った台の期待値も記録できます。</p>
-<div class="actions"><a href="./opportunities.html#list" class="btn" style="text-decoration:none;display:inline-block">狙い目候補一覧を見る</a><a href="./opportunities.html#ledger" class="btn secondary" style="text-decoration:none;display:inline-block">期待値の記録を見る</a></div>
-<p class="meta">16機種の解析サイト別の狙い始めG数を比較できます。期待値の自動計算はまだありません。</p></section>
 <section class="card" id="entry"><h2>今の台をメモする</h2>
 <div class="grid">
-<div><label for="tier">表示する機種</label><select id="tier"><option value="all">重点18機種すべて</option><option value="1">新台（最優先）</option><option value="2">稼働機種</option><option value="3">その他重点</option></select></div>
+<div><label for="tier">表示する機種</label><select id="tier"><option value="all">登録機種すべて</option><option value="1">新台（最優先）</option><option value="2">稼働機種</option><option value="3">その他重点</option></select></div>
 <div><label for="machine">機種を選択</label><select id="machine" required></select></div>
 </div>
 <div id="machine-description" class="note" aria-live="polite" style="margin-top:13px"></div>
@@ -103,9 +95,7 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <div id="saved-list"></div>
 <div class="actions"><button id="export-all" class="secondary" type="button">すべてJSONで保存</button><button id="clear-all" type="button" class="danger">この端末のメモを削除</button></div>
 </section>
-<section class="card"><h2>本公開までに追加するもの</h2>
-<div class="pills"><span class="pill">実機解析の条件付き照合</span><span class="pill">機種別の入力項目</span><span class="pill">出典と更新履歴</span><span class="pill">調査候補の承認</span></div>
-<p>確認済みの解析数値が揃うまで、天井からの残りゲーム数、勝率、期待値などは表示しません。新しい解析で条件が変更された場合は、出典を比較し、差分を確認してから反映する予定です。</p></section>
+
 </main>
 <footer>試用版 v0.2 / 2026-11-12 / 公開デモに運用DBや未承認の実機スペックは含めていません。作者・利用者いずれの現地状況も外部送信しません。</footer>
 <script>
@@ -121,7 +111,7 @@ const DISCOVERY=[
 {"id":"karakuri2","name":"Lパチスロ からくりサーカス2","aliases":["からサー2","からくり2"],"group":"other","colors":["#355f89","#2c9d91"]},
 {"id":"sencolle6","name":"戦国コレクション6","aliases":["戦コレ6","せんこれ6"],"group":"other","colors":["#355f89","#2c9d91"]},
 {"id":"kiseki","name":"スマスロ ミリオンゴッド-神々の軌跡-","aliases":["GOD軌跡","ミリゴ軌跡","神々の軌跡"],"group":"popular","colors":["#355f89","#2c9d91"]},
-{"id":"tensei2","name":"スマスロ 北斗の拳 転生の章2","aliases":["転生2","北斗転生2","転生の章２"],"group":"popular","colors":["#355f89","#2c9d91"]},
+{"id":"tensei2","name":"スマスロ 北斗の拳 転生の章2","aliases":["転生2","北斗転生2","転生の章２"],"group":"popular","colors":["#355f89","#2c9d91"],photo:"https://item-shopping.c.yimg.jp/i/l/nakaiticom_22015",photoSource:"https://store.shopping.yahoo.co.jp/nakaiticom/22015.html"},
 {"id":"valv2","name":"Lパチスロ 革命機ヴァルヴレイヴ2","aliases":["ヴヴヴ2","VVV2","ヴァルヴレイヴ2"],"group":"popular","colors":["#355f89","#2c9d91"]},
 {"id":"toaru2","name":"スマスロ とある魔術の禁書目録2","aliases":["禁書2","とある2","インデックス2"],"group":"other","colors":["#355f89","#2c9d91"]},
 {"id":"yajikita","name":"スマスロ やじきた道中記参る！","aliases":["やじきた","やじきた参る"],"group":"other","colors":["#355f89","#2c9d91"]},
@@ -143,7 +133,7 @@ const DISCOVERY=[
 {id:"kabaneri",name:"スマスロ 甲鉄城のカバネリ 海門決戦",aliases:["カバネリ2","カバネリ","海門決戦"],group:"popular",colors:["#a64b21","#2c465c"],photo:"https://new.sammy.co.jp/img/slot/main_banner/2025/%E3%82%B9%E3%83%9E%E3%82%B9%E3%83%AD%20%E7%94%B2%E9%89%84%E5%9F%8E%E3%81%AE%E3%82%AB%E3%83%90%E3%83%8D%E3%83%AA%20%E6%B5%B7%E9%96%80%EF%BC%88%E3%81%86%E3%81%AA%E3%81%A8%EF%BC%89%E6%B1%BA%E6%88%A6_900_506.jpg",photoSource:"https://new.sammy.co.jp/japanese/products/pachislot/"},
 {id:"monhun",name:"スマスロ モンスターハンターライズ",aliases:["モンハンライズ","初代ライズ","MHR"],group:"popular",colors:["#578369","#373c61"],photo:"https://item-shopping.c.yimg.jp/i/n/nakaiticom_21760",photoSource:"https://store.shopping.yahoo.co.jp/nakaiticom/21760.html"},
 {id:"monkey5",name:"スマスロ モンキーターンV",aliases:["モンキー5","モンキーターン5","モンキーV"],group:"popular",colors:["#256996","#47a8a7"],photo:"https://pachima.itembox.cloud/product/012/000000001268/000000001268-01.jpg?size=l&t=20250430151521&w=ODAw",photoSource:"https://www.pachima.com/c/gr67/gr109/gr162/gr163/S00545"},
-{id:"otome5",name:"戦国乙女5",aliases:["乙女5","せんごくおとめ5"],group:"other",colors:["#a6547b","#d88743"]},
+{id:"otome5",name:"戦国乙女5",aliases:["乙女5","せんごくおとめ5"],group:"other",colors:["#a6547b","#d88743"],photo:"https://image.nana-press.com/kaiseki/machine/1160/20260605112633_6a2233d955a1e.jpg",photoSource:"https://nana-press.com/kaiseki/machine/1160/37342/"},
 {id:"sao2",name:"SAO2（型式確認中）",aliases:["SAO2","ソードアートオンライン2"],group:"other",colors:["#4663a7","#50a3bd"]},
 {id:"sencolle5",name:"戦国コレクション5",aliases:["戦コレ5","せんこれ5"],group:"other",colors:["#7d48ad","#c66546"]},
 {id:"kanokari",name:"彼女、お借りします",aliases:["かのかり","カノカリ"],group:"other",colors:["#d95a91","#e5b46d"]},
