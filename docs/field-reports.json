@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "checked_at": "2026-11-14",
+  "description": "人手で見つけたSNS・動画・独自考察。内容の正しさ・独立性は未検証。動画の概要欄等から確認したテーマであり、本編を見て検証した結果ではない。データは自動収集されず、過去の掲載例として扱う。",
+  "items": [
+    {
+      "id": "monkey-video-20251010",
+      "machine": "monkey5",
+      "type": "video",
+      "published_at": "2025-10-10",
+      "source": "のりへい【学べば勝てるスロット学院】／YouTube概要欄",
+      "title": "天国・通常B示唆・差枚を組み合わせた独自の立ち回り案",
+      "summary": "投稿者は天国/B示唆/差枚と1周期の確認を組み合わせる判断手順を紹介。ヘルメットや予想屋など複数示唆の重ね合わせが論点。",
+      "caution": "動画の概要欄に記された独自提案。個別ホール・投資条件での期待値や再現性は未検証。原資料の解析値と投稿者の推測を区別。",
+      "url": "https://www.youtube.com/watch?v=uLA_C2R5lgI",
+      "kind": "投稿者の独自考察"
+    },
+    {
+      "id": "monkey-x-20260528",
+      "machine": "monkey5",
+      "type": "x",
+      "published_at": "2026-05-28",
+      "source": "YG@パチスロ／X投稿",
+      "title": "モンキーVが全台系候補だったというホール実績報告",
+      "summary": "投稿では5月13日の特定ホールのモンキーVについて10台中9台がプラスなどと報告。機種の狙い目G数ではなく地域・店舗限定の事後集計。",
+      "caution": "投稿者の集計値は原データ未照合。別の日・別店舗での設定投入や勝率を予測できない。",
+      "url": "https://x.com/yg5yosou6/status/2059958369365225884",
+      "kind": "ホール限定のX報告"
+    },
+    {
+      "id": "tokyoghoul-video-20251007",
+      "machine": "tokyoghoul",
+      "type": "video",
+      "published_at": "2025-10-07",
+      "source": "のりへい【学べば勝てるスロット学院】／YouTube概要欄",
+      "title": "喰ポイント・有馬ジャッジ・CZ間などを含む独自狙い目5選",
+      "summary": "概要欄によるとAT間/CZ間/リセット/有馬後/喰ポイント、招待状やアイキャッチを組み合わせる考察を紹介。",
+      "caution": "映像本編の数値・算出条件は未照合。動画の複数論点は一律の期待値を意味しない。",
+      "url": "https://www.youtube.com/watch?v=T9Huf2APR7w",
+      "kind": "動画の未検証考察"
+    },
+    {
+      "id": "tokyoghoul-video-20250822",
+      "machine": "tokyoghoul",
+      "type": "video",
+      "published_at": "2025-08-22",
+      "source": "【一目でわかる】スロット 狙い目・やめ時／YouTube概要欄",
+      "title": "狙い目・やめどきの早見動画",
+      "summary": "概要欄では0:14に狙い目、6:10にやめどきを扱い、データカウンターの店舗差にも注意喚起している。",
+      "caution": "ちょんぼりすたを資料として明記しており、解析サイトとは独立した実戦検証だとみなさない。",
+      "url": "https://www.youtube.com/watch?v=ByH3SnTu2-A",
+      "kind": "解析紹介動画"
+    },
+    {
+      "id": "shinuchi-editorial-20260417",
+      "machine": "yoshimune",
+      "type": "article",
+      "published_at": "2026-04-17",
+      "source": "パチマガスロマガFREE／スパ☆鈴木",
+      "title": "メニュー画面のキャラからCZモード・対戦相手を読む編集部予想",
+      "summary": "大奥キャラはCZモード、敵キャラは次回CZ相手を示すという編集部の推測。吉宗・越前・天英院も設定示唆の推測を掲載。",
+      "caution": "元記事が「予想」「思われる」と表現する内容。設定確定や天国確定、狙い目の成立条件として扱わない。",
+      "url": "https://pachimaga.com/free/article/20260417/064957.php",
+      "kind": "編集部の未確定予想"
+    },
+    {
+      "id": "shinuchi-video-20261012",
+      "machine": "yoshimune",
+      "type": "video",
+      "published_at": "2026-10-12",
+      "source": "サトシーニョTV／動画メタデータ",
+      "title": "初当たりが軽い・ギザギザのグラフから高設定を考察する実戦企画",
+      "summary": "動画タイトルは初当たりとグラフの形から高設定かを問う内容。実戦機種は真打 吉宗と明記。",
+      "caution": "動画本編の結果・サンプル・設定は未確認。グラフ形状だけで設定判別はできない。",
+      "url": "https://www.youtube.com/watch?v=nKT1dONy85I",
+      "kind": "実戦動画"
+    },
+    {
+      "id": "juoh-video-20261007",
+      "machine": "juoh",
+      "type": "video",
+      "published_at": "2026-10-07",
+      "source": "サトシーニョTV／動画一覧",
+      "title": "スマスロ獣王の立ち回りを扱う実戦動画",
+      "summary": "動画タイトルでは立ち回り方を扱うとしている。機種はスマスロ獣王（2026年版）。",
+      "caution": "動画の詳しい打ち始めG数・根拠は未照合。出演者の判断と公式解析を分離して確認する。",
+      "url": "https://digitalcreators.jp/channel/ja/UCeXEd5nLjS-OCDjIcxaL95Q/videos/",
+      "kind": "実戦動画の紹介"
+    },
+    {
+      "id": "world-video-20261015",
+      "machine": "world",
+      "type": "video",
+      "published_at": "2026-10-15",
+      "source": "サトシーニョTV／動画一覧",
+      "title": "ワールドダイスターの大量上乗せ実戦例",
+      "summary": "タイトルでは4桁上乗せの実戦例を取り上げる。",
+      "caution": "大きく乗せた単一例を平均出玉や期待値の根拠に使わない。",
+      "url": "https://digitalcreators.jp/channel/ja/UCeXEd5nLjS-OCDjIcxaL95Q/videos/",
+      "kind": "実戦動画の紹介"
+    },
+    {
+      "id": "otome5-video-20260923",
+      "machine": "otome5",
+      "type": "video",
+      "published_at": "2026-09-23",
+      "source": "サトシーニョTV／動画一覧",
+      "title": "戦国乙女5を長時間遊技した実戦企画",
+      "summary": "動画タイトルでは10,126Gの実戦を扱うとしている。",
+      "caution": "単一台の長時間実戦から設定差・狙い目ボーダーを一般化しない。",
+      "url": "https://digitalcreators.jp/channel/ja/UCeXEd5nLjS-OCDjIcxaL95Q/videos/",
+      "kind": "実戦動画の紹介"
+    }
+  ]
+}
