@@ -42,7 +42,8 @@ class MachineDiscoveryTests(unittest.TestCase):
         <a href="/machines/7463">2026.11.13　「天井機能」を更新</a>
         <a href="/machines/7463">2026.11.13　「天井機能」を更新</a>
         <a href="/machines/7493">2026.11.11　「設定差」を更新</a>
-        <a href="/machines/7490">2026.19.44 異常な日付</a>"""
+        <a href="/machines/7490">2026.19.44 異常な日付</a>
+        <a href="/machines/7463">導入日：2026.11.16 スマスロXYZ メーカー名：A</a>"""
         rows = parse_updates(markup)
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0]["date"], "2026-11-13")
@@ -80,6 +81,12 @@ class MachineDiscoveryTests(unittest.TestCase):
         self.assertIn('hostname==="pachiseven.jp"', page)
         self.assertTrue(snapshot["machines"])
         self.assertTrue(all("ev" not in row for row in snapshot["machines"]))
+
+    def test_metadata_push_redeploys_to_pages(self):
+        workflow = (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "auto-machine-discovery.yml").read_text(encoding="utf-8")
+        self.assertIn("actions/deploy-pages@v4", workflow)
+        self.assertIn("steps.commit.outputs.changed == 'true'", workflow)
+        self.assertIn("permissions:\n  contents: write\n  pages: write\n  id-token: write", workflow)
 
 
 if __name__ == "__main__":
