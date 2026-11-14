@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "checked_at": "2026-11-14T03:26:58.471713+00:00",
+  "results": [
+    {
+      "id": "monkey5-cabinet",
+      "path": "machines/monkey5.webp",
+      "bytes": 41860,
+      "ok": true
+    },
+    {
+      "id": "monhun-cabinet",
+      "path": "machines/monhun.webp",
+      "bytes": 71072,
+      "ok": true
+    },
+    {
+      "id": "shinuchi-cabinet",
+      "path": "machines/yoshimune.webp",
+      "bytes": 98750,
+      "ok": true
+    },
+    {
+      "id": "lycoris-cabinet",
+      "path": "machines/lycoris.webp",
+      "bytes": 124942,
+      "ok": true
+    },
+    {
+      "id": "juoh-cabinet",
+      "path": "machines/juoh.webp",
+      "bytes": 121224,
+      "ok": true
+    },
+    {
+      "id": "tokyo-cabinet",
+      "path": "machines/tokyoghoul.webp",
+      "bytes": 78670,
+      "ok": true
+    },
+    {
+      "id": "kabaneri-cabinet",
+      "path": "machines/kabaneri.webp",
+      "bytes": 93886,
+      "ok": true
+    },
+    {
+      "id": "lycoris-screen",
+      "path": "hints/lycoris-ending.webp",
+      "bytes": 50218,
+      "ok": true
+    },
+    {
+      "id": "aobuta-screen",
+      "path": "hints/aobuta-ending.webp",
+      "bytes": 39144,
+      "ok": true
+    },
+    {
+      "id": "shinuchi-screen",
+      "path": "hints/yoshimune-setting.webp",
+      "bytes": 68858,
+      "ok": true
+    }
+  ]
+}
