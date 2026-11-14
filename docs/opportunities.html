@@ -54,7 +54,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <section id="detail-panel" class="card" hidden>
 <div class="actions"><a class="btn secondary" href="#list">← 狙い目一覧へ戻る</a><a id="detail-alternative-link" class="btn" href="./alternatives.html">この台を見送り、別の候補を探す</a><a class="btn secondary" href="./index.html">現地メモへ</a></div>
 <h2 id="detail-name"></h2>
-<div id="ggo-lab-entry" class="ggo-lab-entry" hidden><strong>GGO 期待収支シミュレーター（試験版）</strong><p>ボーナス間G数・スルー回数・交換条件を入力して、仮の確率モデルを検証できます。実機の期待値や推奨開始G数は計算できません。</p><a class="btn" href="./ggo-ev-lab.html">試算ツールを開く</a></div>
+<div id="ev-simulator-entry" class="ggo-lab-entry" hidden><strong>期待収支の試算ツール（検証用）</strong><p>G数・スルー回数・状態・交換条件を入力。初期の当選率・出玉は仮定であり、実機の期待値や狙い目判定には使えません。</p><a id="ev-simulator-open" class="btn" href="./ev-simulator.html">試算ツールを開く</a></div>
 <section id="strategy-first" class="strategy-intro" aria-label="この機種の狙い方と現場の声">
 <h3>狙い目・やめどき</h3><section class="practical-picks" id="practical-picks"><h3>実際に探すならこの条件</h3><p class="help">高い期待値だけでなく、ホールで探す候補を掲載。空き台の見つけやすさは未集計です。</p><div id="practical-picks-list"></div><p id="practical-picks-status" class="help" role="status"></p></section><figure id="strategy-photo" class="strategy-machine-photo" hidden><img id="strategy-photo-img" alt="" loading="lazy"><figcaption id="strategy-photo-caption"></figcaption></figure><p class="strategy-guide-note">狙えるG数や周期は、台の状態・交換率で変わります。</p>
 <section id="targeting-categories" class="strategy-category-block">
@@ -912,6 +912,21 @@ async function loadStrategyFirstRows(){
  }
  const m=selected();if(m)renderStrategyFirst(m);
 }
+function consumeTrialMemo(m){
+ let row;try{row=JSON.parse(sessionStorage.getItem("slotintel-ev-transfer-v1")||"null")}catch(_){return}
+ if(!row||row.machine!==m.id)return;
+ if(!Number.isFinite(row.ev)||typeof row.basis!=="string")return;
+ try{sessionStorage.removeItem("slotintel-ev-transfer-v1")}catch(_){}
+ const record=$("session-record");record.open=true;
+ $("played-status").value="not_played";
+ $("opportunity-kind").value=["ceiling","zone","through","reset","hint","other"].includes(row.kind)?row.kind:"other";
+ $("manual-ev").value=String(row.ev);
+ $("ev-basis").value=row.basis;
+ $("detail-counter-value").value=Number.isFinite(row.games)?String(row.games):"";
+ $("detail-conditions").value="試験用シミュレーターから転記／スルー回数："+(Number.isFinite(row.through)?row.through:"未確認")+"。実機期待値とは異なる。";
+ $("save-feedback").textContent="試算値をメモ欄へ入力しました（未保存）。実際に打った場合のみ『打った』を選んで保存してください。";
+ requestAnimationFrame(()=>record.scrollIntoView({behavior:"smooth",block:"center"}));
+}
 function showDetail(m){
  $("detail-alternative-link").href="./alternatives.html#skip="+encodeURIComponent(m.id);
  renderStrategyFirst(m);
@@ -920,7 +935,10 @@ function showDetail(m){
  renderCommunity(m);
  renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
- $("ggo-lab-entry").hidden=m.id!=="ggo";
+ const trialMachines=new Set(["ggo","godeva2","garo","mahoako","lycoris","vivy"]);
+ $("ev-simulator-entry").hidden=!trialMachines.has(m.id);
+ $("ev-simulator-open").href="./ev-simulator.html?machine="+encodeURIComponent(m.id);
+ consumeTrialMemo(m);
  $("detail-description").textContent="機種の狙い方は解析・原典と照合してください。登録内容は機種固有の条件で確認します。";
  $("detail-status").textContent=m.id.startsWith("note-")?"提供されたnoteで見出しを確認しました。正確な型式・解析・狙い目・示唆は未調査です。別機種の数値は流用しません。":m.uncertain?
   "対象機種の正式な同定がまだ済んでいません。別バージョンの解析を流用せず、記録を先に残してください。":

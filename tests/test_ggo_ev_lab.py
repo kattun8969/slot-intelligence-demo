@@ -7,10 +7,11 @@ class GGOCalculatorTests(unittest.TestCase):
  def setUpClass(cls):
   cls.lab=(ROOT/"docs"/"ggo-ev-lab.html").read_text(encoding="utf-8")
   cls.detail=(ROOT/"docs"/"opportunities.html").read_text(encoding="utf-8")
- def test_link_only_on_ggo(self):
-  self.assertIn('id="ggo-lab-entry"',self.detail)
-  self.assertIn('m.id!=="ggo"',self.detail)
-  self.assertIn('href="./ggo-ev-lab.html"',self.detail)
+ def test_original_lab_retained_with_multi_machine_navigation(self):
+  self.assertTrue((ROOT/"docs"/"ggo-ev-lab.html").exists())
+  self.assertIn('id="ev-simulator-entry"',self.detail)
+  self.assertIn('href="./ev-simulator.html"',self.detail)
+  self.assertIn('"ggo"',self.detail)
  def test_not_a_real_betting_ev_calculator(self):
   self.assertIn('独自の検証用モデル',self.lab)
   self.assertIn('実機の期待値ではありません',self.lab)
