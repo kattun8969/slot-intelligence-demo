@@ -43,7 +43,25 @@ const KEY="slotintel.hallCandidates.v1",MAX=5;
 let sourceRows=[];
 const EXCHANGES={equal:"等価",medals:"5.6枚・持ちメダル",cash:"5.6枚・現金投資"};
 const unitFor=row=>row.unit==="コレ"?"collection":"games";
+const STORESHOP=new Set(["seiya","ggo","kabaneri","sao2","monhun","otome5","yoshimune","tokyoghoul","aobuta","world","lycoris","mahoako","juoh","sunbreak","monkey5","kanokari","godeva2","garo","ragnador","vivy","paripi","tenma","mogumogu","mieruko","jashin","tondemo","karakuri2","sencolle6","kiseki","tensei2","valv2","toaru2","yajikita","tokyorev","enge2","kaguyasama","oshin3"]);
 const MACHINES=[
+["paripi","スマスロ パリピ孔明"],
+["tenma","L 転生王女と天才令嬢の魔法革命"],
+["mogumogu","モグモグ風林火山 大海戦の巻"],
+["mieruko","パチスロ 見える子ちゃん"],
+["jashin","L邪神ちゃんドロップキック"],
+["tondemo","スマスロ とんでもスキルで異世界放浪メシ"],
+["karakuri2","Lパチスロ からくりサーカス2"],
+["sencolle6","戦国コレクション6"],
+["kiseki","スマスロ ミリオンゴッド-神々の軌跡-"],
+["tensei2","スマスロ 北斗の拳 転生の章2"],
+["valv2","Lパチスロ 革命機ヴァルヴレイヴ2"],
+["toaru2","スマスロ とある魔術の禁書目録2"],
+["yajikita","スマスロ やじきた道中記参る！"],
+["tokyorev","スマスロ 東京リベンジャーズ"],
+["enge2","スマスロ 炎炎ノ消防隊2"],
+["kaguyasama","パチスロ かぐや様は告らせたい"],
+["oshin3","スマスロ 新鬼武者3"],
 ["godeva2","Lパチスロ ゴジラ対エヴァンゲリオン 2"],
 ["garo","L牙狼 闇を照らす者"],
 ["ragnador","スマスロ ラグナドール"],
@@ -281,7 +299,7 @@ function render(){
   box.append(content);$("entries").append(box);
  });
 }
-for(const [id,name] of MACHINES)$("new-machine").add(new Option(name,id));
+for(const [id,name] of MACHINES.filter(x=>STORESHOP.has(x[0])))$("new-machine").add(new Option(name,id));
 function chooseDefaultUnit(){if($("new-machine").value==="sencolle5")$("new-unit").value="collection";else $("new-unit").value="games"}
 $("new-machine").addEventListener("change",()=>{chooseDefaultUnit();updateConditions()});
 $("add").addEventListener("click",()=>{
