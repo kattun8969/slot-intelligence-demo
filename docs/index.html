@@ -63,7 +63,7 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <div id="catalog-groups"></div><p id="catalog-no-results" hidden class="catalog-empty">該当する機種がありません。機種名の一部で検索してください。</p>
 </section>
 <section class="card"><h2>この画面でできること</h2>
-<div class="grid"><div><strong>1. 機種を選ぶ</strong><p class="meta">優先18機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 今の台をメモ</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 見落としをチェック</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
+<div class="grid"><div><strong>1. 機種を選ぶ</strong><p class="meta">優先23機種から選択。名称が未確定の候補も区別。</p></div><div><strong>2. 今の台をメモ</strong><p class="meta">機種別の項目を表示。未確認でもメモを保存できます。</p></div><div><strong>3. 見落としをチェック</strong><p class="meta">条件の矛盾を確認。不明な項目は入力不要です。</p></div></div>
 <p class="note"><strong>この画面は台のメモ用です。</strong> 狙い目G数は一覧から確認できます。ここでは打てる・打てないを自動判定しません。</p>
 </section>
 <section class="card"><h2>狙い目のある機種を探す</h2>
@@ -112,6 +112,11 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 "use strict";
 
 const DISCOVERY=[
+{"id":"godeva2","name":"Lパチスロ ゴジラ対エヴァンゲリオン 2","aliases":["ゴジエヴァ2","ゴジエヴァ","ゴジエヴァ２"],"group":"new","date":"2026-11-02","colors":["#c34a45","#314d78"]},
+{"id":"garo","name":"L牙狼 闇を照らす者","aliases":["牙狼","ガロ","闇を照らす者"],"group":"new","date":"2026-11-02","colors":["#b5893a","#1d2a42"]},
+{"id":"ragnador","name":"スマスロ ラグナドール","aliases":["ラグナドール","ラグナ"],"group":"new","date":"2026-11-02","colors":["#8353b7","#3f4c80"]},
+{"id":"vivy","name":"スロット Vivy -Fluorite Eye’s Song-","aliases":["Vivy","ヴィヴィ","ビビィ"],"group":"new","date":"2026-11-02","colors":["#6080ae","#66aab2"]},
+{"id":"uminchu","name":"L海人（ウミンチュ）","aliases":["海人","ウミンチュ","Lウミンチュ"],"group":"recent","date":"2026-10-19","colors":["#11888c","#307b5f"]},
 {id:"seiya",name:"L聖闘士星矢 黄金十二宮",aliases:["星矢","セイヤ","黄金十二宮"],group:"new",date:"2026-11-09",colors:["#cf651d","#6140a5"]},
 {id:"ggo",name:"L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン",aliases:["GGO","ガンゲイル","ガンゲイルオンライン"],group:"new",date:"2026-11-09",colors:["#de4c70","#514c8a"]},
 {id:"sunbreak",name:"スマスロ モンスターハンターライズ：サンブレイク",aliases:["サンブレイク","MHR:S","モンハンサンブレイク"],group:"recent",date:"2026-10-05",colors:["#99539c","#273e67"]},
@@ -133,7 +138,7 @@ const DISCOVERY=[
 ];
 const CATALOG_GROUPS=[
 {key:"popular",heading:"注目されている機種",desc:"設置・検索動向などを参考に選んだ注目機種。リアルタイム順位ではありません。",style:"rail"},
-{key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種",style:"grid"},
+{key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種。調査資料の追加機種も掲載",style:"grid"},
 {key:"recent",heading:"最近導入された台",desc:"2026年9〜10月導入のピックアップ",style:"grid"},
 {key:"other",heading:"ほかの機種も探す",desc:"継続稼働機種・調査中機種。古い機種だけを集めた一覧ではありません。",style:"list"}
 ];
@@ -168,7 +173,7 @@ function makeMachineTile(m){
  const meta=document.createElement("p");meta.textContent=m.date?"導入："+m.date:"機種の情報を見る";
  const links=document.createElement("div");links.className="tile-links";
  for(const [title,path] of [["機種詳細","./opportunities.html#machine="],["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
-  const a=document.createElement("a");a.href=path+encodeURIComponent(m.id);a.textContent=title;links.append(a);
+  const a=document.createElement("a");const newGuide=["godeva2","garo","ragnador","vivy","uminchu"].includes(m.id);const linkBase=title==="狙い目"&&newGuide?"./opportunities.html#machine=":path;a.href=linkBase+encodeURIComponent(m.id);a.textContent=title;links.append(a);
  }
  body.append(h,meta,links);
  const entry=document.createElement("a");entry.className="tile-hit";entry.href="./opportunities.html#machine="+encodeURIComponent(m.id);entry.setAttribute("aria-label",m.name+"の機種詳細・狙い方を開く");
@@ -194,6 +199,11 @@ document.getElementById("catalog-query").addEventListener("input",renderDiscover
 renderDiscovery();
 
 const machines=[
+ {id:"godeva2",name:"Lパチスロ ゴジラ対エヴァンゲリオン 2",tier:1,note:"PDFの機種別分類を参考に追加。天井・特殊狙いの適用条件は出典照合が必要",uncertain:false},
+ {id:"garo",name:"L牙狼 闇を照らす者",tier:1,note:"PDFの機種別分類を参考に追加。天井・特殊狙いの適用条件は出典照合が必要",uncertain:false},
+ {id:"ragnador",name:"スマスロ ラグナドール",tier:1,note:"PDFの機種別分類を参考に追加。天井・特殊狙いの適用条件は出典照合が必要",uncertain:false},
+ {id:"vivy",name:"スロット Vivy -Fluorite Eye’s Song-",tier:1,note:"PDFの機種別分類を参考に追加。天井・特殊狙いの適用条件は出典照合が必要",uncertain:false},
+ {id:"uminchu",name:"L海人（ウミンチュ）",tier:2,note:"PDFの機種別分類を参考に追加。天井・特殊狙いの適用条件は出典照合が必要",uncertain:false},
  {id:"seiya",name:"聖闘士星矢 黄金十二宮",tier:1,note:"2026年新台。天井・内部モードの資料は確認待ち",uncertain:false},
  {id:"ggo",name:"ガンゲイル・オンライン",tier:1,note:"2026年新台。ST・スルー回数の資料は確認待ち",uncertain:false},
  {id:"kabaneri",name:"カバネリ 海門決戦",tier:2,note:"ST間G数・周期・リセット条件の取り違えに注意",uncertain:false},
@@ -214,6 +224,11 @@ const machines=[
  {id:"kanokari",name:"彼女、お借りします（かのかり）",tier:2,note:"BIG後・REG後・変更後を分けて記録",uncertain:false}
 ];
 const FIELDS={
+ godeva2:{units:["games","throughs"],st:false,contexts:["after_reset","after_at"]},
+ garo:{units:["games","throughs"],st:false,contexts:["after_reset","after_at"]},
+ ragnador:{units:["games","throughs"],st:false,contexts:["after_reset"]},
+ vivy:{units:["games","cycles"],st:false,contexts:["after_reset"]},
+ uminchu:{units:["games"],st:false,contexts:["after_reset","after_at"]},
  seiya:{units:["games"],st:false,contexts:["after_reset"]},
  ggo:{units:["games","throughs"],st:true,contexts:["after_reset"]},
  kabaneri:{units:["games","cycles"],st:true,contexts:["after_reset","after_st","after_upper"]},

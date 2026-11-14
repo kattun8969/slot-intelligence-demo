@@ -29,7 +29,7 @@ button.secondary,.btn.secondary{background:#e4edf5;color:var(--ink)}button.dange
 section[hidden]{display:none!important}.strategy-intro{background:#f4f9fd;border:1px solid #bdd5e5;border-radius:13px;padding:14px;margin:13px 0}.strategy-intro h3{font-size:19px}.strategy-line{background:#fff;border:1px solid #d5e3ed;border-radius:10px;padding:12px;margin:9px 0}.strategy-line strong{font-size:16px}.strategy-number{font-size:20px;font-weight:800;color:#145486}.strategy-inline{display:flex;flex-wrap:wrap;gap:7px;margin:9px 0}.strategy-inline a{padding:7px 10px;border-radius:8px;background:#e5eef6;text-decoration:none;font-size:13px;font-weight:700}.strategy-voice{background:#fff8e9;border-left:3px solid #ca9a4c;padding:10px;border-radius:7px}.field-report{border:1px solid #e2dbca;border-radius:9px;padding:12px;background:#fff;margin:10px 0}.field-report h4{margin:4px 0;font-size:16px}.field-report p{font-size:14px}.field-report .report-tag{color:#845120;font-weight:750;font-size:12px}.field-report .report-meta{color:#516a80;font-size:12px}.field-report .report-caution{background:#fff7e7;padding:8px;border-radius:6px;font-size:13px}.field-report .digest-label{margin:10px 0 4px;font-size:13px;font-weight:750;color:#224d6c}.field-report .digest-points{padding-left:20px;margin:6px 0 12px;font-size:14px}.field-report .digest-points li{margin-bottom:6px}.field-report .digest-reason{background:#edf5fb;border-radius:8px;padding:10px;font-size:14px}.field-report .digest-confidence{color:#694c14;font-size:13px;font-weight:650}.field-report .digest-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.field-report .digest-actions a{display:inline-flex;padding:9px 12px;background:#155c94;color:#fff;text-decoration:none;border-radius:9px;font-weight:700;font-size:14px}.field-report .digest-actions a.secondary{background:#e6edf5;color:#255373}.field-report .digest-topics{font-size:12px;color:#496379}.field-report .digest-chapters a{display:inline-block;margin:5px 8px 3px 0;padding:5px 8px;background:#e6edf5;border-radius:7px;font-size:13px;text-decoration:none}.field-data-status{font-size:13px;color:#536a7a}.strategy-guide-note{color:#486479;font-size:13px}.strategy-machine-photo{margin:5px 0 12px}.strategy-machine-photo img{max-width:min(100%,290px);max-height:280px;object-fit:contain;border-radius:11px;background:#fff;padding:8px}.strategy-machine-photo figcaption{font-size:12px;color:#53697c}.strategy-machine-photo[hidden]{display:none}details.detail-source summary{cursor:pointer;font-weight:700;color:#195d8a}summary{cursor:pointer;font-weight:650;padding:7px 0}small{color:var(--muted)}
 footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 @media(max-width:520px){.card{padding:14px}.actions>*{flex:1 1 140px}}
-</style>
+.strategy-category-block{margin:14px 0;border-top:1px solid #cfe0ec;padding-top:12px}.targeting-category{margin:9px 0;border:1px solid #d8e4ee;border-radius:10px;background:#fff;padding:10px 12px}.targeting-category h4{margin:4px 0;font-size:16px}.targeting-category ul{padding-left:20px;margin:7px 0}.targeting-category li{margin:6px 0;font-size:14px}.targeting-source{font-size:12px;color:#596d80;background:#f4f7fa;padding:8px;border-radius:8px}.targeting-scope{font-weight:700;font-size:13px;color:#6c5627}</style>
 </head>
 <body>
 <header><div><small>試用版 v1.6 · オフライン動作 · スマホ対応</small><h1>次に狙う台を探そう</h1>
@@ -64,7 +64,13 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <h2 id="detail-name"></h2>
 <section id="strategy-first" class="strategy-intro" aria-label="この機種の狙い方と現場の声">
 <h3>この機種の狙い方</h3><figure id="strategy-photo" class="strategy-machine-photo" hidden><img id="strategy-photo-img" alt="" loading="lazy"><figcaption id="strategy-photo-caption"></figcaption></figure><p class="strategy-guide-note">狙い始めの数値は解析サイトごとの掲載例です。通常・リセット・AT間・CZ間などを分け、違う前提の数値は平均しません。</p>
+<section id="targeting-categories" class="strategy-category-block">
+<h3>狙い方の全体像</h3><p class="strategy-guide-note">PDFの整理方法を参考に独自編集。①天井狙い・②ゾーン狙い・③その他（特殊狙い）を分けて、通常/リセット/スルー数などの確認事項を先に把握できます。</p>
+<p id="category-status" class="strategy-guide-note" role="status"></p>
+<div id="category-guide-content"></div>
+</section>
 <div id="strategy-source-summary" role="status"></div><div id="strategy-source-lines"></div>
+
 <h3>一般解析と現場の声</h3><div id="strategy-field-voice" class="strategy-voice"></div>
 <h3>動画・X・編集部考察（未検証）</h3>
 <p class="strategy-guide-note">投稿者の考察や個別のホール実績を保存した調査メモです。元動画の概要欄・記事などから論点を抽出しており、検証済みの狙い目や最新投稿の自動集計ではありません。</p>
@@ -137,6 +143,11 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <script>
 "use strict";
 const MACHINES=[
+ {"id":"godeva2","name":"Lパチスロ ゴジラ対エヴァンゲリオン 2","tier":1,"uncertain":false,"topics":["CZ間とAT間のG数を分ける","CZスルー回数・設定変更・差枚の根拠を確認","引き戻しとメニュー示唆は別"],"units":["games","throughs"],"sources":[["メーカー機種情報","https://www.sankyo-fever.jp/collection/1001/"]]},
+ {"id":"garo","name":"L牙狼 闇を照らす者","tier":1,"uncertain":false,"topics":["AT後・上位CZ後と変更後の差","ボーナススルー回数・モード別天井","終了ボイス・引き戻し確認"],"units":["games","throughs"],"sources":[["なな徹・機種解析","https://nana-press.com/kaiseki/machine/1251/"]]},
+ {"id":"ragnador","name":"スマスロ ラグナドール","tier":1,"uncertain":false,"topics":["CZ間とAT間の区別","CZスルー履歴・設定変更後の条件","終了直後の前兆とエンディングボイス"],"units":["games","throughs"],"sources":[["機種解析・設定差","https://kenslo65536.com/sp/kaiseki/l-ragnador.html"]]},
+ {"id":"vivy","name":"スロット Vivy -Fluorite Eye’s Song-","tier":1,"uncertain":false,"topics":["AT間のG数とリセット後の天井短縮","周期の状態とレア役再生の仕様","独自狙い目のボーダーは調査中"],"units":["games","cycles"],"sources":[["メーカー公式製品紹介","https://www.daitogiken.com/products/slot/"]]},
+ {"id":"uminchu","name":"L海人（ウミンチュ）","tier":2,"uncertain":false,"topics":["BIG後／REG後／変更後の天井起点","32G以内の連チャン区間","フルーツ連状態・終了画面の示唆"],"units":["games","throughs"],"sources":[["P-WORLD機種情報","https://www.p-world.co.jp/machine/database/10579"]]},
  {id:"seiya",name:"聖闘士星矢 黄金十二宮",tier:1,uncertain:false,topics:["CZ間・AT間のカウンター起点","設定変更後の条件","狙う場合のやめどき"],units:["games"],sources:[["機種の掲載情報","https://psmaga.com/e/pachi/pla/s_conq/santhree_slot/09/kh01.php"]]},
  {id:"ggo",name:"ガンゲイル・オンライン",tier:1,uncertain:false,topics:["ST・ボーナスのスルー履歴","直近当選の区切り","設定変更時の条件"],units:["games","throughs"],sources:[["機種解析の掲載情報","https://1geki.jp/slot/l_sao_ggo/"]]},
  {id:"kabaneri",name:"カバネリ 海門決戦",tier:2,uncertain:false,topics:["ST間ゲーム数と表示機の起点","周期数・引継ぎ条件","設定変更後とST終了後の条件"],units:["games","cycles"],sources:[["機種解析の掲載情報","https://1geki.jp/slot/l_kabaneri2/"]]},
@@ -352,6 +363,36 @@ const FIELD_VOICES={
  kabaneri:{text:"サイトごとに開始G数の基準が異なり、ST後の状態・周期・交換率も前提に影響します。SNSで共有された期待値表が転載か独立調査かは未確認です。",source:"既存の一般解析・現場の声の比較メモ",url:"./research.html#kabaneri"}
 };
 let FIRST_SOURCE_ROWS=[],FIRST_SOURCE_LOADED=false;
+let PDF_CATEGORY_GUIDES=[],PDF_CATEGORY_LOADED=false;
+function showTargetingCategories(machine){
+ const panel=$("category-guide-content");panel.replaceChildren();
+ const status=$("category-status");
+ if(!PDF_CATEGORY_LOADED){status.textContent="狙い方の分類を読み込んでいます。";return}
+ const entry=PDF_CATEGORY_GUIDES.find(g=>g.machine===machine.id);
+ if(!entry){status.textContent="この機種の天井・ゾーン・特殊狙いは整理中です。別機種の情報は流用しません。";return}
+ status.textContent=entry.basis==="pdf_summary"?"PDFの内容を参考に独自に整理（個人考察・未検証）":entry.basis==="toc_only"?"PDFでは目次掲載のみ確認":"PDFは目次掲載のみ。機種の概要は別の資料で確認";
+ for(const [key,heading] of [["ceiling","① 天井狙い"],["zone","② ゾーン狙い"],["other","③ その他・特殊狙い"]]){
+  const section=document.createElement("section");section.className="targeting-category";
+  const title=document.createElement("h4");title.textContent=heading;
+  const list=document.createElement("ul");
+  for(const point of entry[key]||[]){const li=document.createElement("li");li.textContent=point;list.append(li)}
+  section.append(title,list);panel.append(section);
+ }
+ const note=document.createElement("p");note.className="targeting-source";note.textContent="出典の扱い："+entry.source_notice;panel.append(note);
+ if(entry.reference)panel.append(fieldLink("関連するメーカー・解析ページを見る",entry.reference));
+}
+async function loadTargetingCategories(){
+ try{
+  const response=await fetch("./targeting-categories.json",{cache:"no-cache"});
+  if(!response.ok)throw Error("HTTP "+response.status);
+  const raw=await response.json();
+  if(raw.schema!==1||!Array.isArray(raw.machine_guides))throw Error("invalid guide schema");
+  PDF_CATEGORY_GUIDES=raw.machine_guides.filter(g=>g&&typeof g.machine==="string"&&Array.isArray(g.ceiling)&&Array.isArray(g.zone)&&Array.isArray(g.other)&&typeof g.source_notice==="string");
+ }catch(e){PDF_CATEGORY_GUIDES=[]}
+ PDF_CATEGORY_LOADED=true;
+ const current=selected();if(current)showTargetingCategories(current);
+}
+
 let FIELD_REPORTS=[],FIELD_REPORTS_LOADED=false;
 const FIELD_SCOPE_LABELS={
  article_read:"記事本文まで確認済み（独自予想は未確定）",
@@ -422,9 +463,16 @@ function fieldLink(label,href){
 }
 function renderStrategyFirst(m){
  showStrategyPhoto(m);
+ showTargetingCategories(m);
  renderFieldReports(m);
  const root=$("strategy-source-lines");root.replaceChildren();
- $("strategy-all-sources").href="./strategy-cards.html#machine="+encodeURIComponent(m.id);
+ const sourceComparison=$("strategy-all-sources");
+ const newIds=new Set(["godeva2","garo","ragnador","vivy","uminchu"]);
+ const isNew=newIds.has(m.id);
+ sourceComparison.href=isNew?(m.sources[0]?.[1]||"./strategy-cards.html"):"./strategy-cards.html#machine="+encodeURIComponent(m.id);
+ sourceComparison.textContent=isNew?"機種解析・メーカー情報を開く":"出典別の狙い目を詳しく比較";
+ sourceComparison.target=isNew?"_blank":"_self";
+ sourceComparison.rel=isNew?"noopener noreferrer":"";
  $("strategy-hint-guide").href="./hints.html#machine="+encodeURIComponent(m.id);
  const searchName=m.name.replace(/（[^）]+）/g,"");
  $("strategy-x-search").href="https://x.com/search?q="+encodeURIComponent('"'+searchName+'" 狙い目')+"&f=live";
@@ -644,6 +692,7 @@ $("ledger-machine").addEventListener("change",updateLedger);
 window.addEventListener("hashchange",navigate);
 loadStrategyFirstRows();
 loadFieldReports();
+loadTargetingCategories();
 $("load-hall-note").addEventListener("click",()=>{
  const m=selected();if(!m)return;
  try{
