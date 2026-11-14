@@ -15,7 +15,7 @@ class CompactTargetingTests(unittest.TestCase):
  def test_no_duplicate_full_comparison_on_first_screen(self):
   a=self.html
   self.assertIn('<details id="all-source-details"',a)
-  self.assertIn('解析サイト別の掲載値をすべて比較',a)
+  self.assertIn('出典別に狙い目を比較する',a)
   self.assertIn('className="compact-target"',a)
   self.assertIn('className="compact-other"',a)
   self.assertIn('function bestCompactGroup(lines)',a)
