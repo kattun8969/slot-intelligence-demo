@@ -389,7 +389,7 @@ function showTargetingCategories(machine){
  if(!PDF_CATEGORY_LOADED){status.textContent="狙い方の分類を読み込んでいます。";return}
  const entry=PDF_CATEGORY_GUIDES.find(g=>g.machine===machine.id);
  if(!entry){status.textContent="この機種の天井・ゾーン・特殊狙いは整理中です。別機種の情報は流用しません。";return}
- status.textContent=entry.basis==="pdf_summary"?"PDFの内容を参考に独自に整理（個人考察・未検証）":entry.basis==="toc_only"?"PDFでは目次掲載のみ確認":"PDFは目次掲載のみ。機種の概要は別の資料で確認";
+ status.textContent=entry.basis==="owner_full_html_source"?"ユーザー提供の完全HTMLから、筆者の考察を確認して独自要約（未検証）":entry.basis==="pdf_summary"?"PDFの内容を参考に独自に整理（個人考察・未検証）":entry.basis==="toc_only"?"PDFでは目次掲載のみ確認":"PDFは目次掲載のみ。機種の概要は別の資料で確認";
  for(const [key,heading] of [["ceiling","① 天井狙い"],["zone","② ゾーン狙い"],["other","③ その他・特殊狙い"]]){
   const section=document.createElement("section");section.className="targeting-category";
   const title=document.createElement("h4");title.textContent=heading;
