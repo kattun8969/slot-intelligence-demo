@@ -152,6 +152,11 @@ def build(previous: dict, catalog: list[dict], updates: list[dict], today: str) 
     for row in catalog:
         old = existing.get(row["id"], {})
         machines.append({**row, "first_seen": old.get("first_seen", today)})
+    # The homepage also reports pachinko news. Admit catalog machines, plus clearly
+    # slot-labeled archived headlines; never silently mix pachinko with slot updates.
+    catalog_urls = {row["url"] for row in machines}
+    slot_label = re.compile(r"スマスロ|パチスロ|スロット|Ｌパチスロ|Lパチスロ", re.I)
+    updates = [row for row in updates if row["url"] in catalog_urls or slot_label.search(row["headline"])]
     previous_updates = {(
         x.get("date"), x.get("headline"), x.get("url")
     ): x for x in previous.get("updates", [])}
