@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "checked_at": "2026-11-14",
-  "note": "追加調査分の公開サイト掲載ライン。独立のSNS集計ではなく、執筆者・解析サイトの意見であり、掲載時点の例。元記事を確認して判断する。",
+  "note": "追加調査による掲載値とゾーン・示唆・天井仕様。displayがある場合は打ち始めラインとは限らず、条件名・warningを必ず表示。SNS未検証と解析サイトの確度は混在させない。",
   "items": [
     {
       "id": "monkey5-haienavi-equal",
@@ -114,6 +114,96 @@
       "date": "2026-10-13",
       "url": "https://slobase.jp/machines/yoshimune",
       "warning": "周期とポイントの起点・当選履歴を元記事で確認。"
+    },
+    {
+      "id": "tokyo-arima-cz100",
+      "machine": "tokyoghoul",
+      "category": "zone",
+      "label": "有馬ジャッジメント失敗後の天国フォロー",
+      "value": 0,
+      "unit": "G",
+      "display": "失敗後 0〜100G＋α",
+      "context": "有馬ジャッジメントに失敗した直後に限る。失敗を液晶等で確認",
+      "source": "なな徹",
+      "kind": "状態限定・ゾーン情報",
+      "date": "2026-11-09",
+      "url": "https://nana-press.com/kaiseki/machine/889/27251/",
+      "warning": "通常のCZ間100Gゾーンとは別。上位モード濃厚の根拠を原記事で確認。"
+    },
+    {
+      "id": "tokyo-ghoul-eyecatch100",
+      "machine": "tokyoghoul",
+      "category": "other",
+      "label": "喰種化アイキャッチ後の規定G数",
+      "value": 100,
+      "unit": "G",
+      "display": "発生後100G以内（示唆）",
+      "context": "喰種化（赫眼）の特定キャラのアイキャッチを実際に確認",
+      "source": "ちえ／note（個人まとめ）",
+      "kind": "個人考察・示唆",
+      "date": "2025-04-25",
+      "url": "https://note.com/afisuttyns/n/n78b9a8eedf69",
+      "warning": "打ち始め100Gという意味ではない。アイキャッチ発生後の到達示唆であり画面の一致が必要。"
+    },
+    {
+      "id": "shinuchi-cycle-5",
+      "machine": "yoshimune",
+      "category": "zone",
+      "label": "通常A等の周期狙い",
+      "value": 5,
+      "unit": "周期",
+      "display": "5周期目〜（周期条件）",
+      "context": "液晶の周期・CZ状態を確認。周期の進行度とG数は別",
+      "source": "ジャグラーズネット",
+      "kind": "個人運営サイトの狙い目",
+      "date": "2026-11-14確認",
+      "url": "https://jugglersnet.com/chumoku/shinnuchi-yoshimune",
+      "warning": "5周期目＝通常A想定の例。通常B/Cなら4周期が天井、天国なら1周期で異なる。"
+    },
+    {
+      "id": "shinuchi-sword-9",
+      "machine": "yoshimune",
+      "category": "other",
+      "label": "抜刀メーターの特殊狙い",
+      "value": 9,
+      "unit": "pt",
+      "display": "抜刀9pt〜（特殊条件）",
+      "context": "実機の抜刀メーターを確認。周期ptとは異なる",
+      "source": "ジャグラーズネット",
+      "kind": "個人運営サイトの狙い目",
+      "date": "2026-11-14確認",
+      "url": "https://jugglersnet.com/chumoku/shinnuchi-yoshimune",
+      "warning": "メーターの起点と終了条件は掲載元で確認。"
+    },
+    {
+      "id": "monkey-first-cycle222",
+      "machine": "monkey5",
+      "category": "zone",
+      "label": "1周期目の規定激走pt到達",
+      "value": 222,
+      "unit": "pt",
+      "display": "1周期目222pt（到達濃厚）",
+      "context": "1周期目で222ptに到達した場合の規定ポイント期待度",
+      "source": "パチ＆スロ必勝本",
+      "kind": "解析・周期到達条件",
+      "date": "2026-11-14確認",
+      "url": "https://p.hisshobon.jp/machine/4185/1/99081",
+      "warning": "222ptから打ち始める狙い目ではない。規定ポイント到達の示唆であり期待値不明。"
+    },
+    {
+      "id": "monkey-short-state495",
+      "machine": "monkey5",
+      "category": "other",
+      "label": "青島VS波多野敗北後の天井短縮",
+      "value": 495,
+      "unit": "G",
+      "display": "天井495G＋α（短縮状態）",
+      "context": "青島VS波多野敗北を実際に確認",
+      "source": "ハイエナビ",
+      "kind": "状態別の短縮天井",
+      "date": "2026-10-11",
+      "url": "https://haienavi.com/machines/monkey",
+      "warning": "495Gは『打ち始めの目安』ではなく短縮後の天井。液晶とデータカウンターの約10G差に注意。"
     }
   ]
 }

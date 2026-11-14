@@ -31,24 +31,24 @@ class NumericFirstAndImagesTests(unittest.TestCase):
  def test_actual_numbers_and_sources_are_displayed_in_guide(self):
   self.assertEqual(self.data["schema"],1)
   rows=self.data["items"]
-  self.assertEqual(len(rows),8)
+  self.assertEqual(len(rows),14)
   self.assertEqual(len(self.sources["rows"]),63)
   for r in rows:
    self.assertTrue(r["url"].startswith("https://"))
-   self.assertGreater(r["value"],0)
+   self.assertGreaterEqual(r["value"],0)
    self.assertIn(r["category"],("ceiling","zone","other"))
-   self.assertIn(r["unit"],("G","pt"))
+   self.assertIn(r["unit"],("G","pt","周期"))
    self.assertTrue(r["source"] and r["context"] and r["warning"])
   self.assertIn('populateTargetNumbers(machine,key,title,figures)',self.detail)
   self.assertIn('loadAdditionalLines();',self.detail)
   self.assertIn('const lines=[...FIRST_SOURCE_ROWS,...ADDITIONAL_LINES]',self.detail)
   self.assertIn('targetNumber(row)',self.detail)
-  self.assertIn('数値の出典を開く',self.detail)
+  self.assertIn('元資料を開く',self.detail)
 
  def test_conflicting_sites_are_not_averaged(self):
-  monkey={r["source"]:r["value"] for r in self.data["items"] if r["machine"]=="monkey5"}
-  self.assertEqual(monkey["ハイエナビ"],300)
-  self.assertEqual(monkey["Setting Analyzer Pro"],500)
+  monkey={r["id"]:r["value"] for r in self.data["items"] if r["machine"]=="monkey5"}
+  self.assertEqual(monkey["monkey5-haienavi-equal"],300)
+  self.assertEqual(monkey["monkey5-setting-equal"],500)
   tokyo={(r["source"],r["label"]):r["value"] for r in self.data["items"] if r["machine"]=="tokyoghoul"}
   self.assertEqual(tokyo[("なな徹","AT間狙い・等価")],550)
   self.assertEqual(tokyo[("スロベース","AT間狙い・等価")],650)
