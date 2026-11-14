@@ -25,7 +25,7 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 .catalog-rail{display:flex;gap:12px;overflow-x:auto;padding:3px 2px 13px;scroll-snap-type:x proximity}
 .catalog-rail .machine-tile{min-width:170px;max-width:190px;scroll-snap-align:start}
 .catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.machine-tile{border:1px solid #d6e1eb;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 3px 10px #24436211}
+.machine-tile{border:1px solid #d6e1eb;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 3px 10px #24436211;position:relative}.machine-tile:focus-within{outline:3px solid #76b9d3;outline-offset:2px}.machine-tile .tile-hit{position:absolute;inset:0;z-index:1;display:block;border-radius:12px}.machine-tile .tile-hit:focus-visible{outline:3px solid #185e96;outline-offset:-3px}.machine-tile .tile-links a{position:relative;z-index:2}.machine-tile:hover{border-color:#5e9ac0}
 .machine-tile .tile-body{padding:10px}.machine-tile h4{font-size:15px;line-height:1.4;margin:7px 0;min-height:41px}
 .machine-tile p{font-size:12px;color:#607487;line-height:1.45}
 .machine-art{height:145px;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(140deg,var(--art1),var(--art2));overflow:hidden}
@@ -167,10 +167,12 @@ function makeMachineTile(m){
  const h=document.createElement("h4");h.textContent=m.name;
  const meta=document.createElement("p");meta.textContent=m.date?"導入："+m.date:"機種の情報を見る";
  const links=document.createElement("div");links.className="tile-links";
- for(const [title,path] of [["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
+ for(const [title,path] of [["機種詳細","./opportunities.html#machine="],["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]]){
   const a=document.createElement("a");a.href=path+encodeURIComponent(m.id);a.textContent=title;links.append(a);
  }
- body.append(h,meta,links);card.append(art,body);return card;
+ body.append(h,meta,links);
+ const entry=document.createElement("a");entry.className="tile-hit";entry.href="./opportunities.html#machine="+encodeURIComponent(m.id);entry.setAttribute("aria-label",m.name+"の機種詳細・狙い方を開く");
+ card.append(art,body,entry);return card;
 }
 function renderDiscovery(){
  const q=normalizeMachine(document.getElementById("catalog-query").value);

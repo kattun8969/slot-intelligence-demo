@@ -1,0 +1,43 @@
+name: Check public machine navigation and field research
+on:
+  pull_request:
+    paths:
+      - 'docs/index.html'
+      - 'docs/opportunities.html'
+      - 'docs/field-reports.json'
+      - 'tests/test_public_navigation.py'
+      - '.github/workflows/check-public-navigation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/index.html'
+      - 'docs/opportunities.html'
+      - 'docs/field-reports.json'
+      - 'tests/test_public_navigation.py'
+      - '.github/workflows/check-public-navigation.yml'
+permissions:
+  contents: read
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -p test_public_navigation.py -v
+      - name: Verify inline JavaScript syntax
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const {spawnSync}=require('child_process');
+          for(const file of ['docs/index.html','docs/opportunities.html']){
+            const html=fs.readFileSync(file,'utf8');
+            const blocks=html.split('<script>').slice(1).map(part=>part.split('</script>')[0]);
+            if(!blocks.length)throw Error(file+': no inline script');
+            for(const code of blocks){
+              const result=spawnSync('node',['--check','--input-type=commonjs'],{input:code,encoding:'utf8'});
+              if(result.status!==0)throw Error(file+': '+result.stderr);
+            }
+          }
+          NODE
