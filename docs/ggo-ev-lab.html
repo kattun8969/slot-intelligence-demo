@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GGO 期待収支の計算実験</title>
+<style>
+body{font:16px/1.6 system-ui,sans-serif;background:#f3f8fc;color:#183b54;margin:0;padding:18px}
+main{max-width:840px;margin:auto}section{background:#fff;border:1px solid #bdd7e9;padding:17px;margin:12px 0;border-radius:12px}
+h1{font-size:23px}h2{font-size:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+label{font-size:13px;font-weight:700;display:block}input,select{width:100%;box-sizing:border-box;border:1px solid #b5ccdc;border-radius:7px;padding:10px;margin-top:4px;font-size:16px}
+#result{font-size:29px;font-weight:800;color:#115c8d}.muted{font-size:13px;color:#566f80}.warning{border-left:5px solid #c49029;padding:12px;background:#fff8e9}
+a{color:#176091}.confirm{display:flex;align-items:start;gap:8px;border:1px solid #bbccd8;background:#f5f8fa;border-radius:8px;padding:12px;margin-bottom:10px}.confirm input{width:auto;min-width:20px;min-height:20px;margin:1px 0 0}
+</style></head>
+<body><main><h1>ガンゲイル・オンライン｜期待収支の計算実験</h1>
+<p class="warning">独自の検証用モデルです。初期の確率・報酬は仮定値で、実機の期待値ではありません。有料期待値表や第三者の計算式を転載していません。狙い目・投資判断には利用しないでください。</p>
+<section><h2>台の状態</h2><div class="grid">
+<label>状態<select id="state"><option value="normal">通常</option><option value="reset">設定変更後</option><option value="after">ST駆け抜け後</option></select></label>
+<label>現在のボーナス間G数<input id="g" type="number" value="200" min="0" max="975"></label>
+<label>AT後のスルー回数<input id="miss" type="number" value="0" min="0" max="6"></label>
+<label>終了条件<select id="goal"><option value="bonus">次のボーナスまで</option><option value="at">ST当選まで</option></select></label>
+</div></section>
+<section><h2>仮のモデル設定（自由に変更）</h2><p class="muted">数値は機種の実測値ではなく、計算の動作確認用の初期設定です。</p>
+<div class="grid">
+<label>通常当選確率（1／分母）<input id="mean" type="number" value="240" min="20" max="2000"></label>
+<label>ボーナスからSTへの移行確率（％）<input id="p" type="number" value="30" min="0" max="100"></label>
+<label>ボーナスの純獲得（枚）<input id="bonus" type="number" value="80" min="0" max="3000"></label>
+<label>STの純獲得（枚）<input id="reward" type="number" value="500" min="0" max="5000"></label>
+<label>50枚で回るG数<input id="spin" type="number" value="32" min="10" max="70"></label>
+<label>貸出単価（円／枚）<input id="lend" type="number" value="20" min="1" max="50"></label>
+<label>交換単価（円／枚）<input id="exchange" type="number" value="19" min="1" max="50"></label>
+</div></section>
+<section><h2>仮定した場合の計算結果</h2>
+<label class="confirm"><input type="checkbox" id="ack">この数値は実機の期待値ではなく、私が設定した仮定での計算実験と理解しました</label>
+<div id="result" role="status">仮定の確認後に計算します</div>
+<p id="games"></p><p id="range" class="muted"></p><p id="assumptions" class="muted"></p>
+</section>
+<section><h2>このモデルで未対応の要素</h2><p class="muted">モード、周期・ゾーン、CZ、示唆、引き戻し、STの獲得枚数分布、コイン持ちの変動、期待値の推定誤差は計算していません。G数到達時に必ずボーナス当選、スルー上限到達時にSTへ移行すると仮定し、1G単位の再帰計算で平均収支を求めます。</p></section>
+<p class="muted">実機の機種情報・期待値ボーダーとは切り離した試験計算です。数値を多少変えた有料データの再現・転載ではありません。</p><p><a href="./opportunities.html#machine=ggo">ガンゲイル・オンラインの機種情報へ戻る</a></p></main>
+<script>
+const $=id=>document.getElementById(id),num=id=>Number($(id).value),yen=n=>(n>=0?"+":"")+Math.round(n).toLocaleString("ja-JP")+"円";
+function calc(a){
+ const {g,miss,cap,limit,goal,mean,p,bonus,reward,spin,lend,exchange}=a;
+ if([g,miss,cap,limit,mean,p,bonus,reward,spin,lend,exchange].some(x=>!Number.isFinite(x))||g<0||g>cap||miss<0||miss>limit||mean<=0||spin<=0||p<0||p>1||bonus<0||reward<0||lend<=0||exchange<=0)throw Error("入力範囲を確認してください");
+ const h=1/mean,cost=50/spin*lend;
+ const E=Array.from({length:limit+1},()=>Array(cap+1).fill(0)),G=Array.from({length:limit+1},()=>Array(cap+1).fill(0));
+ for(let m=limit;m>=0;m--)for(let t=cap;t>=0;t--){
+  const q=t===cap?1:h,win=m===limit?1:p;
+  const next=goal==="at"&&m<limit?E[m+1][0]:0,more=goal==="at"&&m<limit?G[m+1][0]:0;
+  E[m][t]=(t===cap?0:-cost)+q*(bonus*exchange+(goal==="at"?win*reward*exchange+(1-win)*next:0))+(1-q)*(t===cap?0:E[m][t+1]);
+  G[m][t]=(t===cap?0:1)+q*(1-win)*more+(1-q)*(t===cap?0:G[m][t+1]);
+ }
+ return{ev:E[miss][g],games:G[miss][g]};
+}
+function render(){
+ if(!$("ack").checked){$("result").textContent="検証上の仮定に同意すると試算を表示します";$("games").textContent="";$("range").textContent="";$("assumptions").textContent="";return;}
+ try{
+ const state=$("state").value,a={g:num("g"),miss:num("miss"),cap:state==="reset"?300:975,limit:state==="normal"?6:2,goal:$("goal").value,mean:num("mean"),p:num("p")/100,bonus:num("bonus"),reward:num("reward"),spin:num("spin"),lend:num("lend"),exchange:num("exchange")};
+ const x=calc(a),scenarios=[.8,1,1.2].map(k=>calc({...a,mean:a.mean/k,p:Math.min(1,a.p*k),reward:a.reward*k}).ev);
+ $("result").textContent=yen(x.ev);
+ $("games").textContent="想定消化G数："+Math.round(x.games).toLocaleString("ja-JP")+"G";
+ $("range").textContent="設定値を約±20%変えた感度テスト："+yen(Math.min(...scenarios))+" ～ "+yen(Math.max(...scenarios))+"（統計的な信頼区間ではありません）";
+ $("assumptions").textContent="計算条件："+(state==="normal"?"通常":state==="reset"?"設定変更":"ST駆け抜け後")+"／ボーナス間上限"+a.cap+"G／スルー上限"+a.limit+"回。";
+ }catch(e){$("result").textContent=e.message;$("games").textContent="";$("range").textContent="";}
+}
+document.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",render));render();
+</script></body></html>
