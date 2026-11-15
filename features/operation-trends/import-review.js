@@ -3,7 +3,8 @@
 'use strict';
 const id=r=>r.original_post_id?r.type+'|'+r.original_post_id:r.source_id+'|'+r.id;
 const ctxId=r=>JSON.stringify([r.store_id,r.machine_id,r.as_of]);
-const equal=(a,b)=>JSON.stringify(Object.keys(a).sort().map(k=>[k,a[k]]))===JSON.stringify(Object.keys(b).sort().map(k=>[k,b[k]]));
+const canonical=x=>JSON.stringify(Object.keys(x).sort().map(k=>[k,x[k]]));
+const equal=(a,b)=>canonical(a)===canonical(b);
 function preview(existing,incoming){
  const a=archive.checked(existing),b=archive.checked(incoming);
  const conflicts=[],added={records:0,contexts:0},unchanged={records:0,contexts:0};
