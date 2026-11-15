@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "enabled": false,
+  "placements": {
+    "home": "after-main-content",
+    "machine": "after-analysis"
+  },
+  "affiliate": {
+    "enabled": false,
+    "offers": []
+  },
+  "support": {
+    "enabled": false,
+    "services": []
+  }
+}
