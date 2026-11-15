@@ -38,6 +38,23 @@ class ReadinessTests(unittest.TestCase):
     def test_rejected_not_usable(self):
         r=build_readiness({"schema":1,"rules":[rule(review_status="rejected")]})
         self.assertEqual(r["machines"][0]["usable_counter_types"],[])
+    def test_expired_rule_not_currently_ready(self):
+        r=build_readiness({"schema":1,"rules":[rule()]},as_of="2026-11-15")
+        self.assertFalse(r["machines"][0]["mapping_ready"])
+        self.assertEqual(r["machines"][0]["effective_verified_rules"],0)
+        self.assertEqual(r["as_of"],"2026-11-15")
+    def test_effective_rule_ready_on_boundary(self):
+        r=build_readiness({"schema":1,"rules":[rule()]},as_of="2026-06-30")
+        self.assertTrue(r["machines"][0]["mapping_ready"])
+    def test_future_rule_not_currently_ready(self):
+        r=build_readiness({"schema":1,"rules":[rule(valid_from="2027-01-01",valid_until="2027-12-31")]},as_of="2026-11-15")
+        self.assertFalse(r["machines"][0]["mapping_ready"])
+    def test_invalid_as_of_date_rejected(self):
+        with self.assertRaises(ReadinessError):
+            build_readiness({"schema":1,"rules":[]},as_of="2026-2-01")
+    def test_historical_view_explicitly_labeled(self):
+        r=build_readiness({"schema":1,"rules":[rule()]})
+        self.assertEqual(r["readiness_scope"],"all_historical_rules")
     def test_schema_rejected(self):
         with self.assertRaises(ReadinessError):
             build_readiness({"schema":2,"rules":[]})
