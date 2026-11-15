@@ -1,0 +1,17 @@
+name = "minna-community-api"
+main = "community-worker.js"
+compatibility_date = "2026-11-15"
+
+# Copy to wrangler.toml and fill in your own D1 binding identifiers.
+# Do not commit secrets.
+[[d1_databases]]
+binding = "DB"
+database_name = "minna-community"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[vars]
+ALLOWED_ORIGIN = "https://kattun8969.github.io"
+
+# UTC 01:00, 07:00, 13:00 => JST 10:00, 16:00, 22:00
+[triggers]
+crons = ["0 1,7,13 * * *"]
