@@ -9,6 +9,7 @@ function commitImport(before,incoming,approved){
  return next;
 }
 function reviewedImport(incoming){
+ if(pendingReview)throw Error('前の変更確認を完了してください');
  const before={schema_version:1,records,contexts},report=SlotImportReview.preview(before,incoming);
  if(!report.conflicts.length){commitImport(before,incoming,[]);return {report,pending:false};}
  pendingReview={before,incoming,report};
