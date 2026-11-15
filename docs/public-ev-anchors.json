@@ -1,0 +1,280 @@
+{
+  "schema": 1,
+  "checked_at": "2026-11-15",
+  "description": "無料公開期待値表から主要な代表点のみを選んだ出典付き参照ツール。転載・表全体の複製、未掲載行の補間、状態混在、条件の異なる金額の自動換算は行わない。全て20円等価の掲載例。",
+  "groups": [
+    {
+      "machine": "monkey5",
+      "scenario": "通常795G・AT後通常",
+      "counter": "AT間G",
+      "exchange": 20,
+      "source": "ハイエナビ",
+      "url": "https://haienavi.com/machines/monkey",
+      "asof": "2026-10-11",
+      "basis": "設定1当選待ち補正・設定混在出玉、通常795G天井、次AT連チャン終了まで、20円等価／32G/50枚。モード・周期・ヘルメット個別補正なし",
+      "status": "実測補正・掲載例",
+      "kind": "ceiling",
+      "id": "published-monkey5-1",
+      "points": [
+        {
+          "games": 200,
+          "ev_yen": -375
+        },
+        {
+          "games": 300,
+          "ev_yen": 300
+        },
+        {
+          "games": 400,
+          "ev_yen": 1227
+        },
+        {
+          "games": 500,
+          "ev_yen": 2411
+        },
+        {
+          "games": 600,
+          "ev_yen": 3950
+        },
+        {
+          "games": 700,
+          "ev_yen": 5921
+        }
+      ]
+    },
+    {
+      "machine": "ggo",
+      "scenario": "通常ボーナス後・SJ非当選",
+      "counter": "通常ボーナス間G",
+      "exchange": 20,
+      "source": "ハイエナビ",
+      "url": "https://haienavi.com/machines/ggo",
+      "asof": "2026-11-13",
+      "basis": "2026/11/2〜10・設定混在・20円等価。次ボーナスとSJ当選時の終了後50G確認まで。朝一・駆け抜け後・スルー天井を混ぜない。超高確天井後を強制当選とみなさない",
+      "status": "新台9営業日・暫定",
+      "kind": "ceiling",
+      "id": "published-ggo-2",
+      "points": [
+        {
+          "games": 100,
+          "ev_yen": 459
+        },
+        {
+          "games": 200,
+          "ev_yen": 70
+        },
+        {
+          "games": 300,
+          "ev_yen": 685
+        },
+        {
+          "games": 400,
+          "ev_yen": 323
+        },
+        {
+          "games": 500,
+          "ev_yen": 1522
+        },
+        {
+          "games": 600,
+          "ev_yen": 2292
+        }
+      ]
+    },
+    {
+      "machine": "vivy",
+      "scenario": "通常・次ATまで",
+      "counter": "表示G",
+      "exchange": 20,
+      "source": "ハイエナビ",
+      "url": "https://haienavi.com/machines/vivy",
+      "asof": "2026-11-11",
+      "basis": "2026/11/2〜10・9営業日・設定混在。通常AT間、次ATと終了後3G確認まで。設定変更後・特定プレート示唆は含まない",
+      "status": "新台9営業日・暫定",
+      "kind": "ceiling",
+      "id": "published-vivy-3",
+      "points": [
+        {
+          "games": 200,
+          "ev_yen": -1067
+        },
+        {
+          "games": 300,
+          "ev_yen": -254
+        },
+        {
+          "games": 400,
+          "ev_yen": 403
+        },
+        {
+          "games": 500,
+          "ev_yen": 1413
+        },
+        {
+          "games": 600,
+          "ev_yen": 2455
+        },
+        {
+          "games": 700,
+          "ev_yen": 3839
+        }
+      ]
+    },
+    {
+      "machine": "garo",
+      "scenario": "通常ボーナス後・SGB非突入",
+      "counter": "ボーナス間表示G",
+      "exchange": 20,
+      "source": "ハイエナビ",
+      "url": "https://haienavi.com/machines/garo_yami",
+      "asof": "2026-11-11",
+      "basis": "2026/11/2〜10・9営業日・設定混在。上位CZ敗北後・上位AT後を除く。次ボーナスと続く出玉を消化し終了状態の確認まで、等価20円",
+      "status": "新台9営業日・暫定",
+      "kind": "ceiling",
+      "id": "published-garo-4",
+      "points": [
+        {
+          "games": 100,
+          "ev_yen": 265
+        },
+        {
+          "games": 200,
+          "ev_yen": -358
+        },
+        {
+          "games": 300,
+          "ev_yen": -92
+        },
+        {
+          "games": 400,
+          "ev_yen": 430
+        },
+        {
+          "games": 500,
+          "ev_yen": 1399
+        },
+        {
+          "games": 600,
+          "ev_yen": 2647
+        }
+      ]
+    },
+    {
+      "machine": "mahoako",
+      "scenario": "通常・AT間",
+      "counter": "AT間G",
+      "exchange": 20,
+      "source": "ハイエナビ",
+      "url": "https://haienavi.com/machines/mahoako",
+      "asof": "2026-11-01",
+      "basis": "2026/10/19〜30・設定混在、20円等価／31.4G/50枚。次AT・連チャンと引き戻し確認まで。朝イチではない。途中のボーナスでAT間をリセットしない",
+      "status": "実測補正・暫定",
+      "kind": "ceiling",
+      "id": "published-mahoako-5",
+      "points": [
+        {
+          "games": 200,
+          "ev_yen": -1097
+        },
+        {
+          "games": 300,
+          "ev_yen": -435
+        },
+        {
+          "games": 400,
+          "ev_yen": 155
+        },
+        {
+          "games": 500,
+          "ev_yen": 990
+        },
+        {
+          "games": 600,
+          "ev_yen": 1800
+        },
+        {
+          "games": 700,
+          "ev_yen": 2988
+        }
+      ]
+    },
+    {
+      "machine": "mahoako",
+      "scenario": "朝イチ・初AT前（変更確定とは限らない）",
+      "counter": "AT間G",
+      "exchange": 20,
+      "source": "ハイエナビ",
+      "url": "https://haienavi.com/machines/mahoako",
+      "asof": "2026-11-01",
+      "basis": "朝イチ初AT前を集計した設定混在の暫定表。設定変更が確定した台の期待値表ではない。AT後17G確認まで、等価20円",
+      "status": "朝イチ実測・暫定",
+      "kind": "reset",
+      "id": "published-mahoako-6",
+      "points": [
+        {
+          "games": 0,
+          "ev_yen": -1522
+        },
+        {
+          "games": 100,
+          "ev_yen": -657
+        },
+        {
+          "games": 200,
+          "ev_yen": -739
+        },
+        {
+          "games": 300,
+          "ev_yen": 209
+        },
+        {
+          "games": 400,
+          "ev_yen": 1202
+        },
+        {
+          "games": 500,
+          "ev_yen": 2474
+        }
+      ]
+    },
+    {
+      "machine": "tokyoghoul",
+      "scenario": "通常CZ間・600G＋前兆",
+      "counter": "CZ間実G",
+      "exchange": 20,
+      "source": "ハイエナビ 公開サンプル",
+      "url": "https://haienavi.com/sample",
+      "asof": "2026-11-15確認",
+      "basis": "通常CZ間天井600G＋前兆・データカウンター実G・20円等価・千円31G。AT間の数値と混同しない。公開サンプルの参考値",
+      "status": "公開サンプル",
+      "kind": "ceiling",
+      "id": "published-tokyoghoul-7",
+      "points": [
+        {
+          "games": 150,
+          "ev_yen": -1716
+        },
+        {
+          "games": 250,
+          "ev_yen": -336
+        },
+        {
+          "games": 300,
+          "ev_yen": 280
+        },
+        {
+          "games": 350,
+          "ev_yen": 1078
+        },
+        {
+          "games": 400,
+          "ev_yen": 1673
+        },
+        {
+          "games": 500,
+          "ev_yen": 3003
+        }
+      ]
+    }
+  ]
+}
