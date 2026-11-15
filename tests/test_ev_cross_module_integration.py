@@ -7,6 +7,10 @@ from scripts.ev_engine_core import summarize_episodes
 from scripts.ev_reference_compare import compare_exact
 from scripts.ev_holdout_validation import validate_holdout
 from scripts.ev_research_pipeline import run_pipeline
+from scripts.ev_hall_csv_import import import_observations_csv, FIELDS
+from scripts.ev_csv_audit_bridge import process_csv_to_audit
+import csv
+import io
 
 def rule():
     return {
@@ -62,6 +66,28 @@ class EndToEndEVTests(unittest.TestCase):
         self.assertEqual(result.normalized_count,1)
         self.assertEqual(result.blocked_group_count,1)
         self.assertEqual(result.estimate_candidates,())
+
+    def test_csv_through_real_normalization_and_audit(self):
+        row = dict(raw())
+        row.update(event_order="1",counter_value="350",
+                   source_permission="user_owned",
+                   permission_evidence="https://example.org/permission",
+                   source_record_id="record-1")
+        out = io.StringIO()
+        writer = csv.DictWriter(out,fieldnames=FIELDS)
+        writer.writeheader()
+        writer.writerow(row)
+        result = process_csv_to_audit(
+            out.getvalue(),rules=[rule()],
+            intake=import_observations_csv,
+            normalize=normalize,
+            to_audit=observation_to_audit,
+            audit=audit_event_stream)
+        self.assertEqual(result["csv_accepted_count"],1)
+        self.assertEqual(result["audit_event_count"],1)
+        self.assertEqual(result["quarantined_count"],0)
+        self.assertEqual(result["audit_group_count"],1)
+        self.assertEqual(result["estimate_candidates"],[])
 
     def test_unmapped_counter_never_produces_estimate(self):
         item=dict(raw(),counter_label="unknown label")
