@@ -3,7 +3,7 @@
 'use strict';
 const id=r=>r.original_post_id?r.type+'|'+r.original_post_id:r.source_id+'|'+r.id;
 const ctxId=r=>JSON.stringify([r.store_id,r.machine_id,r.as_of]);
-const canonical=x=>JSON.stringify(Object.keys(x).sort().map(k=>[k,x[k]]));
+const canonical=x=>Array.isArray(x)?'['+x.map(canonical).join(',')+']':x&&typeof x==='object'?'{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+canonical(x[k])).join(',')+'}':JSON.stringify(x);
 const equal=(a,b)=>canonical(a)===canonical(b);
 function preview(existing,incoming){
  const a=archive.checked(existing),b=archive.checked(incoming);
