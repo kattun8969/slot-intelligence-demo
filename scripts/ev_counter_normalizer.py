@@ -91,8 +91,8 @@ def normalize(raw: dict[str, Any], rules: list[dict[str, Any]]) -> NormalizedObs
     except (ValueError, TypeError) as exc:
         raise RuleError("invalid observed date") from exc
     v = raw["counter_value"]
-    if isinstance(v, bool) or not isinstance(v, int) or v < 0:
-        raise RuleError("counter must be nonnegative integer")
+    if isinstance(v, bool) or not isinstance(v, int):
+        raise RuleError("counter must be integer")
     candidates = []
     for rule in rules:
         validate_rule(rule)
@@ -105,6 +105,8 @@ def normalize(raw: dict[str, Any], rules: list[dict[str, Any]]) -> NormalizedObs
     # Ambiguous rules are never selected by guessing a newest version.
     status = "verified" if len(candidates) == 1 else ("ambiguous" if candidates else "unmapped")
     r = candidates[0] if len(candidates) == 1 else None
+    if v < 0 and (r is None or r["counter_type"] not in {"daily_difference_medals", "section_difference_medals"}):
+        raise RuleError("negative counter requires verified signed-difference rule")
     return NormalizedObservation(
         source_id=raw["source_id"], venue_id=raw["venue_id"],
         machine_id=raw["machine_id"], model_revision=raw["model_revision"],
