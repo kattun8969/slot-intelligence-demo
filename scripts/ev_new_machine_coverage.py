@@ -5,7 +5,7 @@ Read-only. A reference row is NOT proof of a live, machine-specific EV table.
 from __future__ import annotations
 import argparse
 import json
-from datetime import date
+from datetime import date, datetime, time
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -63,13 +63,16 @@ def coverage(discovery, reference, *, as_of):
             raise ValueError("duplicate catalog id")
         ids.add(catalog_id)
         first=date.fromisoformat(machine["first_seen"])
-        age=(as_of-first).total_seconds()/3600
+        # Date-only discovery has no known clock time. Warn only if breach is certain.
+        latest=datetime.combine(first,time.max)
+        now=datetime.combine(as_of,time.min)
+        certain_age=(now-latest).total_seconds()/3600
         reference_id=CATALOG_TO_REFERENCE.get(catalog_id)
         matches=sorted(scenarios.get(reference_id,[])) if reference_id else []
         output.append({
             "catalog_id":catalog_id,"machine_name":machine["name"],
             "catalog_url":machine["url"],"first_seen":machine["first_seen"],
-            "elapsed_hours":round(max(0,age),2),
+            "elapsed_hours":None,"age_precision":"date_only",
             "reference_machine_id":reference_id,
             "valid_reference_scenario_ids":matches,
             "reference_rows_available":bool(matches),
@@ -77,8 +80,8 @@ def coverage(discovery, reference, *, as_of):
             "live_pages_verified":False,
             "publication_status":"unverified",
             "needs_source_research":not bool(matches),
-            "target_18h_warning":age>=18,
-            "target_24h_exceeded":age>=24,
+            "target_18h_warning":certain_age>=18,
+            "target_24h_exceeded":certain_age>=24,
         })
     return {"schema":1,"as_of":as_of.isoformat(),"machine_count":len(output),
             "reference_rows_available_count":sum(x["reference_rows_available"] for x in output),
