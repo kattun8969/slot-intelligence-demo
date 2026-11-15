@@ -936,7 +936,7 @@ function showDetail(m){
  renderCommunity(m);
  renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
- const publicEvMachines=new Set(["monkey5","tokyoghoul","seiya"]);
+ const publicEvMachines=new Set(["monkey5","tokyoghoul","seiya","ragnador","vivy"]);
  $("public-ev-entry").hidden=!publicEvMachines.has(m.id);
  $("public-ev-open").href="./public-ev-lookup.html?machine="+encodeURIComponent(m.id);
  const trialMachines=new Set(["ggo","godeva2","garo","mahoako","lycoris","vivy"]);
