@@ -380,6 +380,66 @@
       "warning": "4周期目のメーター個数であり10Gではない。3周期目以下はメーター単体で狙わない。",
       "actionable": true,
       "startBasis": "4周期目かつリプレイメーター10個以上"
+    },
+    {
+      "id": "ragnador-at-equal-620",
+      "machine": "ragnador",
+      "category": "ceiling",
+      "label": "AT間・等価",
+      "value": 620,
+      "unit": "G",
+      "context": "等価交換。AT終了後の通常時ゲーム数。CZ中のG数は含めない。",
+      "source": "ちょんぼりすた",
+      "kind": "公開解析サイトの狙い目目安",
+      "date": "2026-11-15確認（サイト更新2026-11-13）",
+      "url": "https://chonborista.com/slot/universal-slot/266983/",
+      "warning": "AT間とCZ間のカウンターは別。等価と5.6枚持ちメダル・現金の開始G数を混同しない。出典の狙い目は期待値金額そのものではない。",
+      "actionable": true
+    },
+    {
+      "id": "ragnador-at-56-medals-640",
+      "machine": "ragnador",
+      "category": "ceiling",
+      "label": "AT間・5.6枚持ちメダル",
+      "value": 640,
+      "unit": "G",
+      "context": "5.6枚交換、持ちメダル遊技。AT終了後の通常時ゲーム数。",
+      "source": "ちょんぼりすた",
+      "kind": "公開解析サイトの狙い目目安",
+      "date": "2026-11-15確認（サイト更新2026-11-13）",
+      "url": "https://chonborista.com/slot/universal-slot/266983/",
+      "warning": "AT間とCZ間のカウンターは別。等価と5.6枚持ちメダル・現金の開始G数を混同しない。出典の狙い目は期待値金額そのものではない。",
+      "actionable": true
+    },
+    {
+      "id": "ragnador-at-56-cash-720",
+      "machine": "ragnador",
+      "category": "ceiling",
+      "label": "AT間・5.6枚現金投資",
+      "value": 720,
+      "unit": "G",
+      "context": "5.6枚交換、現金投資。持ちメダル条件とは区別。",
+      "source": "ちょんぼりすた",
+      "kind": "公開解析サイトの狙い目目安",
+      "date": "2026-11-15確認（サイト更新2026-11-13）",
+      "url": "https://chonborista.com/slot/universal-slot/266983/",
+      "warning": "AT間とCZ間のカウンターは別。等価と5.6枚持ちメダル・現金の開始G数を混同しない。出典の狙い目は期待値金額そのものではない。",
+      "actionable": true
+    },
+    {
+      "id": "ragnador-cz-equal-380",
+      "machine": "ragnador",
+      "category": "ceiling",
+      "label": "CZ間・等価（次CZまで）",
+      "value": 380,
+      "unit": "G",
+      "context": "等価交換。AT後、CZ終了後からの通常時ゲーム数。次のCZまでの狙い目。",
+      "source": "ちょんぼりすた",
+      "kind": "公開解析サイトの狙い目目安",
+      "date": "2026-11-15確認（サイト更新2026-11-13）",
+      "url": "https://chonborista.com/slot/universal-slot/266983/",
+      "warning": "AT間とCZ間のカウンターは別。等価と5.6枚持ちメダル・現金の開始G数を混同しない。出典の狙い目は期待値金額そのものではない。",
+      "actionable": true
     }
   ]
 }
