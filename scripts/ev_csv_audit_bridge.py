@@ -16,11 +16,13 @@ def process_csv_to_audit(
     normalize: Callable[[dict[str, Any], list[dict[str, Any]]], Any],
     to_audit: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]],
     audit: Callable[[list[dict[str, Any]]], dict[str, Any]],
+    pin_rule: Callable[[dict[str, Any], dict[str, Any], list[dict[str, Any]]], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     imported = intake(csv_text)
     if not isinstance(imported, dict) or not isinstance(imported.get("accepted"), list):
         raise BridgeError("invalid CSV intake contract")
     accepted = []
+    pinned = []
     quarantine = list(imported.get("quarantine", []))
     for i, raw in enumerate(imported["accepted"]):
         # Quarantine each observation independently; never guess rule mappings.
@@ -30,10 +32,13 @@ def process_csv_to_audit(
                 normalized = normalized.to_dict()
             if not isinstance(normalized, dict):
                 raise BridgeError("normalizer must return dict")
+            pin = pin_rule(raw, normalized, rules) if pin_rule is not None else None
             audit_row = to_audit(raw, normalized)
             if not isinstance(audit_row, dict):
                 raise BridgeError("audit adapter must return dict")
             accepted.append(audit_row)
+            if pin is not None:
+                pinned.append(pin)
         except (ValueError, TypeError, KeyError) as exc:
             quarantine.append({
                 "source_record_id": raw.get("source_record_id"),
@@ -53,6 +58,7 @@ def process_csv_to_audit(
         "quarantined_count": len(quarantine),
         "quarantine": quarantine,
         "audit_groups": groups,
+        "pinned_rule_snapshots": pinned,
         "estimate_candidates": [],
         "publication_status": "research_only",
         "notice": "Observed hall event streams are not completed player episodes.",
