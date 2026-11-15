@@ -19,7 +19,7 @@ button:disabled{opacity:.45;cursor:not-allowed}a{color:#185c8b}.actions{display:
 <main>
 <section class="card"><p class="notice"><strong>実機スペックを再計算するツールではありません。</strong> 公開されている期待値表の一部掲載行を照合し、間のG数は線形補間した参考値です。表の前提に合わない場合は表示しません。掲載範囲外の推測や交換率の無断換算は行いません。</p>
 <div class="grid">
-<label>機種<select id="machine"><option value="monkey5">モンキーターンV</option><option value="tokyoghoul">東京喰種</option><option value="seiya">聖闘士星矢 黄金十二宮</option></select></label>
+<label>機種<select id="machine"><option value="monkey5">モンキーターンV</option><option value="tokyoghoul">東京喰種</option><option value="seiya">聖闘士星矢 黄金十二宮</option><option value="ragnador">ラグナドール</option><option value="vivy">Vivy</option></select></label>
 <label>現在の状態・カウンター<select id="scenario"></select></label>
 <label>現在のゲーム数（選択したカウンター）<input type="number" min="0" step="1" id="games" value="300"></label>
 </div>
@@ -96,7 +96,7 @@ $("memo").addEventListener("click",()=>{
  try{const response=await fetch("./public-ev-reference.json",{cache:"no-store"});if(!response.ok)throw Error("HTTP "+response.status);const data=await response.json();
  if(data.schema!==1||!Array.isArray(data.scenarios))throw Error("format");
  scenarios=data.scenarios.filter(s=>s&&typeof s.id==="string"&&typeof s.machine==="string"&&Array.isArray(s.points)&&s.points.length>=2&&s.points.every(p=>Array.isArray(p)&&p.length===2&&Number.isFinite(p[0])&&Number.isFinite(p[1])));
- const q=new URLSearchParams(location.search),id=q.get("machine");if(["monkey5","tokyoghoul","seiya"].includes(id))$("machine").value=id;
+ const q=new URLSearchParams(location.search),id=q.get("machine");if(["monkey5","tokyoghoul","seiya","ragnador","vivy"].includes(id))$("machine").value=id;
  refreshMachine();const scenario=q.get("scenario");if(scenarios.some(x=>x.id===scenario&&x.machine===getMachine())){$("scenario").value=scenario;refresh();}
  }catch(e){$("range").textContent="公開期待値データを読み込めませんでした。時間をおいて確認してください。"}
 })();
