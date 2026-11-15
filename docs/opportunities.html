@@ -587,6 +587,15 @@ function renderProfitWorksheet(){
 for(const id of ["profit-low","profit-high","profit-roi"])$(id).addEventListener("input",renderProfitWorksheet);
 renderProfitWorksheet();
 const EV_GUIDES={
+ seiya:[
+  {label:"火時計・1スルー以降・4周期0pt（CZまで）",value:-290,kind:"zone",basis:"等価・4周期目・1スルー以降・CZ当選まで。独自調査に基づくシミュレーション",note:"公開期待値表の一例。0ptから必ず打てるという意味ではありません。火時計pt・現在周期・CZスルー数を確認。",source:"スロパチ期待値ノート",url:"https://slopachi-note.com/seiya-ougon-tenjo"},
+  {label:"火時計・1スルー以降・5周期0pt（CZまで）",value:1200,kind:"zone",basis:"等価・5周期目・1スルー以降・CZ当選まで。独自調査に基づくシミュレーション",note:"公開期待値表の一例。5周期目が確定している場合のみ適用。",source:"スロパチ期待値ノート",url:"https://slopachi-note.com/seiya-ougon-tenjo"},
+  {label:"CZ間・AT後250G（次のCZまで）",value:1520,kind:"ceiling",basis:"等価・AT後CZ間250G・次のCZまで。実戦値ベース",note:"公開期待値表の一例。AT間G数やCZ失敗後の条件には流用しません。",source:"ちょんぼりすた",url:"https://chonborista.com/slot/sanyo-slot/260304/"}
+ ],
+ otome5:[
+  {label:"通常AT間550G（ATまで）",value:1455,kind:"ceiling",basis:"等価・設定1・通常AT間実G550G・AT当選まで",note:"なな徹の公開期待値表の一例。周期状態や終了画面示唆の違いを一律に反映した数値ではありません。",source:"なな徹",url:"https://nana-press.com/kaiseki/machine/1160/"},
+  {label:"設定変更後AT間300G（ATまで）",value:1390,kind:"ceiling",basis:"等価・設定1・変更後AT間実G300G・AT当選まで",note:"なな徹の公開期待値表の一例。設定変更が確認できる場合のみ適用。",source:"なな徹",url:"https://nana-press.com/kaiseki/machine/1160/"}
+ ],
  monkey5:[
   {label:"0G〜・1周期目まで",value:null,kind:"zone",basis:"AT終了直後で1周期目が未消化",note:"機械割100％超とする掲載例はありますが、期待利益の円額は未掲載。ヘルメット・ポイントを確認。",source:"なな徹",url:"https://nana-press.com/kaiseki/machine/644/23068/"},
   {label:"50G〜・1周期目まで",value:null,kind:"zone",basis:"AT後50G時点・1周期目未消化",note:"50G開始時点の金額は未登録。0Gの条件と同一視しません。",source:"調査中",url:null},
