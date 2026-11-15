@@ -5,10 +5,12 @@ on:
       - feat/operation-news-setting-trends-mvp
     paths:
       - 'features/operation-trends/**'
+      - 'index.html'
       - '.github/workflows/operation-trends-tests.yml'
   pull_request:
     paths:
       - 'features/operation-trends/**'
+      - 'index.html'
       - '.github/workflows/operation-trends-tests.yml'
   workflow_dispatch:
 jobs:
