@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "checked_at": "2026-11-14",
+  "checked_at": "2026-11-15",
   "note": "掲載行は開始位置（actionable:true）と規定ポイント・天井仕様（actionable:false）を厳密に分離。出典不明のSNS案も発見・原投稿未確認なら '未検証' とし、具体値を作らない。",
   "items": [
     {
@@ -241,6 +241,96 @@
       "date": "2026-11-14",
       "url": "https://nana-press.com/kaiseki/machine/1124/36100/",
       "warning": "6周期目が天井であることと、5周期目の開始0Gから打てることを区別。"
+    },
+    {
+      "id": "seiya-cz-afterat-220",
+      "machine": "seiya",
+      "category": "ceiling",
+      "label": "AT後・CZ間・等価",
+      "value": 220,
+      "unit": "G",
+      "context": "AT終了後から次CZまで。等価・実戦値で出玉率106%付近を狙う目安",
+      "source": "ちょんぼりすた",
+      "kind": "実戦値に基づく狙い目目安",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/sanyo-slot/260304/",
+      "warning": "CZ間はAT間と異なる。5.6枚持ちメダル240G、現金290G。",
+      "actionable": true
+    },
+    {
+      "id": "seiya-cz-afterfail-250",
+      "machine": "seiya",
+      "category": "ceiling",
+      "label": "CZ失敗後・CZ間・等価",
+      "value": 250,
+      "unit": "G",
+      "context": "CZ失敗後から次CZまで。等価・実戦値で出玉率106%付近を狙う目安",
+      "source": "ちょんぼりすた",
+      "kind": "実戦値に基づく狙い目目安",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/sanyo-slot/260304/",
+      "warning": "5.6枚持ちメダル270G、現金320G。",
+      "actionable": true
+    },
+    {
+      "id": "seiya-at-620",
+      "machine": "seiya",
+      "category": "ceiling",
+      "label": "AT間・等価",
+      "value": 620,
+      "unit": "G",
+      "context": "AT間の実ゲーム数。等価・次ATまで。CZ間が0〜99Gの前提",
+      "source": "ちょんぼりすた",
+      "kind": "実戦値に基づく狙い目目安",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/sanyo-slot/260304/",
+      "warning": "5.6枚持ちメダル650G、現金690G。",
+      "actionable": true
+    },
+    {
+      "id": "seiya-reset-cz-140",
+      "machine": "seiya",
+      "category": "ceiling",
+      "label": "設定変更後・CZ間・等価",
+      "value": 140,
+      "unit": "G",
+      "context": "設定変更後・CZ間。等価・次CZまで。導入初日の実戦値",
+      "source": "ちょんぼりすた",
+      "kind": "実戦値に基づく狙い目目安",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/sanyo-slot/260304/",
+      "warning": "設定変更確定時のみ。5.6枚持ちメダル150G、現金170G。",
+      "actionable": true
+    },
+    {
+      "id": "otome5-at-620",
+      "machine": "otome5",
+      "category": "ceiling",
+      "label": "AT後・AT間・等価",
+      "value": 620,
+      "unit": "G",
+      "context": "AT後のAT間実G・等価・2026-11-13更新の狙い目",
+      "source": "ちょんぼりすた",
+      "kind": "実戦値に基づく狙い目目安",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/orinpia-slot/256147/",
+      "warning": "5.6枚持ちメダル640G、現金700G。周期内Gと混同しない。",
+      "actionable": true
+    },
+    {
+      "id": "otome5-reset-280",
+      "machine": "otome5",
+      "category": "ceiling",
+      "label": "設定変更後・AT間・等価",
+      "value": 280,
+      "unit": "G",
+      "context": "設定変更後のAT間実G・等価・2026-11-13更新の狙い目",
+      "source": "ちょんぼりすた",
+      "kind": "実戦値に基づく狙い目目安",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/orinpia-slot/256147/",
+      "warning": "5.6枚持ちメダル300G、現金350G。変更を確認できない場合は適用しない。",
+      "actionable": true
     }
   ]
 }
