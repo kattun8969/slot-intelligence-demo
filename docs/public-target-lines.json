@@ -331,6 +331,55 @@
       "url": "https://chonborista.com/slot/orinpia-slot/256147/",
       "warning": "5.6枚持ちメダル300G、現金350G。変更を確認できない場合は適用しない。",
       "actionable": true
+    },
+    {
+      "id": "sunbreak-cz-between-210",
+      "machine": "monsterhuntersunbreak",
+      "category": "ceiling",
+      "label": "CZ間天井狙い・等価の暫定目安",
+      "value": 210,
+      "unit": "G",
+      "context": "CZ間の通常時ゲーム数。CZ天井333G＋α、正確なCZ間G数はメニュー画面で確認",
+      "source": "ちょんぼりすた",
+      "kind": "公開解析サイトの暫定狙い目",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/enta-slot/264514/",
+      "warning": "AT間G数やリプレイメーターと混同しない。等価の暫定値であり5.6枚交換や現金投資には直接適用しない。",
+      "actionable": true
+    },
+    {
+      "id": "sunbreak-replay-meter-fifth",
+      "machine": "monsterhuntersunbreak",
+      "category": "zone",
+      "label": "オトモ潜水艇・5周期目の開始",
+      "value": 0,
+      "unit": "個",
+      "display": "5周期目・0個〜",
+      "context": "液晶右下のオトモ潜水艇リプレイメーターが5周期目。リプレイ20回ごとにCZ抽選、5周期目MAXでCZ確定",
+      "source": "ちょんぼりすた",
+      "kind": "周期限定の公開狙い目",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/enta-slot/264514/",
+      "warning": "0Gからではなく5周期目のメーター0個から。周期を確認できない台には適用しない。",
+      "actionable": true,
+      "startBasis": "5周期目であることを液晶右下で確認"
+    },
+    {
+      "id": "sunbreak-replay-meter-fourth",
+      "machine": "monsterhuntersunbreak",
+      "category": "zone",
+      "label": "オトモ潜水艇・4周期目10個から",
+      "value": 10,
+      "unit": "個",
+      "display": "4周期目・10個〜",
+      "context": "液晶右下のオトモ潜水艇リプレイメーターが4周期目で10個以上",
+      "source": "ちょんぼりすた",
+      "kind": "周期限定の公開狙い目",
+      "date": "2026-11-15確認",
+      "url": "https://chonborista.com/slot/enta-slot/264514/",
+      "warning": "4周期目のメーター個数であり10Gではない。3周期目以下はメーター単体で狙わない。",
+      "actionable": true,
+      "startBasis": "4周期目かつリプレイメーター10個以上"
     }
   ]
 }
