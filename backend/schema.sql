@@ -30,3 +30,14 @@ CREATE TABLE IF NOT EXISTS moderation_events (
  new_status TEXT NOT NULL,
  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS aggregate_snapshots (
+ machine TEXT NOT NULL,
+ condition_key TEXT NOT NULL,
+ vote TEXT NOT NULL,
+ result TEXT NOT NULL DEFAULT '',
+ n INTEGER NOT NULL CHECK(n>=0),
+ generated_at TEXT NOT NULL,
+ PRIMARY KEY(machine,condition_key,vote,result)
+);
+CREATE INDEX IF NOT EXISTS idx_reports_burst ON reports(condition_key,vote,created_at);
