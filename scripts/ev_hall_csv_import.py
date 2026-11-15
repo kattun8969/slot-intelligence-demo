@@ -54,8 +54,8 @@ def _row(raw: dict[str, str]) -> dict[str, Any]:
         value = int(raw["counter_value"])
     except ValueError as exc:
         raise IntakeError("invalid_integer") from exc
-    if order < 0 or value < 0 or str(order) != raw["event_order"] or str(value) != raw["counter_value"]:
-        raise IntakeError("invalid_nonnegative_integer")
+    if order < 0 or str(order) != raw["event_order"] or str(value) != raw["counter_value"]:
+        raise IntakeError("invalid_canonical_integer")
     return {
         **{k: raw[k].strip() for k in FIELDS},
         "event_order": order, "counter_value": value,
@@ -101,5 +101,5 @@ def import_observations_csv(text: str, *, max_rows: int = MAX_ROWS) -> dict[str,
         "accepted_count": len(accepted), "quarantined_count": len(quarantine),
         "accepted": accepted, "quarantine": quarantine,
         "publication_status": "research_only",
-        "notice": "Permission labels and URLs are claims requiring external review; no EV inferred.",
+        "notice": "Counter sign is provisional until verified source-specific mapping; permission claims require review; no EV inferred.",
     }
