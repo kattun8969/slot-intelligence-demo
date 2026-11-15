@@ -16,4 +16,4 @@ jobs:
         with:
           node-version: '22'
       - run: node --test features/operation-trends/*.test.cjs
-      - run: node --check features/operation-trends/evidence-engine.js && node --check features/operation-trends/temporal-trends.js
+      - run: for file in features/operation-trends/*.js; do node --check "$file" || exit 1; done
