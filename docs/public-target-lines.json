@@ -334,7 +334,7 @@
     },
     {
       "id": "sunbreak-cz-between-210",
-      "machine": "monsterhuntersunbreak",
+      "machine": "sunbreak",
       "category": "ceiling",
       "label": "CZ間天井狙い・等価の暫定目安",
       "value": 210,
@@ -349,7 +349,7 @@
     },
     {
       "id": "sunbreak-replay-meter-fifth",
-      "machine": "monsterhuntersunbreak",
+      "machine": "sunbreak",
       "category": "zone",
       "label": "オトモ潜水艇・5周期目の開始",
       "value": 0,
@@ -366,7 +366,7 @@
     },
     {
       "id": "sunbreak-replay-meter-fourth",
-      "machine": "monsterhuntersunbreak",
+      "machine": "sunbreak",
       "category": "zone",
       "label": "オトモ潜水艇・4周期目10個から",
       "value": 10,
