@@ -22,10 +22,11 @@ export default {async fetch(request,env){
 const origin=request.headers.get('origin')||'';
 const allowed=env.ALLOWED_ORIGIN||'';
 if(!allowed||!env.DB)return json({error:'service_not_configured'},503);
+const url=new URL(request.url),path=url.pathname;
+if(request.method==='GET'&&path==='/api/health')return json({ok:true,service:'minna-community-api',databaseBinding:true},200);
 if(origin!==allowed)return json({error:'origin_not_allowed'},403);
 if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{'access-control-allow-origin':origin,'access-control-allow-methods':'GET,POST,PATCH,DELETE,OPTIONS','access-control-allow-headers':'content-type,authorization','access-control-max-age':'600','vary':'Origin'}});
-const url=new URL(request.url),path=url.pathname;
-if(request.method==='GET'&&path==='/api/health')return json({ok:true},200,origin);
+
 if(request.method==='GET'&&path==='/api/analysis'){
  const machine=url.searchParams.get('machine');
  if(!validString(machine,100))return json({error:'invalid_machine'},400,origin);
