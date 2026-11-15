@@ -1,6 +1,16 @@
 // Cloudflare Worker + D1. Configure DB binding and ALLOWED_ORIGIN before deployment.
 const json=(data,status=200,origin='')=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...(origin?{'access-control-allow-origin':origin,'vary':'Origin'}:{})}});
 const hash=async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))).map(b=>b.toString(16).padStart(2,'0')).join('');
+const utcDate=()=>new Date().toISOString();
+async function snapshot(env){
+ const rows=await env.DB.prepare("SELECT machine,condition_key,vote,result,COUNT(*) AS n FROM reports WHERE status='accepted' GROUP BY machine,condition_key,vote,result").all();
+ const timestamp=utcDate();
+ await env.DB.batch([
+ env.DB.prepare("DELETE FROM aggregate_snapshots"),
+ ...rows.results.map(r=>env.DB.prepare("INSERT INTO aggregate_snapshots(machine,condition_key,vote,result,n,generated_at) VALUES(?,?,?,?,?,?)").bind(r.machine,r.condition_key,r.vote,r.result,r.n,timestamp))
+ ]);
+ return {count:rows.results.length,generatedAt:timestamp};
+}
 const validString=(v,max=80)=>typeof v==='string'&&v.length>0&&v.length<=max;
 const int=(v,min,max)=>Number.isInteger(v)&&v>=min&&v<=max;
 function validate(c){return c&&validString(c.machine,100)&&['at','cz','reset','other'].includes(c.origin)&&int(c.games,0,100000)&&
@@ -18,8 +28,8 @@ const url=new URL(request.url),path=url.pathname;
 if(request.method==='GET'&&path==='/api/health')return json({ok:true},200,origin);
 if(request.method==='GET'&&path==='/api/summary'){
 const machine=url.searchParams.get('machine');if(!validString(machine,100))return json({error:'invalid_machine'},400,origin);
-const rows=await env.DB.prepare("SELECT condition_key,vote,COUNT(*) n FROM reports WHERE status='accepted' AND machine=? GROUP BY condition_key,vote").bind(machine).all();
-return json({machine,groups:rows.results,updatedAt:new Date().toISOString(),note:'投稿の判断割合であり、期待値や勝率ではありません'},200,origin)}
+const rows=await env.DB.prepare("SELECT condition_key,vote,result,n,generated_at FROM aggregate_snapshots WHERE machine=?").bind(machine).all();
+return json({machine,groups:rows.results,updatedAt:rows.results[0]?.generated_at??null,note:'投稿の判断割合であり、期待値や勝率ではありません。集計はJST 10/16/22時に更新します'},200,origin)}
 if(!['POST','PATCH','DELETE'].includes(request.method))return json({error:'not_found'},404,origin);
 const token=(request.headers.get('authorization')||'').replace(/^Bearer /,'');
 if(!/^[a-f0-9]{64}$/.test(token))return json({error:'invalid_edit_token'},401,origin);
@@ -33,8 +43,11 @@ const c=body.condition,conditionKey=await hash(JSON.stringify([c.machine,c.origi
 const duplicate=await env.DB.prepare("SELECT id FROM reports WHERE owner_hash=? AND condition_key=? AND status='accepted'").bind(tokenHash,conditionKey).first();
 if(duplicate)return json({error:'already_submitted',id:duplicate.id},409,origin);
 const id=crypto.randomUUID();
-await env.DB.prepare("INSERT INTO reports(id,owner_hash,machine,condition_key,condition_json,vote,analysis_json,status) VALUES(?,?,?,?,?,?,?,'accepted')").bind(id,tokenHash,c.machine,conditionKey,JSON.stringify(c),body.vote,JSON.stringify({rating:null,expectedMedals:null,median:null,version:null})).run();
-return json({id,status:'accepted'},201,origin)}
+const burst=await env.DB.prepare("SELECT COUNT(*) n FROM reports WHERE condition_key=? AND vote=? AND created_at>datetime('now','-10 minutes')").bind(conditionKey,body.vote).first();
+const status=burst.n>=12?'quarantined':'accepted';
+await env.DB.prepare("INSERT INTO reports(id,owner_hash,machine,condition_key,condition_json,vote,analysis_json,status) VALUES(?,?,?,?,?,?,?,?)").bind(id,tokenHash,c.machine,conditionKey,JSON.stringify(c),body.vote,JSON.stringify({rating:null,expectedMedals:null,median:null,version:null}),status).run();
+if(status==='quarantined')await env.DB.prepare("INSERT INTO moderation_events(report_id,reason,previous_status,new_status) VALUES(?,?,?,?)").bind(id,'identical_condition_vote_burst','new','quarantined').run();
+return json({id,status},201,origin)}
 const match=path.match(/^\/api\/reports\/([a-f0-9-]{36})$/);if(!match)return json({error:'not_found'},404,origin);
 const row=await env.DB.prepare('SELECT * FROM reports WHERE id=? AND owner_hash=?').bind(match[1],tokenHash).first();
 if(!row)return json({error:'not_found'},404,origin);
@@ -47,5 +60,6 @@ if(previous.n>=20)return json({error:'edit_limit'},429,origin);
 await env.DB.batch([
 env.DB.prepare('INSERT INTO revisions(report_id,previous_json) VALUES(?,?)').bind(row.id,JSON.stringify({result:row.result,net:row.net,updated_at:row.updated_at})),
 env.DB.prepare("UPDATE reports SET result=?,net=?,updated_at=CURRENT_TIMESTAMP WHERE id=?").bind(result,net,row.id)
-]);return json({id:row.id,status:'accepted'},200,origin)
-}};
+]);return json({id:row.id,status:row.status},200,origin)
+},async scheduled(event,env){if(!env.DB)return;await snapshot(env)}
+};
