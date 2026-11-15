@@ -1,0 +1,4 @@
+const test=require('node:test'),assert=require('node:assert/strict');const {profile}=require('./store-profile');const context={store_id:'s',machine_id:'m',as_of:'2026-11-01',source_url:'https://example.org',rights:'verified',placement:'main',volatility:'volatile',installed_units:5,popularity:0.8};
+test('joins context with empty evidence without fabricating settings',()=>{const v=profile([],[context],{store_id:'s',asOf:'2026-11-15'});assert.equal(v.rows[0].installed_units,5);assert.equal(v.rows[0].setting_probability,null);});
+test('does not leak future machine context',()=>{const v=profile([],[{...context,as_of:'2026-11-20'}],{store_id:'s',asOf:'2026-11-15'});assert.equal(v.rows.length,0);});
+test('other stores excluded',()=>{const v=profile([],[{...context,store_id:'other'}],{store_id:'s',asOf:'2026-11-15'});assert.equal(v.rows.length,0);});
