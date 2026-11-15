@@ -440,6 +440,21 @@
       "url": "https://chonborista.com/slot/universal-slot/266983/",
       "warning": "AT間とCZ間のカウンターは別。等価と5.6枚持ちメダル・現金の開始G数を混同しない。出典の狙い目は期待値金額そのものではない。",
       "actionable": true
+    },
+    {
+      "id": "sencolle5-loop-max-ceiling-1280-collection",
+      "machine": "sencolle5",
+      "category": "ceiling",
+      "label": "スマスロ超極楽LOOP・最大天井（狙い目ではない）",
+      "value": 1280,
+      "unit": "コレ",
+      "context": "L戦国コレクション5 超極楽LOOP（2023年9月導入）の液晶コレ数で最大1280コレ。モードにより短縮。通常ゲーム数とは異なる。6.5号機のS戦国コレクション5とは別型式。",
+      "source": "ちょんぼりすた",
+      "kind": "公開解析の仕様上限・開始ボーダーではない",
+      "date": "2026-11-15確認（出典ページ2026-01-27更新）",
+      "url": "https://chonborista.com/slot/konami-slot/194133/",
+      "warning": "最大天井を1280Gから打てるという意味で使用しない。現行機種ID sencolle5 はS版/L版を区別していないため、型式識別が実装されるまで自動狙い目として表示しない。交換率・期待値・実戦サンプルは未検証。",
+      "actionable": false
     }
   ]
 }
