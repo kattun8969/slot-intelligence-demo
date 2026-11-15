@@ -56,5 +56,19 @@ jobs:
           else:
               print("no EV rule registry in this branch")
           PY
-      - name: Run EV research tests
-        run: python -m unittest discover -s tests -p 'test_ev_*.py' -v
+      - name: Run EV research tests (fail if none discovered)
+        run: |
+          python - <<'PY'
+          import pathlib, unittest
+          files = sorted(pathlib.Path('tests').glob('test_ev_*.py'))
+          if not files:
+              raise SystemExit('ERROR: no EV test modules found; empty test run is not success')
+          suite = unittest.defaultTestLoader.discover('tests', pattern='test_ev_*.py')
+          count = suite.countTestCases()
+          print(f'EV test files: {len(files)}; discovered cases: {count}', flush=True)
+          if count < 1:
+              raise SystemExit('ERROR: zero EV tests discovered')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit(1)
+          PY
