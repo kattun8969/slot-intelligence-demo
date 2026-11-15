@@ -18,3 +18,12 @@ test('element IDs are unique',()=>{
  assert.ok(ids.length>10);
  assert.equal(ids.length,new Set(ids).size);
 });
+
+test('backup carries revision history and restore defers it during review',()=>{
+ assert.match(html,/revision_history:SlotRevisionHistory\.checked\(history\)/);
+ assert.match(html,/pendingReview\.importedHistory=importedHistory/);
+ assert.match(html,/mergeImportedHistory\(importedHistory\)/);
+});
+test('pending review blocks deleting local archive',()=>{
+ assert.match(html,/if\(pendingReview\)\{\$\('status'\)\.textContent='変更確認を完了してから削除してください'/);
+});
