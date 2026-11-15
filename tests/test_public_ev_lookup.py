@@ -5,7 +5,7 @@ import json
 import tempfile
 import unittest
 
-from scripts.audit_hall_counter_csv import parse_csv
+from scripts.audit_hall_counter_csv import parse_csv, coverage_summary
 
 ROOT=Path(__file__).resolve().parents[1]
 DOCS=ROOT/"docs"
@@ -83,6 +83,24 @@ class CounterAuditorTests(unittest.TestCase):
             self.assertIn("claimed state needs independent outcome verification",hold[0]["reasons"])
             self.assertIn("counter rules unverified",hold[1]["reasons"])
         finally:d.cleanup()
+    def test_coverage_groups_without_claiming_ev(self):
+        a=self.basic_row()
+        b=self.basic_row()
+        b["event_label"]="駆け抜け"
+        b["counter_value"]="315"
+        d,p=self.csv([a,b])
+        try:
+            ok,held=parse_csv(p)
+            summary=coverage_summary(ok,held)
+            self.assertEqual(len(summary),1)
+            self.assertEqual(summary[0]["rows"],2)
+            self.assertEqual(summary[0]["accepted_rows"],1)
+            self.assertEqual(summary[0]["held_rows"],1)
+            self.assertEqual(summary[0]["accepted_percent"],50.0)
+            self.assertFalse(summary[0]["ev_ready"])
+            self.assertEqual(summary[0]["missing_outcome_details"],1)
+        finally:d.cleanup()
+
     def test_unknown_unit_rejected(self):
         a=self.basic_row()
         a["counter_unit"]="Gかpt"

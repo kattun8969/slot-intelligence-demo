@@ -96,9 +96,43 @@ def parse_csv(path:Path)->tuple[list[dict],list[dict]]:
     return accepted,held
 
 
+def coverage_summary(accepted: list[dict], held: list[dict]) -> list[dict]:
+    """Count observable event coverage, never invent AT/CZ transitions or settings."""
+    groups = {}
+    for row, accepted_flag in [(x, True) for x in accepted] + [
+        (x["record"], False) for x in held
+    ]:
+        key = (row["venue_id"], row["machine_model"], row["model_revision"])
+        entry = groups.setdefault(key, {
+            "venue_id": key[0], "machine_model": key[1],
+            "model_revision": key[2], "rows": 0, "accepted_rows": 0,
+            "held_rows": 0, "dates": set(), "machine_numbers": set(),
+            "labels_observed": set(), "units_observed": set(), "missing_outcome_details": 0,
+        })
+        entry["rows"] += 1
+        entry["accepted_rows" if accepted_flag else "held_rows"] += 1
+        entry["dates"].add(row["data_date"])
+        entry["machine_numbers"].add(row["machine_number"])
+        entry["labels_observed"].add(row["event_label"])
+        entry["units_observed"].add(row["counter_unit"])
+        if row["event_type"] in {"claimed_run_through", "claimed_single", "hit_unspecified", "unknown"}:
+            entry["missing_outcome_details"] += 1
+    output = []
+    for entry in groups.values():
+        entry["date_count"] = len(entry.pop("dates"))
+        entry["machine_count"] = len(entry.pop("machine_numbers"))
+        entry["labels_observed"] = sorted(entry["labels_observed"])
+        entry["units_observed"] = sorted(entry["units_observed"])
+        entry["accepted_percent"] = round(100 * entry["accepted_rows"] / entry["rows"], 1)
+        entry["ev_ready"] = False
+        entry["blocker"] = "Display records alone do not establish bets, credits, payouts, true outcomes or state transitions."
+        output.append(entry)
+    return sorted(output, key=lambda r: (r["venue_id"], r["machine_model"], r["model_revision"]))
+
+
 def run(path:Path, output:Path):
     ok,held=parse_csv(path)
-    report={"schema":1,"pipeline":"counter-audit-only","notice":"This is not a performance estimate. Hall counter event names do not establish CZ/AT/ST boundaries without independent verification.","accepted_count":len(ok),"held_count":len(held),"accepted":ok,"hold_for_review":held}
+    report={"schema":2,"pipeline":"counter-audit-only","notice":"This is not a performance estimate. Hall counter event names do not establish CZ/AT/ST boundaries without independent verification.","accepted_count":len(ok),"held_count":len(held),"coverage":coverage_summary(ok,held),"accepted":ok,"hold_for_review":held}
     output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print("validated",len(ok),"rows; held",len(held),"for manual review")
