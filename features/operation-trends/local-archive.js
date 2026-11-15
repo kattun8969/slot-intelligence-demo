@@ -5,7 +5,8 @@ const KEY='slot-intelligence.operation-trends.archive.v1',MAX=10000;
 function checked(data){
  if(!data||data.schema_version!==1||!Array.isArray(data.records)||!Array.isArray(data.contexts))throw Error('invalid archive schema');
  if(data.records.length>MAX||data.contexts.length>MAX)throw Error('archive too large');
- const records=evidence.deduplicate(data.records.filter(x=>x&&x.rights==='verified'));
+ for(const r of data.records){evidence.validate(r);if(r.rights!=='verified')throw Error('archive includes unverified rights');}
+ const records=evidence.deduplicate(data.records);
  const contexts=data.contexts.map(context.normalize);
  return {schema_version:1,records,contexts};
 }
