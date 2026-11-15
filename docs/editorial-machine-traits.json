@@ -17,11 +17,40 @@
       "machine_name": "スマスロモンキーターンⅤ",
       "verified_on": "2026-11-15",
       "setting_win_rates": [],
-      "payout_per_entry": [],
+      "payout_per_entry": [
+        {
+          "unit": "AT",
+          "mean_medals": 439,
+          "median_medals": 272,
+          "sample_size": 31651,
+          "inclusion_scope": "全AT、有利区間状態不問、青島VS波多野中の純増は現状維持程度と仮定",
+          "source_url": "https://note.com/g1slotapple/n/n4daeb2db6c33",
+          "source_type": "公開実戦データ集計",
+          "estimated": false,
+          "over_1000_rate_pct": 7.69,
+          "over_2000_rate_pct": 2.56,
+          "over_3000_rate_pct": 1.13
+        },
+        {
+          "unit": "AT",
+          "variant": "青島SG",
+          "mean_medals": 2513.2,
+          "median_medals": 2165,
+          "sample_size": 1090,
+          "inclusion_scope": "青島VS波多野当選かつ最低1回勝利のデータ。純増仮定あり",
+          "source_url": "https://note.com/g1slotapple/n/n4daeb2db6c33",
+          "source_type": "公開実戦データ集計",
+          "estimated": false,
+          "over_1000_rate_pct": 88.81,
+          "over_2000_rate_pct": 59.91,
+          "over_3000_rate_pct": 31.01
+        }
+      ],
       "volatility": {
-        "classification": "調査中",
-        "basis": "設定別AT獲得枚数分布、単発率、設定別勝率の公開実測値が未確認",
-        "confidence": "insufficient"
+        "classification": "一撃寄り（全AT平均439枚／中央値272枚）",
+        "basis": "全AT31,651件で平均439枚に対し中央値272枚。1000枚以上7.69%、2000枚以上2.56%。一部の大きな獲得が平均を押し上げる傾向。",
+        "confidence": "published_aggregate",
+        "source_url": "https://note.com/g1slotapple/n/n4daeb2db6c33"
       },
       "published_specs": [
         {
@@ -66,18 +95,21 @@
         }
       ],
       "editorial_assessment": {
-        "headline": "高設定ほどAT初当たりが軽い。ATの一撃性・設定別勝率は検証待ち",
-        "summary": "設定1のAT初当たり1/299.8に対して設定6は1/222.9。機械割も設定1の97.9%から設定6の114.9%へ上昇する。ただし、この差だけで設定6の実戦勝率やAT一撃性能を推定しない。低設定の通常打ちと天井・モード狙いは分けて評価する。",
+        "headline": "AT獲得は中央値272枚・平均439枚。大きな一撃は少数に偏る",
+        "summary": "公開集計の全AT31,651件では平均439枚、中央値272枚。1000枚以上は7.69%、2000枚以上は2.56%で、平均値だけでは典型的なAT獲得枚数を表しにくい。上位AT青島SGは別集計で平均2513.2枚だが、当選かつ最低1回勝利したデータに限る。機械割・勝率・AT獲得枚数は別の指標。低設定の通常打ち可否や高設定の後ヅモは残り時間と設定推測根拠を別途評価する。",
         "labels": [],
-        "confidence": "published_spec_only",
+        "confidence": "published_aggregate",
         "counterpoints": [
           "高設定でも短時間の勝率は未確認",
           "平均獲得枚数を機械割から逆算した理論推計は実戦のAT平均枚数ではない",
-          "全設定混合の勝率は設定別の勝率を表さない"
+          "全設定混合の勝率は設定別の勝率を表さない",
+          "AT獲得枚数の分布は設定別ではない",
+          "公開集計は全店舗・全期間を代表する無作為標本とは限らない"
         ],
         "sources": [
           "https://nana-press.com/kaiseki/machine/644/",
-          "https://report.papimo.jp/common/machine_total.php?machine=223100009"
+          "https://report.papimo.jp/common/machine_total.php?machine=223100009",
+          "https://note.com/g1slotapple/n/n4daeb2db6c33"
         ],
         "updated_at": "2026-11-15"
       }
