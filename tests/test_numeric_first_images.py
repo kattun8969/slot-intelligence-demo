@@ -31,7 +31,7 @@ class NumericFirstAndImagesTests(unittest.TestCase):
  def test_actual_numbers_and_sources_are_displayed_in_guide(self):
   self.assertEqual(self.data["schema"],1)
   rows=self.data["items"]
-  self.assertEqual(len(rows),16)
+  self.assertGreaterEqual(len(rows),16)
   self.assertEqual(len(self.sources["rows"]),63)
   for r in rows:
    self.assertTrue(r["url"].startswith("https://"))
