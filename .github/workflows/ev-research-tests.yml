@@ -1,0 +1,74 @@
+name: Validate EV research modules
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/ev_*.py'
+      - 'tests/test_ev_*.py'
+      - 'data/ev/**'
+      - 'docs/EV_*.md'
+      - '.github/workflows/ev-research-tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ev_*.py'
+      - 'tests/test_ev_*.py'
+      - 'data/ev/**'
+      - '.github/workflows/ev-research-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ev-research-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Python EV unit tests and source syntax
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile research modules
+        run: |
+          python - <<'PY'
+          import pathlib, py_compile
+          for path in sorted(pathlib.Path("scripts").glob("ev_*.py")):
+              py_compile.compile(str(path), doraise=True)
+              print("compiled", path)
+          PY
+      - name: Validate EV counter rule JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("data/ev/counter-rules.json")
+          if path.exists():
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              assert payload.get("schema") == 1
+              assert isinstance(payload.get("rules"), list)
+              print("rule count", len(payload["rules"]))
+          else:
+              print("no EV rule registry in this branch")
+          PY
+      - name: Run EV research tests (fail if none discovered)
+        run: |
+          python - <<'PY'
+          import pathlib, unittest
+          files = sorted(pathlib.Path('tests').glob('test_ev_*.py'))
+          if not files:
+              raise SystemExit('ERROR: no EV test modules found; empty test run is not success')
+          suite = unittest.defaultTestLoader.discover('tests', pattern='test_ev_*.py')
+          count = suite.countTestCases()
+          print(f'EV test files: {len(files)}; discovered cases: {count}', flush=True)
+          if count < 1:
+              raise SystemExit('ERROR: zero EV tests discovered')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit(1)
+          PY
