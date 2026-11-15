@@ -1,0 +1,43 @@
+name: community-api-tests
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "features/community-judgment/**"
+      - ".github/workflows/community-api-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "features/community-judgment/**"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check Worker syntax
+        run: node --check backend/community-worker.js
+      - name: Check browser script syntax
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import vm from 'node:vm';
+          const html=fs.readFileSync('features/community-judgment/index.html','utf8');
+          const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+          if(scripts.length!==1)throw Error('Expected one inline script');
+          new vm.Script(scripts[0][1]);
+          console.log('Browser script syntax OK');
+          NODE
+      - name: Validate database schema
+        run: |
+          python - <<'PY'
+          import sqlite3
+          db=sqlite3.connect(':memory:')
+          db.executescript(open('backend/schema.sql').read())
+          for table in ['reports','revisions','moderation_events','aggregate_snapshots']:
+              assert db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone(), table
+          print('D1-compatible SQLite schema parsed')
+          PY
