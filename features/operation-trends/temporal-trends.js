@@ -22,8 +22,8 @@ function summarize(records,opts={}){
  };
  const recent=window(recentStart,asOf),baseline=window(oldStart,oldEnd);
  // Counts from unequal windows are not comparable without normalization.
- const rate=w=>w.days?((w.confirmed_reports+w.event_targets)/w.days):null;
- const a=rate(recent),b=rate(baseline);
+ const rate=(w,calendarDays)=>(w.confirmed_reports+w.event_targets)/calendarDays;
+ const a=rate(recent,recentDays),b=rate(baseline,baselineDays);
  let direction='判断不可';
  // This is a change in reported evidence frequency, not change in setting probability.
  if(recent.days>=5&&baseline.days>=5&&recent.independent_sources>=2&&baseline.independent_sources>=2&&a!==null&&b!==null){
@@ -32,7 +32,7 @@ function summarize(records,opts={}){
   else if(a<b/1.5)direction='根拠報告が減少';
   else direction='根拠報告は概ね横ばい';
  }
- return {schema_version:1,as_of:asOf,store_id:opts.store_id??null,machine_id:opts.machine_id??null,recent,baseline,reported_evidence_direction:direction,setting_probability:null,prospective_signal:'判断不可',disclaimer:'公開済み根拠の報告頻度の比較。高設定投入率・今後の投入確率ではない。対象日数・媒体数・公開バイアスに注意。'};
+ return {schema_version:1,as_of:asOf,store_id:opts.store_id??null,machine_id:opts.machine_id??null,recent,baseline,reported_evidence_direction:direction,recent_reports_per_calendar_day:a,baseline_reports_per_calendar_day:b,setting_probability:null,prospective_signal:'判断不可',disclaimer:'公開済み根拠の報告頻度の比較。高設定投入率・今後の投入確率ではない。報告件数は暦日で正規化。観測日の偏り・媒体数・公開バイアスに注意。'};
 }
 return {summarize};
 });
