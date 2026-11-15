@@ -17,3 +17,9 @@ test('merge rejects malformed imported history without mutating current',()=>{
  assert.throws(()=>h.merge(one,{schema_version:1,entries:[{}]}));
  assert.equal(one.entries.length,1);
 });
+
+test('nested object key order is not recorded as an update',()=>{
+ const before={...empty,records:[{...row,metadata:{one:1,two:{a:2,b:3}}}]};
+ const after={...empty,records:[{...row,metadata:{two:{b:3,a:2},one:1}}]};
+ assert.equal(h.record(h.empty(),before,after,at).entries.length,0);
+});
