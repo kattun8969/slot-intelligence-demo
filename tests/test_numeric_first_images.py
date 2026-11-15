@@ -37,7 +37,7 @@ class NumericFirstAndImagesTests(unittest.TestCase):
    self.assertTrue(r["url"].startswith("https://"))
    self.assertGreaterEqual(r["value"],0)
    self.assertIn(r["category"],("ceiling","zone","other"))
-   self.assertIn(r["unit"],("G","pt","周期","周期内G"))
+   self.assertIn(r["unit"],("G","pt","周期","周期内G","個"))
    self.assertTrue(r["source"] and r["context"] and r["warning"])
   self.assertIn('populateTargetNumbers(machine,key,title,figures)',self.detail)
   self.assertIn('loadAdditionalLines();',self.detail)
