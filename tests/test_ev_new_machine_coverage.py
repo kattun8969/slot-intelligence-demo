@@ -30,7 +30,7 @@ class CoverageTests(unittest.TestCase):
                    {"scenarios":[scenario()]},as_of=date(2026,11,15))
         self.assertTrue(r["machines"][0]["needs_source_research"])
     def test_24h_warning(self):
-        r=coverage({"machines":[{"id":"7489","name":"Vivy","url":"https://example.org","first_seen":"2026-11-14"}]},
+        r=coverage({"machines":[{"id":"7489","name":"Vivy","url":"https://example.org","first_seen":"2026-11-13"}]},
                    {"scenarios":[scenario()]},as_of=date(2026,11,15))
         self.assertTrue(r["machines"][0]["target_24h_exceeded"])
     def test_duplicate_catalog_id(self):
