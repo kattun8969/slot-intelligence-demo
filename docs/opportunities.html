@@ -54,6 +54,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <section id="detail-panel" class="card" hidden>
 <div class="actions"><a class="btn secondary" href="#list">← 狙い目一覧へ戻る</a><a id="detail-alternative-link" class="btn" href="./alternatives.html">この台を見送り、別の候補を探す</a><a class="btn secondary" href="./index.html">現地メモへ</a></div>
 <h2 id="detail-name"></h2>
+<div id="public-ev-entry" class="ggo-lab-entry" hidden><strong>公開期待値の簡易チェック</strong><p>現在の状態とG数を選ぶだけ。公開表の該当する掲載行、または掲載行間の参考値を調べて実戦メモに転記できます。初当たり・獲得枚数などの仮定入力はありません。</p><a id="public-ev-open" class="btn" href="./public-ev-lookup.html">状態・G数から期待値を調べる</a></div>
 <div id="ev-simulator-entry" class="ggo-lab-entry" hidden><strong>期待収支の試算ツール（検証用）</strong><p>G数・スルー回数・状態・交換条件を入力。初期の当選率・出玉は仮定であり、実機の期待値や狙い目判定には使えません。</p><a id="ev-simulator-open" class="btn" href="./ev-simulator.html">試算ツールを開く</a></div>
 <section id="strategy-first" class="strategy-intro" aria-label="この機種の狙い方と現場の声">
 <h3>狙い目・やめどき</h3><section class="practical-picks" id="practical-picks"><h3>実際に探すならこの条件</h3><p class="help">高い期待値だけでなく、ホールで探す候補を掲載。空き台の見つけやすさは未集計です。</p><div id="practical-picks-list"></div><p id="practical-picks-status" class="help" role="status"></p></section><figure id="strategy-photo" class="strategy-machine-photo" hidden><img id="strategy-photo-img" alt="" loading="lazy"><figcaption id="strategy-photo-caption"></figcaption></figure><p class="strategy-guide-note">狙えるG数や周期は、台の状態・交換率で変わります。</p>
@@ -935,6 +936,9 @@ function showDetail(m){
  renderCommunity(m);
  renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
+ const publicEvMachines=new Set(["monkey5","tokyoghoul","seiya"]);
+ $("public-ev-entry").hidden=!publicEvMachines.has(m.id);
+ $("public-ev-open").href="./public-ev-lookup.html?machine="+encodeURIComponent(m.id);
  const trialMachines=new Set(["ggo","godeva2","garo","mahoako","lycoris","vivy"]);
  $("ev-simulator-entry").hidden=!trialMachines.has(m.id);
  $("ev-simulator-open").href="./ev-simulator.html?machine="+encodeURIComponent(m.id);
