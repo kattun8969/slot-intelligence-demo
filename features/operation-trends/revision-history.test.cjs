@@ -4,3 +4,16 @@ test('records changes with prior and current versions',()=>{const x=h.record(h.e
 test('records removals',()=>assert.equal(h.record(h.empty(),{...empty,records:[row]},empty,at).entries[0].action,'removed'));
 test('unchanged data does not add entries',()=>assert.equal(h.record(h.empty(),empty,empty,at).entries.length,0));
 test('invalid history rejected',()=>assert.throws(()=>h.checked({schema_version:1,entries:[{}]})));
+
+test('merge retains distinct imported history and ignores exact duplicates',()=>{
+ const one=h.record(h.empty(),empty,{...empty,records:[row]},at);
+ const two=h.record(h.empty(),empty,{...empty,records:[{...row,id:'2'}]},at);
+ const combined=h.merge(one,two);
+ assert.equal(combined.entries.length,2);
+ assert.equal(h.merge(combined,one).entries.length,2);
+});
+test('merge rejects malformed imported history without mutating current',()=>{
+ const one=h.record(h.empty(),empty,{...empty,records:[row]},at);
+ assert.throws(()=>h.merge(one,{schema_version:1,entries:[{}]}));
+ assert.equal(one.entries.length,1);
+});
