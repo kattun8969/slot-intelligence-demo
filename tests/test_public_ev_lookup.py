@@ -19,8 +19,8 @@ class PublicEvLookupTests(unittest.TestCase):
         cls.machines=(DOCS/"opportunities.html").read_text(encoding="utf-8")
     def test_conditions_and_points(self):
         rows=self.data["scenarios"]
-        self.assertEqual({x["machine"] for x in rows},{"monkey5","tokyoghoul","seiya","ragnador","vivy"})
-        self.assertEqual(len(rows),9)
+        self.assertEqual({x["machine"] for x in rows},{"monkey5","tokyoghoul","seiya","ragnador","vivy","ggo"})
+        self.assertEqual(len(rows),14)
         for x in rows:
             self.assertTrue(x["url"].startswith("https://"))
             self.assertTrue(x["exit"] and x["preconditions"] and x["price"])
