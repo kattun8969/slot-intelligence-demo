@@ -20,3 +20,9 @@ test('context change requires separate approval',()=>{
  const key=JSON.stringify(['s','m','2026-11-01']);
  assert.equal(x.apply(before,after,[{kind:'contexts',key}]).contexts[0].installed_units,6);
 });
+
+test('nested object key order does not cause a false revision conflict',()=>{
+ const before={...a,records:[{...row,metadata:{one:1,two:{a:2,b:3}}}]};
+ const after={...a,records:[{...row,metadata:{two:{b:3,a:2},one:1}}]};
+ assert.equal(x.preview(before,after).conflicts.length,0);
+});
