@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "checked_at": "2026-11-15",
-  "note": "一般公開された期待収支の代表行。全表の転載ではなく条件別の一部行を参照。入力G数が掲載行の間なら線形補間で推定し、元資料の実測値ではないと表示。掲載範囲外・不適切な条件では計算しない。周期やptの特定が必要な台では単純Gのみの表と混同しない。",
+  "note": "一般公開された期待収支の代表行。全表の転載ではなく条件別の一部行を参照。入力G数が掲載行の間なら線形補間で推定し、元資料の実測値ではないと表示。掲載範囲外・不適切な条件では計算しない。周期やptの特定が必要な台では単純Gのみの表と混同しない。 GGOのボーナス間Gは液晶G数とは一致しない場合がある。対応する機種の入力カウンターを明示。",
   "scenarios": [
     {
       "id": "monkey5-standard",
@@ -361,6 +361,302 @@
           400,
           5640
         ]
+      ]
+    },
+    {
+      "machine": "ggo",
+      "counter": "bonus",
+      "unit": "G",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/ggo-tenjo",
+      "checked_at": "2026-11-15",
+      "counter_origin": "data_counter",
+      "is_display_counter": true,
+      "preconditions": [
+        "データカウンター（台の現在G）を使用。液晶Gと混同しない",
+        "通常SJ後／駆け抜け後／朝一変更後を混同しない",
+        "CZ・前兆中の台や上位ST後は表の除外条件に注意",
+        "前回SJが2セット以上（駆け抜けではない）",
+        "スルーはSJ後、SJなしボーナスの回数"
+      ],
+      "id": "ggo-after-sj-0to5",
+      "label": "SJ非駆け抜け後／0〜5スルー／次のボーナスまで",
+      "state": "non_runthrough",
+      "through_range": [
+        0,
+        5
+      ],
+      "exit": "次回ボーナスまで。SJ後は帯終了の液晶50Gまで、単発で5スルーになったらSJ当選まで継続",
+      "points": [
+        [
+          100,
+          -210
+        ],
+        [
+          200,
+          -580
+        ],
+        [
+          300,
+          10
+        ],
+        [
+          400,
+          10
+        ],
+        [
+          500,
+          1440
+        ],
+        [
+          600,
+          880
+        ],
+        [
+          700,
+          2950
+        ]
+      ],
+      "extra": [
+        "前回SJが2セット以上（駆け抜けではない）",
+        "スルーはSJ後、SJなしボーナスの回数"
+      ]
+    },
+    {
+      "machine": "ggo",
+      "counter": "bonus",
+      "unit": "G",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/ggo-tenjo",
+      "checked_at": "2026-11-15",
+      "counter_origin": "data_counter",
+      "is_display_counter": true,
+      "preconditions": [
+        "データカウンター（台の現在G）を使用。液晶Gと混同しない",
+        "通常SJ後／駆け抜け後／朝一変更後を混同しない",
+        "CZ・前兆中の台や上位ST後は表の除外条件に注意",
+        "SJが1セットで終了しGUN GALE BONUSなし（駆け抜け）",
+        "駆け抜け後のスルー0回。CZ中は除外"
+      ],
+      "id": "ggo-after-runthrough-0",
+      "label": "SJ駆け抜け直後／0スルー／次のボーナスまで",
+      "state": "runthrough",
+      "through_range": [
+        0,
+        0
+      ],
+      "exit": "次のボーナスまで。単発で1スルーになれば即やめ",
+      "points": [
+        [
+          100,
+          20
+        ],
+        [
+          200,
+          -70
+        ],
+        [
+          300,
+          600
+        ],
+        [
+          400,
+          180
+        ],
+        [
+          450,
+          880
+        ],
+        [
+          500,
+          1990
+        ],
+        [
+          600,
+          2540
+        ]
+      ],
+      "extra": [
+        "SJが1セットで終了しGUN GALE BONUSなし（駆け抜け）",
+        "駆け抜け後のスルー0回。CZ中は除外"
+      ]
+    },
+    {
+      "machine": "ggo",
+      "counter": "bonus",
+      "unit": "G",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/ggo-tenjo",
+      "checked_at": "2026-11-15",
+      "counter_origin": "data_counter",
+      "is_display_counter": true,
+      "preconditions": [
+        "データカウンター（台の現在G）を使用。液晶Gと混同しない",
+        "通常SJ後／駆け抜け後／朝一変更後を混同しない",
+        "CZ・前兆中の台や上位ST後は表の除外条件に注意",
+        "駆け抜け後の単発ボーナス1回を確認",
+        "SJ当選までの継続計算であり、次のボーナスまでの値とは混同しない"
+      ],
+      "id": "ggo-after-runthrough-1-sj",
+      "label": "SJ駆け抜け後／1スルー／SJ当選まで",
+      "state": "runthrough",
+      "through_range": [
+        1,
+        1
+      ],
+      "exit": "SJ当選まで。SJ後は帯終了（液晶50G）を確認して終了",
+      "points": [
+        [
+          100,
+          1530
+        ],
+        [
+          200,
+          1290
+        ],
+        [
+          300,
+          2230
+        ],
+        [
+          400,
+          2030
+        ],
+        [
+          500,
+          2970
+        ],
+        [
+          600,
+          3160
+        ],
+        [
+          700,
+          5830
+        ]
+      ],
+      "extra": [
+        "駆け抜け後の単発ボーナス1回を確認",
+        "SJ当選までの継続計算であり、次のボーナスまでの値とは混同しない"
+      ]
+    },
+    {
+      "machine": "ggo",
+      "counter": "bonus",
+      "unit": "G",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/ggo-tenjo",
+      "checked_at": "2026-11-15",
+      "counter_origin": "data_counter",
+      "is_display_counter": true,
+      "preconditions": [
+        "データカウンター（台の現在G）を使用。液晶Gと混同しない",
+        "通常SJ後／駆け抜け後／朝一変更後を混同しない",
+        "CZ・前兆中の台や上位ST後は表の除外条件に注意",
+        "駆け抜け後に単発ボーナス2回が確実",
+        "スルー天井によるSJ当選を想定。状態判別できない場合は対象外"
+      ],
+      "id": "ggo-after-runthrough-2-sj",
+      "label": "SJ駆け抜け後／2スルー／SJ当選まで",
+      "state": "runthrough",
+      "through_range": [
+        2,
+        2
+      ],
+      "exit": "SJ当選まで。SJ後は帯終了の液晶50Gまで",
+      "points": [
+        [
+          50,
+          3580
+        ],
+        [
+          100,
+          4700
+        ],
+        [
+          200,
+          4350
+        ],
+        [
+          300,
+          5390
+        ],
+        [
+          400,
+          4630
+        ],
+        [
+          500,
+          5260
+        ],
+        [
+          600,
+          4700
+        ]
+      ],
+      "extra": [
+        "駆け抜け後に単発ボーナス2回が確実",
+        "スルー天井によるSJ当選を想定。状態判別できない場合は対象外"
+      ]
+    },
+    {
+      "machine": "ggo",
+      "counter": "bonus",
+      "unit": "G",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/ggo-tenjo",
+      "checked_at": "2026-11-15",
+      "counter_origin": "data_counter",
+      "is_display_counter": true,
+      "preconditions": [
+        "データカウンター（台の現在G）を使用。液晶Gと混同しない",
+        "通常SJ後／駆け抜け後／朝一変更後を混同しない",
+        "CZ・前兆中の台や上位ST後は表の除外条件に注意",
+        "前回SJが2セット以上",
+        "SJ後にSJ非当選ボーナス6回を確認"
+      ],
+      "id": "ggo-after-sj-6",
+      "label": "SJ非駆け抜け後／6スルー／次のボーナスまで",
+      "state": "non_runthrough",
+      "through_range": [
+        6,
+        6
+      ],
+      "exit": "次のボーナスまで（原資料ではSJ当選率が高い列）",
+      "points": [
+        [
+          50,
+          5160
+        ],
+        [
+          100,
+          5950
+        ],
+        [
+          200,
+          5400
+        ],
+        [
+          300,
+          5670
+        ],
+        [
+          400,
+          5810
+        ],
+        [
+          500,
+          6610
+        ]
+      ],
+      "extra": [
+        "前回SJが2セット以上",
+        "SJ後にSJ非当選ボーナス6回を確認"
       ]
     }
   ]

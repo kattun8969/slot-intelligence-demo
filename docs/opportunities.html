@@ -60,6 +60,7 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <div><label for="quick-ev-condition">状態・カウンター</label><select id="quick-ev-condition"></select></div>
 <div><label for="quick-ev-games">現在のG数</label><input id="quick-ev-games" type="number" min="0" step="1" value="300" inputmode="numeric"></div>
 </div>
+<label><input id="quick-ev-confirm" type="checkbox">台の表示器のG数・前回の当選結果・状態が選択した条件と一致することを確認しました</label>
 <p id="quick-ev-result" class="amount" aria-live="polite">公開データを確認中</p>
 <p id="quick-ev-explanation" class="help"></p>
 <div class="actions"><button id="quick-ev-memo" type="button" disabled>この条件を期待値メモへ</button><a id="public-ev-open" class="btn secondary" href="./public-ev-lookup.html">対応条件・根拠を詳しく見る</a></div>
@@ -945,7 +946,9 @@ function renderInlinePublicEV(m){
  if(panel.hidden)return;
  const choices=INLINE_PUBLIC_EV.filter(x=>x.machine===m.id);
  const select=$("quick-ev-condition");
- const previous=select.dataset.machine===m.id?select.value:"";
+ const machineChanged=select.dataset.machine!==m.id;
+ const previous=machineChanged?"":select.value;
+ if(machineChanged)$("quick-ev-confirm").checked=false;
  select.replaceChildren();
  for(const item of choices){
   const option=document.createElement("option");option.value=item.id;
@@ -957,8 +960,13 @@ function renderInlinePublicEV(m){
  $("quick-ev-memo").disabled=true;
  const scenario=choices.find(x=>x.id===select.value);
  if(!scenario){$("quick-ev-result").textContent="準備中";$("quick-ev-explanation").textContent="この機種の公開期待値表はまだ照合できていません。";return}
- const games=Number($("quick-ev-games").value);
+ const raw=$("quick-ev-games").value.trim();
+ const games=raw===""?NaN:Number(raw);
  const result=publicEvCheck(scenario,games);
+ if(!$("quick-ev-confirm").checked){
+  $("quick-ev-result").textContent="状態を確認してください";
+  $("quick-ev-explanation").textContent="前回のST結果・スルー回数・カウンター起点を確認してから金額を表示します。";return;
+ }
  if(!result){
   $("quick-ev-result").textContent="掲載条件の範囲外";
   $("quick-ev-explanation").textContent="参照できるG数は"+scenario.points[0][0]+"〜"+scenario.points[scenario.points.length-1][0]+"G。CZ間・AT間や状態を確認してください。";
@@ -1019,7 +1027,7 @@ function showDetail(m){
  renderCommunity(m);
  renderConditionEvidence(m);
  $("detail-name").textContent=m.name;
- const publicEvMachines=new Set(["monkey5","tokyoghoul","seiya","ragnador","vivy"]);
+ const publicEvMachines=new Set(["monkey5","tokyoghoul","seiya","ragnador","vivy","ggo"]);
  $("public-ev-entry").hidden=!publicEvMachines.has(m.id);
  $("public-ev-open").href="./public-ev-lookup.html?machine="+encodeURIComponent(m.id);
  renderInlinePublicEV(m);
@@ -1189,7 +1197,8 @@ loadFieldReports();
 loadTargetingCategories();
 loadPracticalPicks();
 loadInlinePublicEV();
-$("quick-ev-condition").addEventListener("change",()=>{const m=selected();if(m)renderInlinePublicEV(m)});
+$("quick-ev-condition").addEventListener("change",()=>{$("quick-ev-confirm").checked=false;const m=selected();if(m)renderInlinePublicEV(m)});
+$("quick-ev-confirm").addEventListener("change",()=>{const m=selected();if(m)renderInlinePublicEV(m)});
 $("quick-ev-games").addEventListener("input",()=>{const m=selected();if(m)renderInlinePublicEV(m)});
 $("quick-ev-memo").addEventListener("click",saveInlineEVToMemo);
 loadReviewedReports();

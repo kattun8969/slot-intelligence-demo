@@ -18,7 +18,9 @@ class InlinePublicEvTests(unittest.TestCase):
   self.assertIn('href="./ev-simulator.html"',self.page)
  def test_scope_and_no_extrapolation(self):
   self.assertIn('g<p[0][0]||g>p[p.length-1][0]',self.page)
-  self.assertIn('["monkey5","tokyoghoul","seiya","ragnador","vivy"]',self.page)
+  self.assertIn('["monkey5","tokyoghoul","seiya","ragnador","vivy","ggo"]',self.page)
+  self.assertIn('id="quick-ev-confirm"',self.page)
+  self.assertIn('if(!$("quick-ev-confirm").checked)',self.page)
   self.assertIn("この機種の公開期待値表はまだ照合できていません",self.page)
 if __name__=="__main__":
  unittest.main()
