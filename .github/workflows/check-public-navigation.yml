@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'docs/haishio-re-first-look.html'
+      - 'docs/machine-detail.js'
+      - 'docs/machines/**'
+      - 'docs/editorial-machine-traits.json'
       - 'docs/index.html'
       - 'docs/opportunities.html'
       - 'docs/field-reports.json'
@@ -37,6 +40,9 @@ on:
     branches: [main]
     paths:
       - 'docs/haishio-re-first-look.html'
+      - 'docs/machine-detail.js'
+      - 'docs/machines/**'
+      - 'docs/editorial-machine-traits.json'
       - 'docs/index.html'
       - 'docs/opportunities.html'
       - 'docs/field-reports.json'
@@ -78,6 +84,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Verify machine detail JavaScript syntax
+        run: node --check docs/machine-detail.js
       - name: Verify inline JavaScript syntax
         run: |
           node - <<'NODE'

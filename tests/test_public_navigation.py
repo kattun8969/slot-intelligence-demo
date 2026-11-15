@@ -15,7 +15,7 @@ class PublicNavigationTests(unittest.TestCase):
  def test_every_card_has_full_hit_target_and_clear_detail_button(self):
   for marker in (
    'entry.className="tile-hit"',
-   'entry.href="./opportunities.html#machine="+encodeURIComponent(m.id)',
+   'entry.href=FEATURED_IDS.includes(m.id)?"./machines/"+(PAGE_IDS[m.id]||m.id)+".html":"./opportunities.html#machine="+encodeURIComponent(m.id)',
    'entry.setAttribute("aria-label",m.name+"の機種詳細・狙い方を開く")',
    '["機種詳細","./opportunities.html#machine="]',
    '.machine-tile .tile-links a{position:relative;z-index:2}',
