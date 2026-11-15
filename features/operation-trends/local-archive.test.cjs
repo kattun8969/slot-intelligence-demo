@@ -6,5 +6,5 @@ test('empty storage returns empty archive',()=>assert.deepEqual(a.load(store()),
 test('save and restore verified record',()=>{const s=store();a.save(s,{...empty,records:[row]});assert.equal(a.load(s).records.length,1);});
 test('merge removes duplicate evidence',()=>assert.equal(a.merge({...empty,records:[row]},{...empty,records:[row]}).records.length,1));
 test('reject malformed archive',()=>assert.throws(()=>a.checked({records:[],contexts:[]})));
-test('unverified records excluded',()=>assert.equal(a.checked({...empty,records:[{...row,rights:'unverified'}]}).records.length,0));
+test('unverified records rejected',()=>assert.throws(()=>a.checked({...empty,records:[{...row,rights:'unverified'}]}),/unverified rights/));
 test('clear removes saved data',()=>{const s=store();a.save(s,empty);a.clear(s);assert.equal(s.getItem(a.KEY),null);});
