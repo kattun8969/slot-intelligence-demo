@@ -18,6 +18,13 @@ function record(h,before,after,observedAt){const old=snapshot(before),next=snaps
  }
  return checked({schema_version:VERSION,entries});
 }
+function merge(current,imported){
+ const a=checked(current),b=checked(imported);
+ const seen=new Set(a.entries.map(e=>JSON.stringify(e)));
+ const entries=[...a.entries];
+ for(const e of b.entries){const key=JSON.stringify(e);if(!seen.has(key)){seen.add(key);entries.push(e);}}
+ return checked({schema_version:VERSION,entries});
+}
 function empty(){return {schema_version:VERSION,entries:[]};}
-return {empty,checked,record};
+return {empty,checked,record,merge};
 });
