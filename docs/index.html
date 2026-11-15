@@ -144,8 +144,9 @@ const DISCOVERY=[
 {id:"mahoako",name:"魔法少女にあこがれて",aliases:["まほあこ","マホアコ"],group:"other",colors:["#a65ea5","#ca6466"]},
 {id:"god",name:"GOD（型式確認中）",aliases:["ゴッド"],group:"other",colors:["#a77927","#445982"]}
 ];
+const FEATURED_IDS=["monkey5","tokyoghoul","seiya","ragnador","vivy","ggo","toaru2","mogumogu","sunbreak","world","aobuta","kanokari","lycoris","yoshimune","tensei2","juoh","otome5"];const PAGE_IDS={toaru2:"index2",sunbreak:"monhun",world:"worlddaistar"};for(const m of DISCOVERY){if(FEATURED_IDS.includes(m.id))m.group="popular";else if(m.group==="popular")m.group="other"}
 const CATALOG_GROUPS=[
-{key:"popular",heading:"注目されている機種",desc:"設置・検索動向などを参考に選んだ注目機種。リアルタイム順位ではありません。",style:"rail"},
+{key:"popular",heading:"注目されている機種",desc:"先行公開中の機種ページ17機種。カバネリは後日追加予定です。人気順のランキングではありません。",style:"rail"},
 {key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種。調査資料の追加機種も掲載",style:"grid"},
 {key:"recent",heading:"最近導入された台",desc:"2026年9〜10月導入のピックアップ",style:"grid"},
 {key:"other",heading:"ほかの機種も探す",desc:"継続稼働機種・調査中機種。古い機種だけを集めた一覧ではありません。",style:"list"},
@@ -182,10 +183,10 @@ function makeMachineTile(m){
  const meta=document.createElement("p");meta.textContent=m.group==="archive"?"noteに掲載／狙い目の調査中":m.date?"導入："+m.date:"機種別の狙い方・示唆を見る";
  const links=document.createElement("div");links.className="tile-links";
  for(const [title,path] of (m.group==="archive"?[["機種詳細","./opportunities.html#machine="]]:[["機種詳細","./opportunities.html#machine="],["狙い目","./strategy-cards.html#machine="],["終了画面・示唆","./hints.html#machine="]])){
-  const a=document.createElement("a");const newGuide=m.group==="archive"||!["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun","sunbreak","monkey5","sencolle5","kanokari","aobuta","world","lycoris","mahoako","juoh","yoshimune"].includes(m.id);const linkBase=title==="狙い目"&&newGuide?"./opportunities.html#machine=":path;a.href=linkBase+encodeURIComponent(m.id);a.textContent=title;links.append(a);
+  const a=document.createElement("a");const newGuide=m.group==="archive"||!["seiya","ggo","kabaneri","tokyoghoul","otome5","monhun","sunbreak","monkey5","sencolle5","kanokari","aobuta","world","lycoris","mahoako","juoh","yoshimune"].includes(m.id);const linkBase=title==="狙い目"&&newGuide?"./opportunities.html#machine=":path;a.href=title==="機種詳細"&&FEATURED_IDS.includes(m.id)?"./machines/"+(PAGE_IDS[m.id]||m.id)+".html":linkBase+encodeURIComponent(m.id);a.textContent=title;links.append(a);
  }
  body.append(h,meta,links);
- const entry=document.createElement("a");entry.className="tile-hit";entry.href="./opportunities.html#machine="+encodeURIComponent(m.id);entry.setAttribute("aria-label",m.name+"の機種詳細・狙い方を開く");
+ const entry=document.createElement("a");entry.className="tile-hit";entry.href=FEATURED_IDS.includes(m.id)?"./machines/"+(PAGE_IDS[m.id]||m.id)+".html":"./opportunities.html#machine="+encodeURIComponent(m.id);entry.setAttribute("aria-label",m.name+"の機種詳細・狙い方を開く");
  card.append(art,body,entry);return card;
 }
 function renderDiscovery(){
