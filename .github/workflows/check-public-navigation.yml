@@ -16,6 +16,11 @@ on:
       - 'docs/shop-note-extras.json'
       - 'docs/strategy-cards.html'
       - 'docs/alternatives.html'
+      - 'docs/public-ev-lookup.html'
+      - 'docs/public-ev-reference.json'
+      - 'docs/practical-picks.json'
+      - 'scripts/audit_hall_counter_csv.py'
+      - 'tests/test_public_ev_lookup.py'
       - 'docs/auto-machine-updates.html'
       - 'docs/auto-machine-discovery.json'
       - 'scripts/collect_machine_updates.py'
@@ -44,6 +49,11 @@ on:
       - 'docs/shop-note-extras.json'
       - 'docs/strategy-cards.html'
       - 'docs/alternatives.html'
+      - 'docs/public-ev-lookup.html'
+      - 'docs/public-ev-reference.json'
+      - 'docs/practical-picks.json'
+      - 'scripts/audit_hall_counter_csv.py'
+      - 'tests/test_public_ev_lookup.py'
       - 'docs/auto-machine-updates.html'
       - 'docs/auto-machine-discovery.json'
       - 'scripts/collect_machine_updates.py'
@@ -71,7 +81,7 @@ jobs:
           node - <<'NODE'
           const fs=require('fs');
           const {spawnSync}=require('child_process');
-          for(const file of ['docs/index.html','docs/opportunities.html','docs/hints.html','docs/hall-compare.html','docs/strategy-cards.html','docs/alternatives.html','docs/auto-machine-updates.html']){
+          for(const file of ['docs/index.html','docs/opportunities.html','docs/hints.html','docs/hall-compare.html','docs/strategy-cards.html','docs/alternatives.html','docs/auto-machine-updates.html','docs/public-ev-lookup.html']){
             const html=fs.readFileSync(file,'utf8');
             const blocks=html.split('<script>').slice(1).map(part=>part.split('</script>')[0]);
             if(!blocks.length)throw Error(file+': no inline script');
