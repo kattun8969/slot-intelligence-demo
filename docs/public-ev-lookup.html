@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none';connect-src 'self';style-src 'unsafe-inline';script-src 'unsafe-inline';base-uri 'none';form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none';connect-src 'self';frame-src 'self';style-src 'unsafe-inline';script-src 'unsafe-inline';base-uri 'none';form-action 'none'">
 <title>公開期待値から簡単確認｜Slot Intelligence</title>
 <style>
 *{box-sizing:border-box}body{font:15px/1.6 system-ui,-apple-system,"Noto Sans JP",sans-serif;background:#f2f6fa;color:#19354b;margin:0}
@@ -12,7 +12,7 @@ label{font-weight:650;display:block;font-size:14px}select,input{width:100%;paddi
 button,.btn{display:inline-block;border:0;background:#155f92;color:white;border-radius:9px;padding:12px 15px;font-weight:650;font-size:15px;text-decoration:none;cursor:pointer}
 button:disabled{opacity:.45;cursor:not-allowed}a{color:#185c8b}.actions{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}
 .row{border-top:1px solid #e5edf2;padding:9px 0}.pill{display:inline-block;background:#e5f0f9;color:#235773;font-size:12px;padding:3px 8px;border-radius:15px}
-#amount[hidden]{display:none}#result[hidden]{display:none}
+#amount[hidden]{display:none}#result[hidden]{display:none}.judgment{font-size:21px;font-weight:800;margin:8px 0}.judgment-note{font-size:13px;color:#536d80}iframe{display:block;width:100%;height:1050px;border:1px solid #d4e0e9;border-radius:10px;background:#fff}
 </style></head><body>
 <header><div><small>機種ページ用／公開の期待値掲載行から簡単確認</small><h1>G数から期待収支を調べる</h1>
 <a href="./opportunities.html">機種一覧に戻る</a></div></header>
@@ -30,12 +30,12 @@ button:disabled{opacity:.45;cursor:not-allowed}a{color:#185c8b}.actions{display:
 <p class="number" id="amount"></p>
 <p class="help" id="location"></p>
 <p class="help" id="method"></p>
-<div id="checks"></div>
+<div id="checks"></div><div class="row"><strong>参考の4段階判断</strong><p id="judgment" class="judgment">条件を確認してください</p><p id="judgment-note" class="judgment-note">公開期待収支に基づく暫定的な分類です。実戦での推奨・勝率を保証しません。</p></div>
 <p class="help" id="source"></p>
 <div class="actions"><button id="memo" type="button" disabled>期待値集計にメモする</button><a href="./opportunities.html" id="machine-link" class="btn">機種ページに戻る</a></div>
 <p class="help">転記後も自動保存はしません。条件が合っていると確認したうえで、実際の稼働記録を保存してください。</p>
 </section>
-<section class="card"><h2>掲載条件がない機種について</h2><p class="help">公開期待値表から状態・交換条件・終了条件まで確認できたケースだけ追加しています。該当する表がまだない機種には数値を表示しません。<a href="./ev-simulator.html">設定1の初当たり確率や出玉枚数を調整する検証用試算はこちら</a>に残しています。</p></section>
+<section class="card"><h2>投票・実戦報告</h2><p class="help">下のフォームで機種・起点・G数・示唆を入力して投稿できます。上の期待収支と投稿条件は別々に管理されます。<strong>投票前に両方の条件が一致するか確認してください。</strong></p><iframe title="みんなの期待値｜投票と実戦報告" loading="lazy" src="./features/community-judgment/index.html"></iframe><p class="help"><a href="./features/community-judgment/index.html">投稿フォームを別画面で開く</a></p></section><section class="card"><h2>掲載条件がない機種について</h2><p class="help">公開期待値表から状態・交換条件・終了条件まで確認できたケースだけ追加しています。該当する表がまだない機種には数値を表示しません。<a href="./ev-simulator.html">設定1の初当たり確率や出玉枚数を調整する検証用試算はこちら</a>に残しています。</p></section>
 </main>
 <script>
 "use strict";
@@ -61,9 +61,10 @@ function calculate(s,g){
  }
  return null;
 }
+function setJudgment(ev){const el=$("judgment"),note=$("judgment-note");if(ev===null){el.textContent="条件未確認・判定対象外";note.textContent="公開された期待収支の条件が確認できた場合のみ分類します。";return}const label=ev<0?"打ってはダメ":ev<1000?"打たない方が良い":ev<3000?"打ってみても良い":"打った方が良い";el.textContent=label;note.textContent="検証用の暫定基準（参考期待収支）：マイナス／0〜999円／1,000〜2,999円／3,000円以上。実際の狙い目・投資リスク・勝率を保証する評価ではありません。";}
 function refresh(){
  const item=scenarios.find(x=>x.id===$("scenario").value),raw=$("games").value.trim(),g=raw===""?NaN:Number(raw),r=calculate(item,g);
- current=null;$("memo").disabled=true;
+ current=null;$("memo").disabled=true;setJudgment(null);
  $("result").hidden=!item;
  if(!item)return;
  $("range").textContent="対応する掲載G数："+item.points[0][0]+"〜"+item.points[item.points.length-1][0]+"G ／ "+item.price+" ／ "+item.counter.toUpperCase()+"間 ／ やめどき："+item.exit;
@@ -79,7 +80,7 @@ function refresh(){
  $("estimate-label").textContent=r.exact?"公開された掲載行":"掲載行間を補間した概算";
  $("location").textContent="入力："+g+"G ／ "+item.label+" ／ "+item.price;
  $("method").textContent=r.exact?"公開表の該当する掲載行の値です。":r.lower+"Gと"+r.upper+"Gの掲載行を線形補間した便宜上の推定値です。ゾーン等では実際の期待値と大きく異なり得ます。";
- current={item,g,ev:Math.round(r.ev),exact:r.exact};
+ current={item,g,ev:Math.round(r.ev),exact:r.exact};setJudgment(r.ev);
  $("memo").disabled=false;
 }
 $("machine").addEventListener("change",refreshMachine);
