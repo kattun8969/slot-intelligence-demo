@@ -21,6 +21,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validate inline JavaScript on EV simulator
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, subprocess
+          page = Path('docs/ev-simulator.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script(?:\\s[^>]*)?>([\\s\\S]*?)</script>', page)
+          assert scripts, 'No inline scripts found'
+          for script in scripts:
+              subprocess.run(['node', '--check', '--input-type=commonjs'], input=script, text=True, check=True)
+          print('EV simulator inline JavaScript syntax OK')
+          PY
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
