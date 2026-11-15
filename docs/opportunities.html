@@ -54,7 +54,17 @@ footer{padding:8px 15px 25px;font-size:12px;color:var(--muted)}
 <section id="detail-panel" class="card" hidden>
 <div class="actions"><a class="btn secondary" href="#list">← 狙い目一覧へ戻る</a><a id="detail-alternative-link" class="btn" href="./alternatives.html">この台を見送り、別の候補を探す</a><a class="btn secondary" href="./index.html">現地メモへ</a></div>
 <h2 id="detail-name"></h2>
-<div id="public-ev-entry" class="ggo-lab-entry" hidden><strong>公開期待値の簡易チェック</strong><p>現在の状態とG数を選ぶだけ。公開表の該当する掲載行、または掲載行間の参考値を調べて実戦メモに転記できます。初当たり・獲得枚数などの仮定入力はありません。</p><a id="public-ev-open" class="btn" href="./public-ev-lookup.html">状態・G数から期待値を調べる</a></div>
+<div id="public-ev-entry" class="ggo-lab-entry" hidden><strong>公開期待値の簡易チェック</strong>
+<p>状態とG数だけで確認できます。設定1の初当たり率や獲得枚数を入力する必要はありません。対応する公開表の範囲外は算出せず、行間の値は参考の補間値として区別します。</p>
+<div class="group">
+<div><label for="quick-ev-condition">状態・カウンター</label><select id="quick-ev-condition"></select></div>
+<div><label for="quick-ev-games">現在のG数</label><input id="quick-ev-games" type="number" min="0" step="1" value="300" inputmode="numeric"></div>
+</div>
+<p id="quick-ev-result" class="amount" aria-live="polite">公開データを確認中</p>
+<p id="quick-ev-explanation" class="help"></p>
+<div class="actions"><button id="quick-ev-memo" type="button" disabled>この条件を期待値メモへ</button><a id="public-ev-open" class="btn secondary" href="./public-ev-lookup.html">対応条件・根拠を詳しく見る</a></div>
+<p class="help">その状態である根拠・交換率・終了条件を確認して使用してください。期待値の確度や実機での収支は保証できません。</p>
+</div>
 <div id="ev-simulator-entry" class="ggo-lab-entry" hidden><strong>期待収支の試算ツール（検証用）</strong><p>G数・スルー回数・状態・交換条件を入力。初期の当選率・出玉は仮定であり、実機の期待値や狙い目判定には使えません。</p><a id="ev-simulator-open" class="btn" href="./ev-simulator.html">試算ツールを開く</a></div>
 <section id="strategy-first" class="strategy-intro" aria-label="この機種の狙い方と現場の声">
 <h3>狙い目・やめどき</h3><section class="practical-picks" id="practical-picks"><h3>実際に探すならこの条件</h3><p class="help">高い期待値だけでなく、ホールで探す候補を掲載。空き台の見つけやすさは未集計です。</p><div id="practical-picks-list"></div><p id="practical-picks-status" class="help" role="status"></p></section><figure id="strategy-photo" class="strategy-machine-photo" hidden><img id="strategy-photo-img" alt="" loading="lazy"><figcaption id="strategy-photo-caption"></figcaption></figure><p class="strategy-guide-note">狙えるG数や周期は、台の状態・交換率で変わります。</p>
@@ -913,6 +923,79 @@ async function loadStrategyFirstRows(){
  }
  const m=selected();if(m)renderStrategyFirst(m);
 }
+let INLINE_PUBLIC_EV=[];
+let CURRENT_INLINE_EV=null;
+function publicEvCheck(s,g){
+ if(!s||!Number.isSafeInteger(g)||g<0)return null;
+ const p=s.points;
+ if(!Array.isArray(p)||p.length<2||g<p[0][0]||g>p[p.length-1][0])return null;
+ for(let i=0;i<p.length;i++){
+  const [n,v]=p[i];
+  if(g===n)return{amount:v,exact:true,low:n,high:n};
+  if(i<p.length-1){
+   const [m,w]=p[i+1];
+   if(g>n&&g<m)return{amount:v+(w-v)*(g-n)/(m-n),exact:false,low:n,high:m};
+  }
+ }
+ return null;
+}
+function renderInlinePublicEV(m){
+ CURRENT_INLINE_EV=null;
+ const panel=$("public-ev-entry");
+ if(panel.hidden)return;
+ const choices=INLINE_PUBLIC_EV.filter(x=>x.machine===m.id);
+ const select=$("quick-ev-condition");
+ const previous=select.dataset.machine===m.id?select.value:"";
+ select.replaceChildren();
+ for(const item of choices){
+  const option=document.createElement("option");option.value=item.id;
+  option.textContent=item.label+" ／ "+item.counter.toUpperCase()+"間";
+  select.append(option);
+ }
+ select.dataset.machine=m.id;
+ if(choices.some(x=>x.id===previous))select.value=previous;
+ $("quick-ev-memo").disabled=true;
+ const scenario=choices.find(x=>x.id===select.value);
+ if(!scenario){$("quick-ev-result").textContent="準備中";$("quick-ev-explanation").textContent="この機種の公開期待値表はまだ照合できていません。";return}
+ const games=Number($("quick-ev-games").value);
+ const result=publicEvCheck(scenario,games);
+ if(!result){
+  $("quick-ev-result").textContent="掲載条件の範囲外";
+  $("quick-ev-explanation").textContent="参照できるG数は"+scenario.points[0][0]+"〜"+scenario.points[scenario.points.length-1][0]+"G。CZ間・AT間や状態を確認してください。";
+  return;
+ }
+ const amount=Math.round(result.amount);
+ $("quick-ev-result").textContent=(amount>=0?"+":"")+amount.toLocaleString("ja-JP")+"円";
+ const type=result.exact?"公開表にある掲載行":result.low+"G〜"+result.high+"Gの間を線形補間した参考値（実測値ではありません）";
+ $("quick-ev-explanation").textContent=type+" ／ "+scenario.price+" ／ "+scenario.counter.toUpperCase()+"間 ／ 終了条件："+scenario.exit+" ／ 前提："+scenario.preconditions.join("、")+" ／ 掲載元："+scenario.source_name+"（"+scenario.checked_at+"確認）。";
+ CURRENT_INLINE_EV={scenario,games,amount,exact:result.exact};
+ $("quick-ev-memo").disabled=false;
+}
+function saveInlineEVToMemo(){
+ const data=CURRENT_INLINE_EV;
+ const m=selected();
+ if(!data||!m||data.scenario.machine!==m.id)return;
+ const s=data.scenario;
+ $("session-record").open=true;
+ $("played-status").value="not_played";
+ $("opportunity-kind").value=s.counter==="cz"?"zone":"ceiling";
+ $("manual-ev").value=String(data.amount);
+ $("ev-basis").value="公開期待値の"+(data.exact?"掲載行":"線形補間")+"｜"+s.label+"｜"+s.price+"｜終了："+s.exit+"｜出典："+s.url+"｜前提："+s.preconditions.join("／")+"｜確認日："+s.checked_at;
+ $("detail-counter-value").value=String(data.games);
+ $("detail-conditions").value="簡易公開期待値ツールから転記。"+s.counter.toUpperCase()+"間"+data.games+"G。状態・前兆・実機表示を現地で再確認してください。";
+ $("save-feedback").textContent="公開期待値の参考値を入力しました（未保存）。実際に打った場合のみ『打った』を選択してください。";
+ requestAnimationFrame(()=>$("session-record").scrollIntoView({behavior:"smooth",block:"center"}));
+}
+async function loadInlinePublicEV(){
+ try{
+  const res=await fetch("./public-ev-reference.json",{cache:"no-store"});
+  if(!res.ok)throw Error("HTTP "+res.status);
+  const data=await res.json();
+  if(data.schema!==1||!Array.isArray(data.scenarios))throw Error("schema");
+  INLINE_PUBLIC_EV=data.scenarios.filter(x=>x&&typeof x.id==="string"&&typeof x.machine==="string"&&Array.isArray(x.preconditions)&&Array.isArray(x.points)&&x.points.length>=2&&x.points.every(p=>Array.isArray(p)&&p.length===2&&Number.isFinite(p[0])&&Number.isFinite(p[1])));
+ }catch(_){INLINE_PUBLIC_EV=[];}
+ const m=selected();if(m)renderInlinePublicEV(m);
+}
 function consumeTrialMemo(m){
  let row;try{row=JSON.parse(sessionStorage.getItem("slotintel-ev-transfer-v1")||"null")}catch(_){return}
  if(!row||row.machine!==m.id)return;
@@ -939,6 +1022,7 @@ function showDetail(m){
  const publicEvMachines=new Set(["monkey5","tokyoghoul","seiya","ragnador","vivy"]);
  $("public-ev-entry").hidden=!publicEvMachines.has(m.id);
  $("public-ev-open").href="./public-ev-lookup.html?machine="+encodeURIComponent(m.id);
+ renderInlinePublicEV(m);
  const trialMachines=new Set(["ggo","godeva2","garo","mahoako","lycoris","vivy"]);
  $("ev-simulator-entry").hidden=!trialMachines.has(m.id);
  $("ev-simulator-open").href="./ev-simulator.html?machine="+encodeURIComponent(m.id);
@@ -1104,6 +1188,10 @@ loadAdditionalLines();
 loadFieldReports();
 loadTargetingCategories();
 loadPracticalPicks();
+loadInlinePublicEV();
+$("quick-ev-condition").addEventListener("change",()=>{const m=selected();if(m)renderInlinePublicEV(m)});
+$("quick-ev-games").addEventListener("input",()=>{const m=selected();if(m)renderInlinePublicEV(m)});
+$("quick-ev-memo").addEventListener("click",saveInlineEVToMemo);
 loadReviewedReports();
 $("load-hall-note").addEventListener("click",()=>{
  const m=selected();if(!m)return;
