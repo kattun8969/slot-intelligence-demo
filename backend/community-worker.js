@@ -26,11 +26,16 @@ if(origin!==allowed)return json({error:'origin_not_allowed'},403);
 if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{'access-control-allow-origin':origin,'access-control-allow-methods':'GET,POST,PATCH,DELETE,OPTIONS','access-control-allow-headers':'content-type,authorization','access-control-max-age':'600','vary':'Origin'}});
 const url=new URL(request.url),path=url.pathname;
 if(request.method==='GET'&&path==='/api/health')return json({ok:true},200,origin);
+if(request.method==='GET'&&path==='/api/analysis'){
+ const machine=url.searchParams.get('machine');
+ if(!validString(machine,100))return json({error:'invalid_machine'},400,origin);
+ return json({machine,available:false,rating:null,expectedMedals:null,medianMedals:null,source:null,analysisVersion:null,reason:'verified_condition_specific_analysis_not_loaded'},200,origin);
+}
 if(request.method==='GET'&&path==='/api/summary'){
 const machine=url.searchParams.get('machine');if(!validString(machine,100))return json({error:'invalid_machine'},400,origin);
 const rows=await env.DB.prepare("SELECT condition_key,vote,result,n,generated_at FROM aggregate_snapshots WHERE machine=?").bind(machine).all();
 return json({machine,groups:rows.results,updatedAt:rows.results[0]?.generated_at??null,note:'投稿の判断割合であり、期待値や勝率ではありません。集計はJST 10/16/22時に更新します'},200,origin)}
-if(!['POST','PATCH','DELETE'].includes(request.method))return json({error:'not_found'},404,origin);
+if(!['GET','POST','PATCH','DELETE'].includes(request.method))return json({error:'not_found'},404,origin);
 const token=(request.headers.get('authorization')||'').replace(/^Bearer /,'');
 if(!/^[a-f0-9]{64}$/.test(token))return json({error:'invalid_edit_token'},401,origin);
 const tokenHash=await hash(token);
@@ -51,15 +56,20 @@ return json({id,status},201,origin)}
 const match=path.match(/^\/api\/reports\/([a-f0-9-]{36})$/);if(!match)return json({error:'not_found'},404,origin);
 const row=await env.DB.prepare('SELECT * FROM reports WHERE id=? AND owner_hash=?').bind(match[1],tokenHash).first();
 if(!row)return json({error:'not_found'},404,origin);
+if(request.method==='GET')return json({id:row.id,condition:JSON.parse(row.condition_json),vote:row.vote,result:row.result,net:row.net,status:row.status,updatedAt:row.updated_at},200,origin);
 if(request.method==='DELETE'){await env.DB.prepare("UPDATE reports SET status='withdrawn',updated_at=CURRENT_TIMESTAMP WHERE id=?").bind(row.id).run();return json({id:row.id,status:'withdrawn'},200,origin)}
 let body;try{body=await request.json()}catch{return json({error:'invalid_json'},400,origin)}
 if(row.status==='withdrawn')return json({error:'withdrawn'},409,origin);
-const result=body?.result??'',net=body?.net??null;if(!validateReport(result,net))return json({error:'invalid_result'},400,origin);
+const c=body?.condition??JSON.parse(row.condition_json);
+const vote=body?.vote??row.vote;
+if(!validate(c)||!['play','skip'].includes(vote))return json({error:'invalid_input'},400,origin);
+const conditionKey=await hash(JSON.stringify([c.machine,c.origin,c.games,c.difference,c.differenceKind,c.cycle,c.points,c.hint]));
+const result=body?.result??row.result,net=body?.net===undefined?row.net:body.net;if(!validateReport(result,net))return json({error:'invalid_result'},400,origin);
 const previous=await env.DB.prepare('SELECT COUNT(*) n FROM revisions WHERE report_id=?').bind(row.id).first();
 if(previous.n>=20)return json({error:'edit_limit'},429,origin);
 await env.DB.batch([
-env.DB.prepare('INSERT INTO revisions(report_id,previous_json) VALUES(?,?)').bind(row.id,JSON.stringify({result:row.result,net:row.net,updated_at:row.updated_at})),
-env.DB.prepare("UPDATE reports SET result=?,net=?,updated_at=CURRENT_TIMESTAMP WHERE id=?").bind(result,net,row.id)
+env.DB.prepare('INSERT INTO revisions(report_id,previous_json) VALUES(?,?)').bind(row.id,JSON.stringify({condition:JSON.parse(row.condition_json),vote:row.vote,result:row.result,net:row.net,updated_at:row.updated_at})),
+env.DB.prepare("UPDATE reports SET machine=?,condition_key=?,condition_json=?,vote=?,result=?,net=?,updated_at=CURRENT_TIMESTAMP WHERE id=?").bind(c.machine,conditionKey,JSON.stringify(c),vote,result,net,row.id)
 ]);return json({id:row.id,status:row.status},200,origin)
 },async scheduled(event,env){if(!env.DB)return;await snapshot(env)}
 };
