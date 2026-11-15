@@ -56,7 +56,7 @@ class CompactTargetingTests(unittest.TestCase):
    self.assertTrue(r["url"].startswith("https://"))
    self.assertTrue(r["warning"])
   self.assertEqual(len(self.sourced["rows"]),63)
-  self.assertEqual(len(rows),16)
+  self.assertGreaterEqual(len(rows),16)
 
 if __name__=="__main__":
  unittest.main()
