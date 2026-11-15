@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-15",
+  "purpose": "機種ごとの出玉性能・設定別勝率・編集部考察の検証可能な保管形式",
+  "fields": {
+    "machine_id": "既存機種ID",
+    "setting_win_rates": "設定別の実戦勝率。集計の勝利定義・試行数・実戦時間・出典を必須とする。未確認は空配列",
+    "payout_per_entry": "AT/ST/ボーナス1回の獲得分布。平均値・中央値・単発率・駆け抜け率・集計対象・出典を分ける",
+    "volatility": "一撃性・安定性・収支分布。標準偏差や分位点がない場合は定性的な暫定評価のみ",
+    "editorial_assessment": "編集部の立ち回り考察。判断根拠・反例・確度・更新日を保持する",
+    "published_specs": "設定別AT初当たり・機械割等の公開スペック。勝率とは別",
+    "reference_metrics": "全設定混合集計などの参考指標。設定別勝率と混同しない"
+  },
+  "records": [
+    {
+      "machine_id": "monkey5",
+      "machine_name": "スマスロモンキーターンⅤ",
+      "verified_on": "2026-11-15",
+      "setting_win_rates": [],
+      "payout_per_entry": [
+        {
+          "unit": "AT",
+          "mean_medals": 439,
+          "median_medals": 272,
+          "sample_size": 31651,
+          "inclusion_scope": "全AT、有利区間状態不問、青島VS波多野中の純増は現状維持程度と仮定",
+          "source_url": "https://note.com/g1slotapple/n/n4daeb2db6c33",
+          "source_type": "公開実戦データ集計",
+          "estimated": false,
+          "over_1000_rate_pct": 7.69,
+          "over_2000_rate_pct": 2.56,
+          "over_3000_rate_pct": 1.13
+        },
+        {
+          "unit": "AT",
+          "variant": "青島SG",
+          "mean_medals": 2513.2,
+          "median_medals": 2165,
+          "sample_size": 1090,
+          "inclusion_scope": "青島VS波多野当選かつ最低1回勝利のデータ。純増仮定あり",
+          "source_url": "https://note.com/g1slotapple/n/n4daeb2db6c33",
+          "source_type": "公開実戦データ集計",
+          "estimated": false,
+          "over_1000_rate_pct": 88.81,
+          "over_2000_rate_pct": 59.91,
+          "over_3000_rate_pct": 31.01
+        }
+      ],
+      "volatility": {
+        "classification": "一撃寄り（全AT平均439枚／中央値272枚）",
+        "basis": "全AT31,651件で平均439枚に対し中央値272枚。1000枚以上7.69%、2000枚以上2.56%。一部の大きな獲得が平均を押し上げる傾向。",
+        "confidence": "published_aggregate",
+        "source_url": "https://note.com/g1slotapple/n/n4daeb2db6c33"
+      },
+      "published_specs": [
+        {
+          "metric": "AT初当たり確率",
+          "unit": "1/N",
+          "values": {
+            "1": 299.8,
+            "2": 295.5,
+            "4": 258.8,
+            "5": 235.7,
+            "6": 222.9
+          },
+          "source_url": "https://nana-press.com/kaiseki/machine/644/",
+          "source_type": "解析サイト",
+          "verified_on": "2026-11-15"
+        },
+        {
+          "metric": "機械割",
+          "unit": "%",
+          "values": {
+            "1": 97.9,
+            "2": 98.9,
+            "4": 104.5,
+            "5": 110.2,
+            "6": 114.9
+          },
+          "source_url": "https://nana-press.com/kaiseki/machine/644/",
+          "source_type": "解析サイト",
+          "verified_on": "2026-11-15"
+        }
+      ],
+      "reference_metrics": [
+        {
+          "metric": "全設定混合の平均勝率",
+          "value": 33.3,
+          "unit": "%",
+          "period": "2026-11-07〜2026-11-13",
+          "sample_machines": 101,
+          "sample_units": 4015,
+          "source_url": "https://report.papimo.jp/common/machine_total.php?machine=223100009",
+          "note": "全設定混合の集計であり設定1や設定6の勝率ではない。集計期間で変動する。サイト表示値を参照し、データ取得・再配布の利用条件は別途確認する。"
+        }
+      ],
+      "editorial_assessment": {
+        "headline": "AT獲得は中央値272枚・平均439枚。大きな一撃は少数に偏る",
+        "summary": "公開集計の全AT31,651件では平均439枚、中央値272枚。1000枚以上は7.69%、2000枚以上は2.56%で、平均値だけでは典型的なAT獲得枚数を表しにくい。上位AT青島SGは別集計で平均2513.2枚だが、当選かつ最低1回勝利したデータに限る。機械割・勝率・AT獲得枚数は別の指標。低設定の通常打ち可否や高設定の後ヅモは残り時間と設定推測根拠を別途評価する。",
+        "labels": [],
+        "confidence": "published_aggregate",
+        "counterpoints": [
+          "高設定でも短時間の勝率は未確認",
+          "平均獲得枚数を機械割から逆算した理論推計は実戦のAT平均枚数ではない",
+          "全設定混合の勝率は設定別の勝率を表さない",
+          "AT獲得枚数の分布は設定別ではない",
+          "公開集計は全店舗・全期間を代表する無作為標本とは限らない"
+        ],
+        "sources": [
+          "https://nana-press.com/kaiseki/machine/644/",
+          "https://report.papimo.jp/common/machine_total.php?machine=223100009",
+          "https://note.com/g1slotapple/n/n4daeb2db6c33"
+        ],
+        "updated_at": "2026-11-15"
+      }
+    }
+  ],
+  "editorial_labels": [
+    {
+      "id": "low_setting_at_potential",
+      "label": "低設定でもATの一撃に期待",
+      "required_evidence": "低設定条件下のAT獲得分布、上位AT移行率、設定差"
+    },
+    {
+      "id": "avoid_low_setting_normal_play",
+      "label": "低設定の通常打ちは非推奨",
+      "required_evidence": "低設定の機械割・実戦勝率・通常打ちの投資分布。天井狙い等は別評価"
+    },
+    {
+      "id": "high_setting_late_pick",
+      "label": "高設定の後ヅモ候補",
+      "required_evidence": "設定推測根拠・残り営業時間・現在状態・閉店リスク・期待収支"
+    }
+  ],
+  "rules": [
+    "機械割と勝率は別指標。設定別勝率を機械割から推定しない",
+    "AT初当たり1回の平均獲得枚数と上位ATを含む完走期待枚数を混同しない",
+    "出玉分布が歪むため平均値のみで安定・荒波を判断しない",
+    "設定別の勝率は実戦時間・交換率・設定確認方法・サンプル数を併記する",
+    "編集部考察は公開解析・実戦データ・SNSを区別して根拠と反例を示す",
+    "後ヅモは高設定確定ではなく推定根拠と残り時間を考慮し、機械割のみで推奨しない",
+    "根拠未確認の数値や機種固有の評価は追加しない"
+  ]
+}

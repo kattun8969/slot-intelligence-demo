@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'">
+<title>機種別の出玉性能・編集部考察 | Slot Intelligence</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fa;color:#163149;font:15px/1.65 system-ui,-apple-system,"Noto Sans JP",sans-serif}header{background:#112c49;color:#fff;padding:22px 16px}header>div,main{max-width:960px;margin:auto}h1{font-size:25px;margin:4px 0}h2{font-size:20px}h3{font-size:16px}a{color:#155c94}header a{color:#e6f3ff}main{padding:16px}section{background:#fff;border:1px solid #d7e2ec;border-radius:13px;padding:18px;margin:14px 0}select{font:inherit;padding:10px;border:1px solid #a5b9c8;border-radius:8px;width:100%;max-width:520px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:10px;text-align:left;border-bottom:1px solid #dae5ed}th{background:#eff5fa}.muted{color:#576d80;font-size:13px}.pill{display:inline-block;border-radius:15px;background:#edf3f8;padding:4px 10px;font-size:12px}.notice{padding:12px;background:#fff7e7;border-radius:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.tile{border:1px solid #d7e2ec;border-radius:10px;padding:13px}.value{font-size:21px;font-weight:750}ul{padding-left:22px}
+</style></head><body><header><div><a href="./opportunities.html">← 狙い目一覧に戻る</a><h1>機種別の出玉性能・編集部考察</h1><p>設定ごとの勝ちやすさと、ATの一撃性を出典付きで比較</p></div></header>
+<main><section><label for="machine">機種を選択</label><br><select id="machine"><option value="">読み込み中</option></select><p class="muted">設定別勝率・AT平均獲得枚数が未公表の場合は「未確認」と表示します。機械割を勝率に換算しません。</p></section>
+<div id="content" role="status"><section>データを読み込んでいます。</section></div>
+</main>
+<script>
+const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const validUrl=u=>typeof u==="string"&&u.startsWith("https://")?u:null;
+const link=(url,label)=>validUrl(url)?'<a href="'+escapeHtml(url)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(label)+'</a>':escapeHtml(label);
+function render(row){
+ const c=document.getElementById("content");
+ if(!row){c.innerHTML='<section>この機種の検証済み情報はまだ登録されていません。</section>';return}
+ const specs=row.published_specs||[];
+ const table=specs.map(m=>'<tr><th>'+escapeHtml(m.metric)+'</th>'+["1","2","4","5","6"].map(k=>'<td>'+escapeHtml(m.values?.[k]??"未確認")+(m.unit==="%"&&m.values?.[k]!=null?"%":"")+'</td>').join("")+'</tr>').join("");
+ const sources=[...new Set([...(row.editorial_assessment?.sources||[]),...specs.map(x=>x.source_url)])].filter(validUrl);
+ c.innerHTML='<section><h2>'+escapeHtml(row.machine_name)+'</h2><p class="pill">確認日：'+escapeHtml(row.verified_on)+'</p><h3>設定別の公開スペック</h3><div style="overflow-x:auto"><table><thead><tr><th>項目</th>'+["1","2","4","5","6"].map(x=>'<th>設定'+x+'</th>').join("")+'</tr></thead><tbody>'+table+'</tbody></table></div><p class="muted">AT初当たり確率の数値は 1/N の分母。設定別勝率ではありません。</p></section>'+
+ '<section><div class="grid"><div class="tile"><h3>設定別勝率</h3><div class="value">'+(row.setting_win_rates?.length?escapeHtml(row.setting_win_rates.map(x=>"設定"+x.setting+" "+x.value+"%").join(" / ")):"未確認")+'</div><p class="muted">実戦時間・勝利定義・設定確認方法が揃った場合のみ掲載</p></div><div class="tile"><h3>AT/ST/ボーナス1回の獲得枚数</h3><div class="value">'+(row.payout_per_entry?.length?escapeHtml(row.payout_per_entry.map(x=>x.mean_medals+"枚").join(" / ")):"未確認")+'</div><p class="muted">実測平均・理論推計・TYは区別して掲載</p></div><div class="tile"><h3>一撃性・安定性</h3><div class="value">'+escapeHtml(row.volatility?.classification||"調査中")+'</div><p class="muted">'+escapeHtml(row.volatility?.basis||"")+'</p></div></div></section>'+
+ '<section><h2>編集部考察</h2><h3>'+escapeHtml(row.editorial_assessment?.headline||"調査中")+'</h3><p>'+escapeHtml(row.editorial_assessment?.summary||"")+'</p><h3>注意点・反例</h3><ul>'+(row.editorial_assessment?.counterpoints||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join("")+'</ul><h3>出典</h3><ul>'+sources.map((x,i)=>'<li>'+link(x,"出典 "+(i+1))+'</li>').join("")+'</ul></section>';
+}
+fetch("./editorial-machine-traits.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(data=>{
+ const rows=data.records||[];const select=document.getElementById("machine");
+ select.innerHTML=rows.map((r,i)=>'<option value="'+i+'">'+escapeHtml(r.machine_name)+'</option>').join("")||'<option>登録データなし</option>';
+ const query=new URLSearchParams(location.search).get("machine");const index=rows.findIndex(x=>x.machine_id===query);
+ select.value=String(index>=0?index:0);render(rows[Number(select.value)]);
+ select.addEventListener("change",()=>render(rows[Number(select.value)]));
+}).catch(()=>{document.getElementById("content").innerHTML='<section class="notice">データを取得できませんでした。時間をおいて再読み込みしてください。</section>'});
+</script></body></html>
