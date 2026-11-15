@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
 <title>機種別期待収支の試算実験｜Slot Intelligence</title>
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;color:#15334b;background:#f2f6fb}*{box-sizing:border-box}
@@ -11,13 +11,13 @@ label{display:block;font-size:13px;font-weight:650}input,select{display:block;wi
 nav a,.action{display:inline-block;background:#155f91;color:white;text-decoration:none;border:0;border-radius:8px;padding:10px 13px;font-size:15px;cursor:pointer}
 a{color:#155f91}.muted{font-size:13px;color:#546f80;line-height:1.7}.warn{padding:12px;border-left:4px solid #b67a2b;background:#fff9eb}.result{font-size:29px;font-weight:800;color:#155f91}
 .mono{font-variant-numeric:tabular-nums}.actions{display:flex;flex-wrap:wrap;gap:9px}.check{display:flex;gap:8px;align-items:start;margin:10px 0}.check input{width:auto;min-width:19px;min-height:19px;margin:0}
-button:disabled{opacity:.45;cursor:not-allowed}.tag{font-size:12px;background:#e5eef5;border-radius:7px;padding:3px 7px}
+button:disabled{opacity:.45;cursor:not-allowed}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:9px;border-bottom:1px solid #dbe5ee;text-align:right}th:first-child,td:first-child{text-align:left}.judgment{font-size:21px;font-weight:800;color:#155f91}.table-wrap{overflow-x:auto}.tag{font-size:12px;background:#e5eef5;border-radius:7px;padding:3px 7px}
 </style></head>
 <body><main>
 <nav><a href="./opportunities.html">機種一覧へ戻る</a></nav>
 <h1>機種別・期待収支の試算</h1>
 <p class="warn">検証用の独立モデルです。初当たり確率は一部機種で公開された設定1の値を使用していますが、獲得枚数・状態別当選分布は仮定であり、実機の期待値・打ち始め目安・有料期待値表の再現ではありません。数値を見て打つかどうかの判断はできません。</p>
-<section><h2>1. 台の状態を入力</h2>
+<section><h2>公開期待値表を登録した場合の表示・動作</h2><p class="muted">以下は公開資料の掲載行を登録済みの検証用データです。仮の当選率から算出する下部の独立試算とは別です。表にないG数は参考補間値、掲載範囲外は判定しません。</p><div class="grid"><label>機種<select id="registered-machine"></select></label><label>登録済みの条件<select id="registered-scenario"></select></label><label>打ち始めG数<input id="registered-games" type="number" min="0" step="1" value="300"></label></div><p id="registered-status" class="muted">登録データを読み込み中…</p><p>参考期待収支：<strong id="registered-ev">未算出</strong></p><p>4段階判断：<span class="judgment" id="registered-judgment">未判定</span></p><p id="registered-note" class="muted"></p><div class="table-wrap"><table><thead><tr><th>開始G数</th><th>公開期待収支</th><th>暫定判断</th></tr></thead><tbody id="registered-rows"></tbody></table></div><p id="registered-source" class="muted"></p><p class="muted">暫定判断の区切り：マイナス＝打ってはダメ、0〜999円＝打たない方が良い、1,000〜2,999円＝打ってみても良い、3,000円以上＝打った方が良い。これは表示検証用で、投資リスクや実際の推奨を保証しません。</p></section><section><h2>投票・実戦報告</h2><p class="muted">登録済み期待値表の結果を確認したあと、投稿フォームで条件を入力して投票できます。現在は表の入力値と投稿フォームは独立しているため、投稿前に条件を照合してください。</p><p><a class="action" href="./features/community-judgment/index.html">新しい実戦を投稿・履歴を編集する</a></p></section><section><h2>1. 台の状態を入力（独立した仮定モデル）</h2>
 <div class="grid">
 <label>機種<select id="machine"></select></label>
 <label>状態<select id="state"></select></label>
@@ -46,6 +46,16 @@ button:disabled{opacity:.45;cursor:not-allowed}.tag{font-size:12px;background:#e
 </main>
 <script>
 "use strict";
+const REGISTERED_NAMES={monkey5:"モンキーターンV",tokyoghoul:"東京喰種",seiya:"聖闘士星矢",ragnador:"ラグナドール",vivy:"Vivy",ggo:"ガンゲイル・オンライン"};
+let registered=[];
+const reg=id=>document.getElementById(id);
+const tier=v=>v<0?"打ってはダメ":v<1000?"打たない方が良い":v<3000?"打ってみても良い":"打った方が良い";
+const yen=v=>(v>=0?"+":"")+Math.round(v).toLocaleString("ja-JP")+"円";
+function regScenario(){return registered.find(x=>x.id===reg("registered-scenario").value)}
+function updateRegistered(){const x=regScenario(),raw=reg("registered-games").value,g=Number(raw),rows=reg("registered-rows");rows.replaceChildren();reg("registered-source").replaceChildren();if(!x){reg("registered-ev").textContent="未算出";reg("registered-judgment").textContent="未判定";return}for(const [n,v] of x.points){const tr=document.createElement("tr");for(const value of [n+"G",yen(v),tier(v)]){const td=document.createElement("td");td.textContent=value;tr.append(td)}rows.append(tr)}reg("registered-status").textContent=x.label+"／"+x.price+"／終了条件："+x.exit;const a=document.createElement("a");a.href=x.url;a.textContent="公開元の条件を確認："+x.source_name;a.target="_blank";a.rel="noopener noreferrer";reg("registered-source").append(a);if(raw.trim()===""||!Number.isSafeInteger(g)||g<x.points[0][0]||g>x.points[x.points.length-1][0]){reg("registered-ev").textContent="掲載範囲外";reg("registered-judgment").textContent="判定対象外";reg("registered-note").textContent="表にあるG数の範囲で入力してください。";return}let ev=null,exact=false;for(let i=0;i<x.points.length;i++){const [n,v]=x.points[i];if(g===n){ev=v;exact=true;break}if(i+1<x.points.length&&g>n&&g<x.points[i+1][0]){const [n2,v2]=x.points[i+1];ev=v+(v2-v)*(g-n)/(n2-n);break}}if(ev===null){reg("registered-ev").textContent="未算出";reg("registered-judgment").textContent="判定対象外";return}reg("registered-ev").textContent=yen(ev);reg("registered-judgment").textContent=tier(ev);reg("registered-note").textContent=exact?"公開資料にある掲載行です。":"掲載行間の線形補間による参考値です。実機のゾーン等により大きく異なる可能性があります。"}
+function updateRegisteredMachine(){const options=registered.filter(x=>x.machine===reg("registered-machine").value);reg("registered-scenario").replaceChildren();for(const x of options){const option=document.createElement("option");option.value=x.id;option.textContent=x.label;reg("registered-scenario").append(option)}updateRegistered()}
+reg("registered-machine").addEventListener("change",updateRegisteredMachine);reg("registered-scenario").addEventListener("change",updateRegistered);reg("registered-games").addEventListener("input",updateRegistered);
+fetch("./public-ev-reference.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(data=>{if(data.schema!==1||!Array.isArray(data.scenarios))throw Error("invalid schema");registered=data.scenarios.filter(x=>x&&typeof x.machine==="string"&&Array.isArray(x.points)&&x.points.length>=2&&x.points.every(p=>Array.isArray(p)&&p.length===2&&Number.isFinite(p[0])&&Number.isFinite(p[1])));for(const id of [...new Set(registered.map(x=>x.machine))]){const option=document.createElement("option");option.value=id;option.textContent=REGISTERED_NAMES[id]||id;reg("registered-machine").append(option)}updateRegisteredMachine()}).catch(e=>{reg("registered-status").textContent="登録済み期待値表を読み込めません："+e.message});
 const MACHINES=[
  {id:"ggo",name:"ガンゲイル・オンライン",denom:192,base:31,verified:true,states:[["normal","通常／ボーナス間",975,"bonus"],["reset","設定変更後",300,"bonus"],["after","ST駆け抜け後",975,"bonus"]]},
  {id:"godeva2",name:"ゴジラ対エヴァンゲリオン2",denom:234.2,base:32,verified:true,states:[["normal","通常／ボーナス間",850,"bonus"],["reset","変更後／ボーナス間",400,"bonus"],["at","通常／AT間",1500,"at"],["at-reset","変更後／AT間",750,"at"]]},
