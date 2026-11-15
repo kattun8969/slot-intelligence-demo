@@ -502,6 +502,66 @@
       ],
       "stop": "GG終了後に引き戻しや特殊状態の有無を確認。未確認の区間は追わない",
       "assessment": "単発履歴が確実な台の検討用"
+    },
+    {
+      "machine": "ragnador",
+      "id": "ragnador-2026-reset",
+      "name": "設定変更後のAT天井短縮を確認",
+      "type": "reset",
+      "condition": "設定変更後はAT間500G＋α（通常AT間999G＋α）。この数値は天井到達位置であり、打ち始め推奨Gではありません",
+      "check": [
+        "設定変更された根拠があるか",
+        "CZ間500G＋αとAT間Gを混同していないか",
+        "CZスルー回数と前回のAT終了位置"
+      ],
+      "stop": "AT後の続行は機種固有の短縮・引き戻しと、途中のCZ結果で判断。AT後50Gフォローは短期実戦報告に基づくため要検証",
+      "ev_yen": null,
+      "ev_basis": "AT間・CZ間の天井値は公開解析。条件別の期待値額は未登録",
+      "availability": "設定変更確認が必要",
+      "assessment": "当日の履歴を分けて検討",
+      "confidence": "天井仕様確認・実戦狙い目要検証",
+      "source": "https://chonborista.com/slot/universal-slot/266983/",
+      "reviewed_at": "2026-11-15"
+    },
+    {
+      "machine": "ragnador",
+      "id": "ragnador-cz-counter",
+      "name": "CZ間とAT間を分けて確認",
+      "type": "zone",
+      "condition": "CZ間500G＋αでCZ、AT間999G＋αでAT（通常）。AT後・CZ失敗後はカウンター起点を確認",
+      "check": [
+        "CZ間カウンターとAT間カウンターの両方",
+        "前回のCZ成功・失敗履歴",
+        "AT初当りの起点、直近の駆け抜けの有無"
+      ],
+      "stop": "CZ当選後の結果と次のATまでの追い方を別に判断",
+      "ev_yen": null,
+      "ev_basis": "同じ500GでもCZ天井とAT天井で出玉・継続条件が異なる。開始目安の期待値未照合",
+      "availability": "CZ失敗後のAT間履歴が見える台を想定",
+      "assessment": "天井仕様のチェックカード",
+      "confidence": "仕様確認・期待値未登録",
+      "source": "https://slopachi-note.com/ragnador-tenjo",
+      "reviewed_at": "2026-11-15"
+    },
+    {
+      "machine": "vivy",
+      "id": "vivy-2026-cycle-g",
+      "name": "AT間G数と現在周期を両方確認",
+      "type": "zone",
+      "condition": "通常AT間800G＋αまたは6周期でAT。設定変更後はAT間500G＋α。現在の周期・液晶ポイントでも状況が異なる",
+      "check": [
+        "データ表示器がAT間Gを正しく表しているか",
+        "液晶右上の周期数・ポイント",
+        "設定変更か据え置きか"
+      ],
+      "stop": "AT後の1周期目については掲載元間で評価が異なるため、非当選まで追う／即やめのどちらも確定推奨しない",
+      "ev_yen": null,
+      "ev_basis": "周期・pt・示唆別の期待値を特定しない数値は誤認につながるため未掲載",
+      "availability": "液晶の周期・ポイントを確認できる台のみ",
+      "assessment": "周期・G数の併記が必要",
+      "confidence": "天井解析確認・終了条件に差異",
+      "source": "https://slot-toolbox.com/vivy-tenjo/",
+      "reviewed_at": "2026-11-15"
     }
   ]
 }
