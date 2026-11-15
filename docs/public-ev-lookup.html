@@ -19,11 +19,11 @@ button:disabled{opacity:.45;cursor:not-allowed}a{color:#185c8b}.actions{display:
 <main>
 <section class="card"><p class="notice"><strong>実機スペックを再計算するツールではありません。</strong> 公開されている期待値表の一部掲載行を照合し、間のG数は線形補間した参考値です。表の前提に合わない場合は表示しません。掲載範囲外の推測や交換率の無断換算は行いません。</p>
 <div class="grid">
-<label>機種<select id="machine"><option value="monkey5">モンキーターンV</option><option value="tokyoghoul">東京喰種</option><option value="seiya">聖闘士星矢 黄金十二宮</option><option value="ragnador">ラグナドール</option><option value="vivy">Vivy</option></select></label>
+<label>機種<select id="machine"><option value="monkey5">モンキーターンV</option><option value="tokyoghoul">東京喰種</option><option value="seiya">聖闘士星矢 黄金十二宮</option><option value="ragnador">ラグナドール</option><option value="vivy">Vivy</option><option value="ggo">ガンゲイル・オンライン</option></select></label>
 <label>現在の状態・カウンター<select id="scenario"></select></label>
 <label>現在のゲーム数（選択したカウンター）<input type="number" min="0" step="1" id="games" value="300"></label>
 </div>
-<p class="help" id="range"></p></section>
+<p class="help" id="range"></p><label><input id="counter-confirm" type="checkbox" style="width:auto;display:inline;margin-right:8px">表示器のG数・前回の結果・スルー回数が、選択した条件と一致することを確認しました</label><p class="help">GGOは「データカウンターG」と「液晶G」を混同しないでください。</p></section>
 <section class="card" id="result" hidden>
 <span class="pill" id="estimate-label"></span>
 <h2>参考の期待収支</h2>
@@ -44,7 +44,7 @@ let scenarios=[],current=null;
 function getMachine(){return $("machine").value}
 function asYen(v){return(v>=0?"+":"")+Math.round(v).toLocaleString("ja-JP")+"円"}
 function text(tag,value){const e=document.createElement(tag);e.textContent=value;return e}
-function refreshMachine(){
+function refreshMachine(){ $("counter-confirm").checked=false;
  const options=scenarios.filter(x=>x.machine===getMachine());
  $("scenario").replaceChildren();
  for(const row of options){const opt=document.createElement("option");opt.value=row.id;opt.textContent=row.label+"（"+row.counter.toUpperCase()+"間）";$("scenario").append(opt)}
@@ -62,7 +62,7 @@ function calculate(s,g){
  return null;
 }
 function refresh(){
- const item=scenarios.find(x=>x.id===$("scenario").value),g=Number($("games").value),r=calculate(item,g);
+ const item=scenarios.find(x=>x.id===$("scenario").value),raw=$("games").value.trim(),g=raw===""?NaN:Number(raw),r=calculate(item,g);
  current=null;$("memo").disabled=true;
  $("result").hidden=!item;
  if(!item)return;
@@ -73,6 +73,7 @@ function refresh(){
  const ul=text("ul","");for(const c of item.preconditions)ul.append(text("li",c));$("checks").append(ul);
  $("source").replaceChildren(text("span","公開情報："+item.source_name+" ／ 確認日："+item.checked_at+" ／ "));
  const anchor=text("a","公開元の条件を見る");anchor.href=item.url;anchor.rel="noopener noreferrer";anchor.target="_blank";$("source").append(anchor);
+ if(!$("counter-confirm").checked){$("amount").textContent="カウンターと状態を確認してください";$("estimate-label").textContent="条件未確認";$("location").textContent="前回の結果・スルー回数・表示器Gを確認してから金額を表示します。";$("method").textContent="";return}
  if(!r){$("amount").textContent="条件に合う掲載行なし";$("estimate-label").textContent="金額は表示できません";$("location").textContent="掲載範囲外、またはG数の入力が不正です。";$("method").textContent="";return}
  $("amount").textContent=asYen(r.ev);
  $("estimate-label").textContent=r.exact?"公開された掲載行":"掲載行間を補間した概算";
@@ -82,7 +83,8 @@ function refresh(){
  $("memo").disabled=false;
 }
 $("machine").addEventListener("change",refreshMachine);
-$("scenario").addEventListener("change",refresh);
+$("scenario").addEventListener("change",()=>{$("counter-confirm").checked=false;refresh()});
+$("counter-confirm").addEventListener("change",refresh);
 $("games").addEventListener("input",refresh);
 $("memo").addEventListener("click",()=>{
  if(!current)return;
@@ -96,7 +98,7 @@ $("memo").addEventListener("click",()=>{
  try{const response=await fetch("./public-ev-reference.json",{cache:"no-store"});if(!response.ok)throw Error("HTTP "+response.status);const data=await response.json();
  if(data.schema!==1||!Array.isArray(data.scenarios))throw Error("format");
  scenarios=data.scenarios.filter(s=>s&&typeof s.id==="string"&&typeof s.machine==="string"&&Array.isArray(s.points)&&s.points.length>=2&&s.points.every(p=>Array.isArray(p)&&p.length===2&&Number.isFinite(p[0])&&Number.isFinite(p[1])));
- const q=new URLSearchParams(location.search),id=q.get("machine");if(["monkey5","tokyoghoul","seiya","ragnador","vivy"].includes(id))$("machine").value=id;
+ const q=new URLSearchParams(location.search),id=q.get("machine");if(["monkey5","tokyoghoul","seiya","ragnador","vivy","ggo"].includes(id))$("machine").value=id;
  refreshMachine();const scenario=q.get("scenario");if(scenarios.some(x=>x.id===scenario&&x.machine===getMachine())){$("scenario").value=scenario;refresh();}
  }catch(e){$("range").textContent="公開期待値データを読み込めませんでした。時間をおいて確認してください。"}
 })();
