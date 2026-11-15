@@ -1,0 +1,10 @@
+const test=require('node:test'),assert=require('node:assert/strict');const a=require('./local-archive');
+const store=()=>{const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v),removeItem:k=>m.delete(k)}};
+const row={id:'1',type:'social_report',store_id:'s',machine_id:'m',source_id:'x',source_url:'https://example.org',event_date:'2026-11-01',published_date:'2026-11-02',collected_date:'2026-11-03',rights:'verified',verification:'reported'};
+const empty={schema_version:1,records:[],contexts:[]};
+test('empty storage returns empty archive',()=>assert.deepEqual(a.load(store()),empty));
+test('save and restore verified record',()=>{const s=store();a.save(s,{...empty,records:[row]});assert.equal(a.load(s).records.length,1);});
+test('merge removes duplicate evidence',()=>assert.equal(a.merge({...empty,records:[row]},{...empty,records:[row]}).records.length,1));
+test('reject malformed archive',()=>assert.throws(()=>a.checked({records:[],contexts:[]})));
+test('unverified records excluded',()=>assert.equal(a.checked({...empty,records:[{...row,rights:'unverified'}]}).records.length,0));
+test('clear removes saved data',()=>{const s=store();a.save(s,empty);a.clear(s);assert.equal(s.getItem(a.KEY),null);});
