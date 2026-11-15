@@ -54,9 +54,10 @@ class IntakeTests(unittest.TestCase):
     def test_rejects_unverifiable_permission(self):
         report=import_observations_csv(csv_text([sample(permission_evidence="")]))
         self.assertEqual(report["accepted_count"],0)
-    def test_rejects_bad_counter(self):
+    def test_signed_value_provisional_until_mapping(self):
         report=import_observations_csv(csv_text([sample(counter_value="-5")]))
-        self.assertEqual(report["accepted_count"],0)
+        self.assertEqual(report["accepted_count"],1)
+        self.assertEqual(report["accepted"][0]["counter_value"],-5)
     def test_rejects_missing_headers(self):
         with self.assertRaises(IntakeError):
             import_observations_csv("source_id,venue_id\na,b\n")
