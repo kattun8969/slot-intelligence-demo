@@ -15,5 +15,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test features/operation-trends/evidence-engine.test.cjs
-      - run: node --check features/operation-trends/evidence-engine.js
+      - run: node --test features/operation-trends/*.test.cjs
+      - run: node --check features/operation-trends/evidence-engine.js && node --check features/operation-trends/temporal-trends.js
