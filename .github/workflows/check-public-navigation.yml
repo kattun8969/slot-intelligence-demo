@@ -2,6 +2,7 @@ name: Check public machine navigation and field research
 on:
   pull_request:
     paths:
+      - 'docs/haishio-re-first-look.html'
       - 'docs/index.html'
       - 'docs/opportunities.html'
       - 'docs/field-reports.json'
@@ -35,6 +36,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'docs/haishio-re-first-look.html'
       - 'docs/index.html'
       - 'docs/opportunities.html'
       - 'docs/field-reports.json'
