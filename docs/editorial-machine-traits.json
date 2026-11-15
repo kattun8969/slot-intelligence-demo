@@ -7,9 +7,82 @@
     "setting_win_rates": "設定別の実戦勝率。集計の勝利定義・試行数・実戦時間・出典を必須とする。未確認は空配列",
     "payout_per_entry": "AT/ST/ボーナス1回の獲得分布。平均値・中央値・単発率・駆け抜け率・集計対象・出典を分ける",
     "volatility": "一撃性・安定性・収支分布。標準偏差や分位点がない場合は定性的な暫定評価のみ",
-    "editorial_assessment": "編集部の立ち回り考察。判断根拠・反例・確度・更新日を保持する"
+    "editorial_assessment": "編集部の立ち回り考察。判断根拠・反例・確度・更新日を保持する",
+    "published_specs": "設定別AT初当たり・機械割等の公開スペック。勝率とは別",
+    "reference_metrics": "全設定混合集計などの参考指標。設定別勝率と混同しない"
   },
-  "records": [],
+  "records": [
+    {
+      "machine_id": "monkey5",
+      "machine_name": "スマスロモンキーターンⅤ",
+      "verified_on": "2026-11-15",
+      "setting_win_rates": [],
+      "payout_per_entry": [],
+      "volatility": {
+        "classification": "調査中",
+        "basis": "設定別AT獲得枚数分布、単発率、設定別勝率の公開実測値が未確認",
+        "confidence": "insufficient"
+      },
+      "published_specs": [
+        {
+          "metric": "AT初当たり確率",
+          "unit": "1/N",
+          "values": {
+            "1": 299.8,
+            "2": 295.5,
+            "4": 258.8,
+            "5": 235.7,
+            "6": 222.9
+          },
+          "source_url": "https://nana-press.com/kaiseki/machine/644/",
+          "source_type": "解析サイト",
+          "verified_on": "2026-11-15"
+        },
+        {
+          "metric": "機械割",
+          "unit": "%",
+          "values": {
+            "1": 97.9,
+            "2": 98.9,
+            "4": 104.5,
+            "5": 110.2,
+            "6": 114.9
+          },
+          "source_url": "https://nana-press.com/kaiseki/machine/644/",
+          "source_type": "解析サイト",
+          "verified_on": "2026-11-15"
+        }
+      ],
+      "reference_metrics": [
+        {
+          "metric": "全設定混合の平均勝率",
+          "value": 33.3,
+          "unit": "%",
+          "period": "2026-11-07〜2026-11-13",
+          "sample_machines": 101,
+          "sample_units": 4015,
+          "source_url": "https://report.papimo.jp/common/machine_total.php?machine=223100009",
+          "note": "全設定混合の集計であり設定1や設定6の勝率ではない。集計期間で変動する。サイト表示値を参照し、データ取得・再配布の利用条件は別途確認する。"
+        }
+      ],
+      "editorial_assessment": {
+        "headline": "高設定ほどAT初当たりが軽い。ATの一撃性・設定別勝率は検証待ち",
+        "summary": "設定1のAT初当たり1/299.8に対して設定6は1/222.9。機械割も設定1の97.9%から設定6の114.9%へ上昇する。ただし、この差だけで設定6の実戦勝率やAT一撃性能を推定しない。低設定の通常打ちと天井・モード狙いは分けて評価する。",
+        "labels": [],
+        "confidence": "published_spec_only",
+        "counterpoints": [
+          "高設定でも短時間の勝率は未確認",
+          "平均獲得枚数を機械割から逆算した理論推計は実戦のAT平均枚数ではない",
+          "全設定混合の勝率は設定別の勝率を表さない"
+        ],
+        "sources": [
+          "https://nana-press.com/kaiseki/machine/644/",
+          "https://report.papimo.jp/common/machine_total.php?machine=223100009"
+        ],
+        "updated_at": "2026-11-15"
+      }
+    }
+  ],
   "editorial_labels": [
     {
       "id": "low_setting_at_potential",
