@@ -34,7 +34,7 @@ def episode(i, day, return_yen=1400):
     return {
         "episode_id":str(i),"machine_id":"fixture-machine",
         "model_revision":"fixture-rev","venue_id":"fixture-hall",
-        "date":day,"counter_type":"at_games","counter_value":350,
+        "date":day,"counter_type":"at_games","counter_origin":"last_at_end","counter_value":350,
         "state":"normal","state_evidence":"observed",
         "investment_yen":1000,"return_yen":return_yen,
         "exchange_basis":"20yen_equal",
