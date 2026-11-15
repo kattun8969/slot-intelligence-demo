@@ -16,8 +16,9 @@ function merge(existing,incoming){
  for(const c of [...a.contexts,...b.contexts])contexts.set(JSON.stringify([c.store_id,c.machine_id,c.as_of]),c);
  return checked({schema_version:1,records,contexts:[...contexts.values()]});
 }
+function restore(existing,backup){const incoming=checked(backup),prior=checked(existing),merged=merge(prior,incoming);return {archive:merged,added_records:merged.records.length-prior.records.length,added_contexts:merged.contexts.length-prior.contexts.length};}
 function load(storage){const raw=storage.getItem(KEY);return raw?checked(JSON.parse(raw)):{schema_version:1,records:[],contexts:[]};}
 function save(storage,data){const valid=checked(data);storage.setItem(KEY,JSON.stringify(valid));return {records:valid.records.length,contexts:valid.contexts.length};}
 function clear(storage){storage.removeItem(KEY);}
-return {KEY,checked,merge,load,save,clear};
+return {KEY,checked,merge,restore,load,save,clear};
 });
