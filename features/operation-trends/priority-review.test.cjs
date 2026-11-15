@@ -1,0 +1,5 @@
+const test=require('node:test'),assert=require('node:assert/strict');const {review}=require('./priority-review');
+const ctx={store_id:'s',machine_id:'m',as_of:'2026-07-01',source_url:'https://example.org',rights:'verified',placement:'variety',volatility:'stable',installed_units:1,popularity:0.3};
+test('context-only machine remains unclassified',()=>{const x=review([],[ctx],{store_id:'s',asOf:'2026-11-15'});assert.equal(x.rows[0].classification,'根拠不足');assert.equal(x.rows[0].setting_probability,null);});
+test('missing prior context is not evidence of priority change',()=>{const x=review([],[{...ctx,as_of:'2026-11-15'}],{store_id:'s',asOf:'2026-11-15'});assert.equal(x.rows[0].priority_shift,'未判定');assert.ok(x.rows[0].reasons.some(v=>v.includes('揃っていない')));});
+test('installation growth without evidence does not imply strengthening',()=>{const x=review([],[ctx,{...ctx,as_of:'2026-11-15',installed_units:5}],{store_id:'s',asOf:'2026-11-15'});assert.equal(x.rows[0].classification,'根拠不足');assert.equal(x.rows[0].mix_changed,true);});
