@@ -40,6 +40,10 @@ if(!['GET','POST','PATCH','DELETE'].includes(request.method))return json({error:
 const token=(request.headers.get('authorization')||'').replace(/^Bearer /,'');
 if(!/^[a-f0-9]{64}$/.test(token))return json({error:'invalid_edit_token'},401,origin);
 const tokenHash=await hash(token);
+if(request.method==='GET'&&path==='/api/reports'){
+ const rows=await env.DB.prepare("SELECT id,condition_json,vote,result,net,status,created_at,updated_at FROM reports WHERE owner_hash=? AND status!='withdrawn' ORDER BY created_at DESC,id DESC LIMIT 100").bind(tokenHash).all();
+ return json({reports:rows.results.map(r=>({id:r.id,condition:JSON.parse(r.condition_json),vote:r.vote,result:r.result,net:r.net,status:r.status,createdAt:r.created_at,updatedAt:r.updated_at}))},200,origin);
+}
 if(request.method==='POST'&&path==='/api/reports'){
 let body;try{if(Number(request.headers.get('content-length')||0)>12000)return json({error:'too_large'},413,origin);body=await request.json()}catch{return json({error:'invalid_json'},400,origin)}
 if(!validate(body?.condition)||!['play','skip'].includes(body.vote))return json({error:'invalid_input'},400,origin);
