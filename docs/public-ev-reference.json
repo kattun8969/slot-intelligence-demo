@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "checked_at": "2026-11-15",
-  "note": "一般公開された期待収支の代表行。全表の転載ではなく条件別の一部行を参照。入力G数が掲載行の間なら線形補間で推定し、元資料の実測値ではないと表示。掲載範囲外・不適切な条件では計算しない。",
+  "note": "一般公開された期待収支の代表行。全表の転載ではなく条件別の一部行を参照。入力G数が掲載行の間なら線形補間で推定し、元資料の実測値ではないと表示。掲載範囲外・不適切な条件では計算しない。周期やptの特定が必要な台では単純Gのみの表と混同しない。",
   "scenarios": [
     {
       "id": "monkey5-standard",
@@ -200,6 +200,166 @@
         [
           500,
           4302
+        ]
+      ]
+    },
+    {
+      "id": "ragnador-at",
+      "machine": "ragnador",
+      "label": "通常時・AT間（CZ失敗をまたいで合算）",
+      "counter": "at",
+      "unit": "G",
+      "state": "normal",
+      "exit": "ATまで（CZに負けても継続）、AT後50Gまで（途中CZ敗北後は即やめ）",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/ragnador-tenjo",
+      "checked_at": "2026-11-15",
+      "preconditions": [
+        "AT間GはCZをまたぎ、通常時のみ累積させた値を使用",
+        "設定変更後の初回ATは別表につき適用不可",
+        "終了条件はAT後50G／途中でCZ敗北なら即やめ"
+      ],
+      "points": [
+        [
+          200,
+          -1240
+        ],
+        [
+          300,
+          -590
+        ],
+        [
+          400,
+          290
+        ],
+        [
+          600,
+          1850
+        ],
+        [
+          800,
+          4130
+        ]
+      ]
+    },
+    {
+      "id": "ragnador-cz",
+      "machine": "ragnador",
+      "label": "通常・CZ間の全体列",
+      "counter": "cz",
+      "unit": "G",
+      "state": "normal",
+      "exit": "次のCZまたはATまで。CZ失敗で即やめ、AT後50Gフォロー",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/ragnador-tenjo",
+      "checked_at": "2026-11-15",
+      "preconditions": [
+        "前回CZまたはAT後のCZ間G数を使用",
+        "CZスルーとAT間は別条件",
+        "変更後初回や特殊状態を含めない通常の全体列"
+      ],
+      "points": [
+        [
+          100,
+          -770
+        ],
+        [
+          200,
+          -370
+        ],
+        [
+          300,
+          160
+        ],
+        [
+          350,
+          480
+        ],
+        [
+          450,
+          2020
+        ]
+      ]
+    },
+    {
+      "id": "vivy-after-first",
+      "machine": "vivy",
+      "label": "通常・AT後1周期目非当選後（ptを見ない）",
+      "counter": "at",
+      "unit": "G",
+      "state": "after_first_cycle",
+      "exit": "AT後は即やめ（1周期目フォローは含めない）",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/vivy-tenjo",
+      "checked_at": "2026-11-15",
+      "preconditions": [
+        "AT後の初回周期がすでに非当選で終了している",
+        "G数は液晶G。表示器Gや現在ptの条件が違う場合は使用不可",
+        "前兆中ではない・設定変更後ではない"
+      ],
+      "points": [
+        [
+          100,
+          -780
+        ],
+        [
+          200,
+          100
+        ],
+        [
+          300,
+          780
+        ],
+        [
+          400,
+          1390
+        ],
+        [
+          500,
+          2330
+        ]
+      ]
+    },
+    {
+      "id": "vivy-reset",
+      "machine": "vivy",
+      "label": "設定変更後・AT間（リセット確認）",
+      "counter": "at",
+      "unit": "G",
+      "state": "reset",
+      "exit": "AT後即やめ。1周期目フォローの追加利益は含まない",
+      "price": "20円等価",
+      "source_name": "スロパチ期待値ノート",
+      "url": "https://slopachi-note.com/vivy-tenjo",
+      "checked_at": "2026-11-15",
+      "preconditions": [
+        "設定変更済みと判断できる明確な根拠",
+        "G数は液晶のG。現在周期と液晶ptにより期待値が変わる",
+        "前兆中は対象外"
+      ],
+      "points": [
+        [
+          0,
+          220
+        ],
+        [
+          100,
+          2440
+        ],
+        [
+          200,
+          2410
+        ],
+        [
+          300,
+          3820
+        ],
+        [
+          400,
+          5640
         ]
       ]
     }
