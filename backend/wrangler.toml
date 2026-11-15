@@ -1,0 +1,14 @@
+name = "minna-community-api"
+main = "community-worker.js"
+compatibility_date = "2026-11-15"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "minna-community"
+database_id = "7995c5bb-6cc2-42ce-816d-d7213770ae19"
+
+[vars]
+ALLOWED_ORIGIN = "https://kattun8969.github.io"
+
+[triggers]
+crons = ["0 1,7,13 * * *"]
