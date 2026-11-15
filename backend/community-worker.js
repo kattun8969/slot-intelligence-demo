@@ -1,0 +1,51 @@
+// Cloudflare Worker + D1. Configure DB binding and ALLOWED_ORIGIN before deployment.
+const json=(data,status=200,origin='')=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...(origin?{'access-control-allow-origin':origin,'vary':'Origin'}:{})}});
+const hash=async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))).map(b=>b.toString(16).padStart(2,'0')).join('');
+const validString=(v,max=80)=>typeof v==='string'&&v.length>0&&v.length<=max;
+const int=(v,min,max)=>Number.isInteger(v)&&v>=min&&v<=max;
+function validate(c){return c&&validString(c.machine,100)&&['at','cz','reset','other'].includes(c.origin)&&int(c.games,0,100000)&&
+(c.difference===null||(int(c.difference,-100000,100000)&&['daily','section'].includes(c.differenceKind)))&&
+(c.cycle===null||int(c.cycle,0,1000))&&(c.points===null||int(c.points,0,100000))&&
+['unknown','mode','setting','other'].includes(c.hint)}
+function validateReport(result,net){if(!['','big-plus','plus','zero','minus','big-minus'].includes(result))return false;if(net!==null&&!int(net,-100000,100000))return false;if(net!==null&&result==='zero'&&net!==0)return false;if(net!==null&&['plus','big-plus'].includes(result)&&net<=0)return false;if(net!==null&&['minus','big-minus'].includes(result)&&net>=0)return false;return true}
+export default {async fetch(request,env){
+const origin=request.headers.get('origin')||'';
+const allowed=env.ALLOWED_ORIGIN||'';
+if(!allowed||!env.DB)return json({error:'service_not_configured'},503);
+if(origin!==allowed)return json({error:'origin_not_allowed'},403);
+if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{'access-control-allow-origin':origin,'access-control-allow-methods':'GET,POST,PATCH,DELETE,OPTIONS','access-control-allow-headers':'content-type,authorization','access-control-max-age':'600','vary':'Origin'}});
+const url=new URL(request.url),path=url.pathname;
+if(request.method==='GET'&&path==='/api/health')return json({ok:true},200,origin);
+if(request.method==='GET'&&path==='/api/summary'){
+const machine=url.searchParams.get('machine');if(!validString(machine,100))return json({error:'invalid_machine'},400,origin);
+const rows=await env.DB.prepare("SELECT condition_key,vote,COUNT(*) n FROM reports WHERE status='accepted' AND machine=? GROUP BY condition_key,vote").bind(machine).all();
+return json({machine,groups:rows.results,updatedAt:new Date().toISOString(),note:'投稿の判断割合であり、期待値や勝率ではありません'},200,origin)}
+if(!['POST','PATCH','DELETE'].includes(request.method))return json({error:'not_found'},404,origin);
+const token=(request.headers.get('authorization')||'').replace(/^Bearer /,'');
+if(!/^[a-f0-9]{64}$/.test(token))return json({error:'invalid_edit_token'},401,origin);
+const tokenHash=await hash(token);
+if(request.method==='POST'&&path==='/api/reports'){
+let body;try{if(Number(request.headers.get('content-length')||0)>12000)return json({error:'too_large'},413,origin);body=await request.json()}catch{return json({error:'invalid_json'},400,origin)}
+if(!validate(body?.condition)||!['play','skip'].includes(body.vote))return json({error:'invalid_input'},400,origin);
+const recent=await env.DB.prepare("SELECT COUNT(*) n FROM reports WHERE owner_hash=? AND created_at>datetime('now','-1 hour')").bind(tokenHash).first();
+if(recent.n>=3)return json({error:'rate_limited'},429,origin);
+const c=body.condition,conditionKey=await hash(JSON.stringify([c.machine,c.origin,c.games,c.difference,c.differenceKind,c.cycle,c.points,c.hint]));
+const duplicate=await env.DB.prepare("SELECT id FROM reports WHERE owner_hash=? AND condition_key=? AND status='accepted'").bind(tokenHash,conditionKey).first();
+if(duplicate)return json({error:'already_submitted',id:duplicate.id},409,origin);
+const id=crypto.randomUUID();
+await env.DB.prepare("INSERT INTO reports(id,owner_hash,machine,condition_key,condition_json,vote,analysis_json,status) VALUES(?,?,?,?,?,?,?,'accepted')").bind(id,tokenHash,c.machine,conditionKey,JSON.stringify(c),body.vote,JSON.stringify({rating:null,expectedMedals:null,median:null,version:null})).run();
+return json({id,status:'accepted'},201,origin)}
+const match=path.match(/^\/api\/reports\/([a-f0-9-]{36})$/);if(!match)return json({error:'not_found'},404,origin);
+const row=await env.DB.prepare('SELECT * FROM reports WHERE id=? AND owner_hash=?').bind(match[1],tokenHash).first();
+if(!row)return json({error:'not_found'},404,origin);
+if(request.method==='DELETE'){await env.DB.prepare("UPDATE reports SET status='withdrawn',updated_at=CURRENT_TIMESTAMP WHERE id=?").bind(row.id).run();return json({id:row.id,status:'withdrawn'},200,origin)}
+let body;try{body=await request.json()}catch{return json({error:'invalid_json'},400,origin)}
+if(row.status==='withdrawn')return json({error:'withdrawn'},409,origin);
+const result=body?.result??'',net=body?.net??null;if(!validateReport(result,net))return json({error:'invalid_result'},400,origin);
+const previous=await env.DB.prepare('SELECT COUNT(*) n FROM revisions WHERE report_id=?').bind(row.id).first();
+if(previous.n>=20)return json({error:'edit_limit'},429,origin);
+await env.DB.batch([
+env.DB.prepare('INSERT INTO revisions(report_id,previous_json) VALUES(?,?)').bind(row.id,JSON.stringify({result:row.result,net:row.net,updated_at:row.updated_at})),
+env.DB.prepare("UPDATE reports SET result=?,net=?,updated_at=CURRENT_TIMESTAMP WHERE id=?").bind(result,net,row.id)
+]);return json({id:row.id,status:'accepted'},200,origin)
+}};
