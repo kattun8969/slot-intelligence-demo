@@ -123,6 +123,33 @@
       "meaning": "2026年のスマスロ獣王の画面を確認。旧獣王シリーズの画像は流用しない。",
       "url": "https://pachimo.altema.jp/lzyuogamen",
       "asof": "2026-10-13"
+    },
+    {
+      "machine": "ggo",
+      "kind": "voice",
+      "title": "報酬レベルを確認するタイミング",
+      "meaning": "通常時は末尾70G付近のサテライトスキャンのメッセージを確認。前兆に重なる場合は前兆終了時にも注目します。武器表示によるモード示唆と、メッセージによる報酬レベル示唆を混同しないよう記録してください。",
+      "url": "https://1geki.jp/slot/l_sao_ggo/51/",
+      "asof": "2026-11-17確認（一撃11/11更新）",
+      "evidence_kind": "published_analysis"
+    },
+    {
+      "machine": "ggo",
+      "kind": "eyecatch",
+      "title": "「SJ締め切り間近！」で判断を補強",
+      "meaning": "公開解析では報酬レベル4以上濃厚!?のメッセージ。編集部としては、BIG連続回数だけより強い判断材料として扱います。ただし、この示唆単独の期待収支や設定別勝率を保証するものではありません。",
+      "url": "https://1geki.jp/slot/l_sao_ggo/51/",
+      "asof": "2026-11-17確認（一撃11/11更新）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "ggo",
+      "kind": "eyecatch",
+      "title": "「本日SJ開催！」はレベル5以上の示唆",
+      "meaning": "公開解析では報酬レベル5以上かつエピソード期待度が上がるメッセージ。エピボ間G数だけで追うより、こうした現在状態の示唆を優先して確認します。表示後の転落契機をまたいで、そのまま同じレベルが続くと判断しないでください。",
+      "url": "https://1geki.jp/slot/l_sao_ggo/51/",
+      "asof": "2026-11-17確認（一撃11/11更新）",
+      "evidence_kind": "published_analysis_and_editorial"
     }
   ]
 }
