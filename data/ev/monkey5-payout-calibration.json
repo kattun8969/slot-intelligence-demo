@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "machine_id": "monkey5",
+  "model_revision": "payout-discrete-hypothesis-v1",
+  "status": "research_only",
+  "verified_on": "2026-11-16",
+  "source_url": "https://note.com/g1slotapple/n/n4daeb2db6c33",
+  "source_sample_size": 31651,
+  "scope": "全AT・設定混合・有利区間状態不問。青島VS波多野中の純増は現状維持程度との原典仮定",
+  "observed_constraints": {
+    "mean_medals": 439,
+    "median_medals": 272,
+    "over_1000_probability": 0.0769,
+    "over_2000_probability": 0.0256,
+    "over_3000_probability": 0.0113
+  },
+  "assumptions": [
+    "各区間を代表点へ圧縮した編集部仮定。元の実測分布ではない",
+    "下位50%を272枚に置くことで下側中央値を合わせる",
+    "代表点350/1200/2200枚を仮置きし、3000枚以上区間代表点を平均439枚制約から逆算",
+    "投資・当選までのゲーム数との同時分布は未取得。条件別EV・設定別勝率はこの入力だけから算出しない"
+  ],
+  "support": [
+    {
+      "probability": 0.5,
+      "at_medals": 272
+    },
+    {
+      "probability": 0.4231,
+      "at_medals": 350
+    },
+    {
+      "probability": 0.0513,
+      "at_medals": 1200
+    },
+    {
+      "probability": 0.0143,
+      "at_medals": 2200
+    },
+    {
+      "probability": 0.0113,
+      "at_medals": 5477.433628318588
+    }
+  ],
+  "unidentified": [
+    "区間内分布",
+    "設定別分布",
+    "当選G数と獲得の相関",
+    "投資額分布",
+    "駆け抜け定義と頻度"
+  ],
+  "next_step": "複数の代表点仮定で感度を比較し、条件付き当選ハザードと投資モデルを別根拠で接続する"
+}
