@@ -150,6 +150,33 @@
       "url": "https://1geki.jp/slot/l_sao_ggo/51/",
       "asof": "2026-11-17確認（一撃11/11更新）",
       "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "ragnador",
+      "kind": "eyecatch",
+      "title": "発展失敗の次G：次のCZ相手を確認",
+      "meaning": "発展演出失敗の次ゲームに出るアイキャッチは、次回CZの相手を示すものです。たとえば朱雀の表示は次の相手が朱雀濃厚!?とする解析。設定確定画面とは区別して記録します。",
+      "url": "https://1geki.jp/slot/l_ragnador/53/",
+      "asof": "2026-11-17確認（11/13更新）",
+      "evidence_kind": "published_analysis"
+    },
+    {
+      "machine": "ragnador",
+      "kind": "voice",
+      "title": "クダの動きで通常時の状態を確認",
+      "meaning": "リプレイ時に中央で止まった後の行動に注目。左へ戻る場合は高確以上、寝る場合は超高確濃厚!?とする解析です。編集部では、G数だけでやめる前に状態を見直す材料として扱います。継続すれば必ず期待収支がプラスになるという意味ではありません。",
+      "url": "https://1geki.jp/slot/l_ragnador/53/",
+      "asof": "2026-11-17確認（11/13更新）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "ragnador",
+      "kind": "voice",
+      "title": "前兆エフェクトは発生契機も合わせて確認",
+      "meaning": "前兆中の好機表示でレア役を否定した場合や、発展失敗の次Gに出るエフェクトが対象。公開解析では赤色の本前兆期待度は85%以上です。この数値は該当演出の本前兆期待度であり、AT当選率・実戦勝率・設定別勝率ではありません。前兆の結果まで確認してから次の判断へ。",
+      "url": "https://1geki.jp/slot/l_ragnador/53/",
+      "asof": "2026-11-17確認（11/13更新）",
+      "evidence_kind": "published_analysis_and_editorial"
     }
   ]
 }
