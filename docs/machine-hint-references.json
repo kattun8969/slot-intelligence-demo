@@ -1,0 +1,128 @@
+{
+  "provenance": "hints.html収集済み記録の直接統合。今回の再調査ではない。",
+  "guides": [
+    {
+      "machine": "yoshimune",
+      "kind": "ending",
+      "title": "AT終了画面（大岡越前・柳生・大奥・吉宗）",
+      "meaning": "2026年の真打 吉宗。吉宗の画面は設定6濃厚、大奥は設定5以上濃厚とする解析。2025年吉宗と混同しない。",
+      "url": "https://tennabi.jp/shinuchi-yoshimune/",
+      "asof": "2026-10-30"
+    },
+    {
+      "cached": "./assets/hints/yoshimune-setting.webp",
+      "machine": "yoshimune",
+      "kind": "setting",
+      "title": "コパンダトロフィー・AT終了画面",
+      "meaning": "設定示唆は出現画面・トロフィーの色を区別して元記事で照合。",
+      "url": "https://hisshobon.com/machineinfo/185957/",
+      "asof": "2026-11-13"
+    },
+    {
+      "cached": "./assets/hints/aobuta-ending.webp",
+      "machine": "aobuta",
+      "kind": "ending",
+      "title": "ST終了・吉／良／優／極スタンプ",
+      "meaning": "かえで「吉」は設定3以上、翔子「良」は4以上、バニー麻衣「優」は5or6、集合「極」は6濃厚の掲載例。キャラだけの画面は別扱い。",
+      "url": "https://hisshobon.com/machineinfo/185935/",
+      "asof": "2026-11-13"
+    },
+    {
+      "machine": "aobuta",
+      "kind": "eyecatch",
+      "title": "CZ・ST終了後の赤ワイプ",
+      "meaning": "次の規定思春期ポイントが100pt以下濃厚とする解析。設定6確定ではなく、次のポイントまでの示唆。",
+      "url": "https://nana-press.com/kaiseki/machine/1214/38929/",
+      "asof": "2026-09-07以降"
+    },
+    {
+      "machine": "aobuta",
+      "kind": "eyecatch",
+      "title": "かえで・翔子／青ワイプ",
+      "meaning": "かえで・翔子は対応する不可思議モード示唆、青ワイプは次回500pt以内のチャンス。",
+      "url": "https://nana-press.com/kaiseki/machine/1214/38929/",
+      "asof": "2026-09-07以降"
+    },
+    {
+      "machine": "aobuta",
+      "kind": "voice",
+      "title": "ドリームコレクション終了後のボイス",
+      "meaning": "終了時PUSHによる規定ポイントまでの残り示唆。セリフごとに意味が異なるため元記事の一覧を確認。",
+      "url": "https://hisshobon.com/machineinfo/185935/",
+      "asof": "2026-11-13"
+    },
+    {
+      "machine": "world",
+      "kind": "ending",
+      "title": "カトリナ＆ここな／3人集合",
+      "meaning": "高設定示唆（弱）／（強）の掲載例。画面単体で設定を確定しません。",
+      "url": "https://hisshobon.com/machineinfo/185927/",
+      "asof": "2026-11-13"
+    },
+    {
+      "machine": "world",
+      "kind": "setting",
+      "title": "コパンダトロフィー",
+      "meaning": "銅=設定2以上／銀=3以上／金=4以上／イナズマ柄=5or6／虹=6濃厚の掲載例。",
+      "url": "https://hisshobon.com/machineinfo/185927/",
+      "asof": "2026-11-13"
+    },
+    {
+      "machine": "world",
+      "kind": "voice",
+      "title": "エンディング中のPUSHボイス・サイン",
+      "meaning": "ボイス／サインに設定示唆あり。サインと色の組み合わせを元記事で確認。",
+      "url": "https://hisshobon.com/machineinfo/185927/",
+      "asof": "2026-11-13"
+    },
+    {
+      "cached": "./assets/hints/lycoris-ending.webp",
+      "machine": "lycoris",
+      "kind": "ending",
+      "title": "ハワイ／ロボ太／押上の風景",
+      "meaning": "ハワイ=設定6、ロボ太=4以上、押上の風景=2以上濃厚の掲載例。",
+      "url": "https://hisshobon.com/machineinfo/185644/",
+      "asof": "2026-11-10"
+    },
+    {
+      "machine": "lycoris",
+      "kind": "ending",
+      "title": "千束・たきなの私服",
+      "meaning": "どちらのラッシュ終了後かで示唆が変わる。逆キャラ私服で設定4以上濃厚の掲載例。",
+      "url": "https://hisshobon.com/machineinfo/185644/",
+      "asof": "2026-11-10"
+    },
+    {
+      "machine": "lycoris",
+      "kind": "eyecatch",
+      "title": "CZ後アイキャッチ（たきな・クルミ・千束）",
+      "meaning": "たきな／クルミのBパターンは短縮天井期待度の示唆、千束BはCZ復活濃厚とする解析。終了画面の設定示唆と別。",
+      "url": "https://slobase.jp/machines/lycoris-recoil",
+      "asof": "2026-10-23"
+    },
+    {
+      "machine": "lycoris",
+      "kind": "setting",
+      "title": "サミートロフィー・ラッシュ終了画面",
+      "meaning": "出現状況とラッシュの種類を確認。トロフィー色の設定示唆は元記事の画像で照合。",
+      "url": "https://hisshobon.com/machineinfo/185644/",
+      "asof": "2026-11-10"
+    },
+    {
+      "machine": "juoh",
+      "kind": "setting",
+      "title": "サミートロフィー",
+      "meaning": "銅で設定2以上／金4以上／キリン柄5以上／虹6濃厚とする掲載例。",
+      "url": "https://pachimo.altema.jp/lzyuogamen",
+      "asof": "2026-10-13"
+    },
+    {
+      "machine": "juoh",
+      "kind": "ending",
+      "title": "終了画面・トロフィー",
+      "meaning": "2026年のスマスロ獣王の画面を確認。旧獣王シリーズの画像は流用しない。",
+      "url": "https://pachimo.altema.jp/lzyuogamen",
+      "asof": "2026-10-13"
+    }
+  ]
+}
