@@ -177,6 +177,24 @@
       "url": "https://1geki.jp/slot/l_ragnador/53/",
       "asof": "2026-11-17確認（11/13更新）",
       "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "ragnador",
+      "kind": "voice",
+      "title": "CZ回数とリセット起点で次の相手を判断",
+      "meaning": "公開解析では、設定変更後は3回目以降、AT終了後は6回目以降のCZが朱雀シナリオになります。両者の起点を分け、単なる当日CZ回数とは混同しないでください。朱雀は青龍より有利な相手ですが、勝利確定ではありません。",
+      "url": "https://1geki.jp/slot/l_ragnador/51/",
+      "asof": "2026-11-17確認（11/13更新）",
+      "evidence_kind": "published_analysis"
+    },
+    {
+      "machine": "ragnador",
+      "kind": "voice",
+      "title": "赤いCZ強化カケジク：参戦条件まで確認",
+      "meaning": "赤帯のCZ強化カケジクを持った状態でCZに入ると妖主オトモ参戦濃厚!?とする解析。妖主参戦時のCZ勝利期待度は90%ですが、通常のCZ全体は約50%で、同じ条件ではありません。表示中にCZへ入ることが条件なので、赤帯を見ただけで次のCZまで無制限に追う根拠にはしません。",
+      "url": "https://1geki.jp/slot/l_ragnador/51/",
+      "asof": "2026-11-17確認（11/13更新）",
+      "evidence_kind": "published_analysis_and_editorial"
     }
   ]
 }
