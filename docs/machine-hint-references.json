@@ -346,6 +346,26 @@
       "url": "https://www.kyoraku.co.jp/dev-letter/articles/1fezdosnd6qj3iwse5t5",
       "asof": "2026-11-17本文確認（メーカー公開11/14）",
       "evidence_kind": "manufacturer_and_editorial"
+    },
+    {
+      "machine": "toaru2",
+      "kind": "ceiling",
+      "placement": "target",
+      "title": "天井狙い：表示500Gと実400Gを別々に確認",
+      "meaning": "必勝本の調査では、右下の表示Gは500G以上、左上の実Gは400G以上を参考目安としています。右下は加算を含む表示Gで800G＋α到達時にCZまたはAT、左上は実Gで1200G到達時にAT。CZに失敗しても左上の実Gは引き継がれます。編集部では両方のカウンターと直前のCZ・AT履歴を確認してから候補にする方針です。データカウンターの500Gを、そのまま右下表示500Gと扱いません。参考目安であり利益保証や同条件の期待値額ではありません。",
+      "url": "https://hisshobon.com/machineinfo/185654/",
+      "asof": "2026-11-17本文確認（11/10公開・必勝本編集部調査）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "toaru2",
+      "kind": "reset",
+      "placement": "target",
+      "title": "設定変更後：短縮天井と続行条件を分ける",
+      "meaning": "設定変更を確認できた場合は、右下の表示G天井が200G＋α、左上の実G天井が777Gに短縮されます。掲載元は右下の短縮天井狙いを0Gから、左上の実G天井狙いを400Gからの参考候補としています。朝一というだけで設定変更済みとは決めません。右下の天井でCZに当選して失敗したら、左上の残りGと示唆を見直します。AT終了時の上部ランプ赤などに付く条件付き出玉率は、次のAT当選まで継続する前提です。CZ当選まででやめる条件と混同せず、収支勝率や期待値額へ換算しません。",
+      "url": "https://hisshobon.com/machineinfo/185654/",
+      "asof": "2026-11-17本文確認（11/10公開・必勝本編集部調査）",
+      "evidence_kind": "published_analysis_and_editorial"
     }
   ]
 }
