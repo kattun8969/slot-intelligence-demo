@@ -87,10 +87,11 @@
     {
       "machine": "lycoris",
       "kind": "ending",
-      "title": "千束・たきなの私服",
-      "meaning": "どちらのラッシュ終了後かで示唆が変わる。逆キャラ私服で設定4以上濃厚の掲載例。",
-      "url": "https://hisshobon.com/machineinfo/185644/",
-      "asof": "2026-11-10"
+      "title": "私服画面：通常STと上位STの条件",
+      "meaning": "通常STでは、たきな選択で千束の私服、千束選択でたきなの私服が出ると設定4以上濃厚とする解析です。上位ST終了後の私服は、選択キャラと矛盾しても高設定期待度UP（弱）にとどまります。選択キャラと通常／上位の区別を記録し、上位STの私服矛盾だけを設定4以上の根拠にはしません。",
+      "url": "https://chonborista.com/slot/sammy-slot/261631/",
+      "asof": "2026-11-17本文確認（項目更新日未取得）",
+      "evidence_kind": "published_analysis_and_editorial"
     },
     {
       "machine": "lycoris",
