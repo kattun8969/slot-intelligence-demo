@@ -337,6 +337,15 @@
       "url": "https://note.com/g1slotapple/n/nc40995928398",
       "asof": "2026-11-17本文確認（最終更新10/1、9/7〜27集計）",
       "evidence_kind": "published_estimate_and_editorial"
+    },
+    {
+      "machine": "ggo",
+      "kind": "performance",
+      "title": "ピーちゃんアシスト：差枚の起点と再突入",
+      "meaning": "メーカー公表では、SJ1・SJ2それぞれの準備中から数えた差枚状況によって、セットごとのアシスト突入率が変わります。一度転落しても次セットで再抽選され、再突入する場合があります。アシスト中の平均セット継続率はSJ1約82%・SJ2約87%で、バレットライン状況により上下します。全SJ共通の固定継続率、設定別の収支勝率、AT獲得枚数を示す数値ではありません。編集部ではSJ1/SJ2の起点・差枚・ライン・アシスト滞在を別々に確認する方針です。通常時から打つ開始G数の根拠には使いません。",
+      "url": "https://www.kyoraku.co.jp/dev-letter/articles/1fezdosnd6qj3iwse5t5",
+      "asof": "2026-11-17本文確認（メーカー公開11/14）",
+      "evidence_kind": "manufacturer_and_editorial"
     }
   ]
 }
