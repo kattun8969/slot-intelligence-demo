@@ -144,7 +144,10 @@
       "editorial_assessment": {
         "summary": "推定設定群の実戦参考値を先行掲載。設定別の一般的な収支勝率と、ST1回の平均・中央値は別途調査中です。",
         "updated_at": "2026-11-17",
-        "labels": []
+        "labels": [],
+        "sources": [
+          "https://chonborista.com/slot/sammy-slot/261631/"
+        ]
       }
     }
   ],
