@@ -19,8 +19,8 @@ class PublicEvLookupTests(unittest.TestCase):
         cls.machines=(DOCS/"opportunities.html").read_text(encoding="utf-8")
     def test_conditions_and_points(self):
         rows=self.data["scenarios"]
-        self.assertEqual({x["machine"] for x in rows},{"monkey5","tokyoghoul","seiya","ragnador","vivy","ggo"})
-        self.assertEqual(len(rows),14)
+        self.assertEqual({x["machine"] for x in rows},{"monkey5","tokyoghoul","seiya","ragnador","vivy","ggo","lycoris"})
+        self.assertEqual(len(rows),19)
         for x in rows:
             self.assertTrue(x["url"].startswith("https://"))
             self.assertTrue(x["exit"] and x["preconditions"] and x["price"])
@@ -28,6 +28,20 @@ class PublicEvLookupTests(unittest.TestCase):
             self.assertTrue(all(isinstance(p[1],int) for p in x["points"]))
         self.assertTrue(any(x["counter"]=="at" for x in rows))
         self.assertTrue(any(x["counter"]=="cz" for x in rows))
+    def test_lycoris_reference_conditions(self):
+        rows=[x for x in self.data["scenarios"] if x["machine"]=="lycoris"]
+        self.assertEqual(len(rows),5)
+        for row in rows:
+            self.assertIn("参考",row["label"])
+            self.assertEqual(row["evidence_kind"],"user_supplied_published_estimate")
+            self.assertEqual(set(row["point_sample_sizes"]),{str(p[0]) for p in row["points"]})
+            self.assertTrue(all(isinstance(n,int) and n>0 for n in row["point_sample_sizes"].values()))
+            self.assertTrue(any("データカウンター" in c for c in row["preconditions"]))
+            self.assertTrue(any("閉店減算なし" in c for c in row["preconditions"]))
+        by_id={x["id"]:dict(x["points"]) for x in rows}
+        self.assertEqual(by_id["lycoris-reset-at-reference"][0],973)
+        self.assertEqual(by_id["lycoris-reset-cz-reference"][0],-356)
+        self.assertGreater(by_id["lycoris-runthrough-at-reference"][100],by_id["lycoris-runthrough-at-reference"][120])
     def test_no_standalone_guessing(self):
         for text in ["掲載範囲外","線形補間","前提","期待値集計にメモする","sessionStorage.setItem"]:
             self.assertIn(text,self.page)
