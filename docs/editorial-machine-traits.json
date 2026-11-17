@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-15",
+  "updated_at": "2026-11-17",
   "purpose": "機種ごとの出玉性能・設定別勝率・編集部考察の検証可能な保管形式",
   "fields": {
     "machine_id": "既存機種ID",
@@ -9,7 +9,7 @@
     "volatility": "一撃性・安定性・収支分布。標準偏差や分位点がない場合は定性的な暫定評価のみ",
     "editorial_assessment": "編集部の立ち回り考察。判断根拠・反例・確度・更新日を保持する",
     "published_specs": "設定別AT初当たり・機械割等の公開スペック。勝率とは別",
-    "reference_metrics": "全設定混合集計などの参考指標。設定別勝率と混同しない"
+    "reference_metrics": "全設定混合集計などの参考指標。設定別勝率と混同しない。推定設定群のプラス台割合はobserved_positive_day_rateとして区別し、設定別勝率を埋めない"
   },
   "records": [
     {
@@ -112,6 +112,38 @@
           "https://note.com/g1slotapple/n/n4daeb2db6c33"
         ],
         "updated_at": "2026-11-15"
+      }
+    },
+    {
+      "machine_id": "lycoris",
+      "machine_name": "スマスロ リコリス・リコイル",
+      "verified_on": "2026-11-17",
+      "setting_win_rates": [],
+      "payout_per_entry": [],
+      "published_specs": [],
+      "reference_metrics": [
+        {
+          "metric_kind": "observed_positive_day_rate",
+          "metric": "推定全6の実戦参考値：プラス台割合",
+          "value": 90,
+          "unit": "%",
+          "positive_units": 18,
+          "sample_units": 20,
+          "setting_status": "掲載元が推定全6とした台群。設定確定方法は未確認",
+          "win_definition": "掲載元のグラフ目視集計で差枚がプラスの台",
+          "period": "投稿表示日2026-09-27。営業日・店舗は未取得",
+          "duration": "出玉率計算は9500G想定。各台の実消化G数・実戦時間は未取得",
+          "exchange": "交換率・現金投資条件は未取得。差枚プラスと換金後収支プラスは別",
+          "source_url": "https://chonborista.com/slot/sammy-slot/261631/",
+          "original_post_url": "https://x.com/chonbo7771/status/2104079715334267150",
+          "source_type": "解析記事内に掲載されたSNS実戦集計（原投稿は取得できず）",
+          "verified_on": "2026-11-17",
+          "note": "20台の選ばれた推定設定群の結果です。設定6の一般的な勝率、短時間の着席判断、現在G数の期待値、AT1回の獲得枚数には読み替えません。全設定の推定や信頼区間への外挿はしません。"
+        }
+      ],
+      "editorial_assessment": {
+        "summary": "推定設定群の実戦参考値を先行掲載。設定別の一般的な収支勝率と、ST1回の平均・中央値は別途調査中です。",
+        "updated_at": "2026-11-17"
       }
     }
   ],
