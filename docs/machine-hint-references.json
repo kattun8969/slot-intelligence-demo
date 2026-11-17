@@ -213,6 +213,34 @@
       "url": "https://1geki.jp/slot/l_ragnador/51/",
       "asof": "2026-11-17確認（11/13更新）",
       "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "ggo",
+      "kind": "voice",
+      "title": "グレネード：サイクル・装填・表示色をセットで確認",
+      "meaning": "小Vベルで弾が1個ずつ入り、6個でジャッジへ。メーカーは最大3サイクル以内の報酬獲得を案内し、2サイクル目以降を狙い目候補としています。ただし報酬にはバレット高確率も含まれ、BONUS確定ではありません。赤いサイクル表示はBONUSやYes Ma'amに期待する材料。編集部は残り装填と強い会話も併せて確認し、報酬獲得後は持ち越して追わず現在状態で再判断します。開始G・追加投資上限の目安は現在調査中です。",
+      "url": "https://www.kyoraku.co.jp/dev-letter/articles/cmmw1l6tiiip1spkmars",
+      "asof": "2026-11-17確認（メーカー11/10公開）",
+      "evidence_kind": "manufacturer_and_editorial",
+      "placement": "target"
+    },
+    {
+      "machine": "ggo",
+      "kind": "voice",
+      "title": "ピトフーイ会話：回数とサイクルの結果が条件",
+      "meaning": "「そうそう、そういう顔が見たかったのよ」は、報酬を得るまでに3回確認するとBONUS以上期待度90%超。「無抵抗の人間を撃つのって嫌じゃなーい？」は、出現したサイクルで報酬を得なかった場合が対象です。回数やサイクル結果を確認できない台に同じ期待度を当てはめません。これは報酬を得る際の種別期待度で、即当選率・エピボ当選率・収支勝率ではありません。",
+      "url": "https://www.kyoraku.co.jp/dev-letter/articles/67szf3680b2zcv4u61z5",
+      "asof": "2026-11-17確認（メーカー11/15公開）",
+      "evidence_kind": "manufacturer_and_editorial"
+    },
+    {
+      "machine": "ggo",
+      "kind": "voice",
+      "title": "強い会話2種：報酬獲得時のBONUS以上に期待",
+      "meaning": "「あら、慎重じゃなーい」「ここからは本気でいくよ」は、出現時点で報酬獲得時のBONUS以上期待度90%超とメーカーが案内しています。編集部はグレネード狙いの確認材料として扱いますが、報酬レベル4・5の滞在確率や2〜5連BIG後の推定確率には置き換えません。報酬までの投資を含む金額期待値は別途調査中です。",
+      "url": "https://www.kyoraku.co.jp/dev-letter/articles/67szf3680b2zcv4u61z5",
+      "asof": "2026-11-17確認（メーカー11/15公開）",
+      "evidence_kind": "manufacturer_and_editorial"
     }
   ]
 }
