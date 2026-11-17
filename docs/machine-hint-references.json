@@ -46,10 +46,11 @@
     {
       "machine": "aobuta",
       "kind": "voice",
-      "title": "ドリームコレクション終了後のボイス",
-      "meaning": "終了時PUSHによる規定ポイントまでの残り示唆。セリフごとに意味が異なるため元記事の一覧を確認。",
-      "url": "https://hisshobon.com/machineinfo/185935/",
-      "asof": "2026-11-13"
+      "title": "DC終了ボイス：残り100pt・300ptの区別",
+      "meaning": "DREAM COLLECTION終了画面でPUSHしたボイスは、次の規定ポイントまでの残りを示します。かえでの翌日を楽しみにする2種類のボイスは残り100pt以下濃厚、麻衣の「そろそろかしら？」は残り300pt以下濃厚。同じ麻衣でも未来を選んでほしいという内容は300pt以下のチャンスにとどまります。現在の液晶ptや実ゲーム数、設定示唆に読み替えません。",
+      "url": "https://chonborista.com/slot/orinpia-slot/261018/",
+      "asof": "2026-11-17本文確認（ボイス項目追加11/5）",
+      "evidence_kind": "published_analysis_and_editorial"
     },
     {
       "machine": "world",
@@ -290,6 +291,16 @@
       "meaning": "キャラ吹き出しの「もうすぐ」は、そのキャラのCZポイント98%以上保持濃厚とする解析。編集部では、示されたキャラと対応役を確認する拾い候補として扱います。98%は保有割合で、当選率・勝率ではありません。通常G数やラッキーモードとは別に記録し、CZ結果後に残る示唆を見直して続行判断。追加投資の上限は現在調査中で、無条件にCZまで追う目安にはしません。",
       "url": "https://chonborista.com/slot/daito-slot/261144/",
       "asof": "2026-11-17確認（記事表示9/30、項目改訂日未取得）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "aobuta",
+      "kind": "zone",
+      "placement": "target",
+      "title": "残りpt示唆狙い：かえで100pt以下を先に確認",
+      "meaning": "編集部の拾い候補は、DC終了時の残り100pt以下濃厚ボイスを実際に確認できた台。残り300pt以下濃厚の麻衣ボイスは、現在のG数・CZスルー・他の示唆も合わせて比較します。残りptだけからプラス期待値や追加投資上限は決められず、追う金額は現在調査中です。声の内容・確認場面・その後の消化履歴が不明なら、残り100ptの台として扱いません。規定pt到達後は前兆/CZ結果と新しい示唆を見直し、古い声を根拠に次の規定ptまで追い続けない方針です。",
+      "url": "https://chonborista.com/slot/orinpia-slot/261018/",
+      "asof": "2026-11-17本文確認（既存解析の編集部整理）",
       "evidence_kind": "published_analysis_and_editorial"
     }
   ]
