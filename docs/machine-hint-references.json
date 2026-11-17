@@ -241,6 +241,36 @@
       "url": "https://www.kyoraku.co.jp/dev-letter/articles/67szf3680b2zcv4u61z5",
       "asof": "2026-11-17確認（メーカー11/15公開）",
       "evidence_kind": "manufacturer_and_editorial"
+    },
+    {
+      "machine": "vivy",
+      "kind": "voice",
+      "placement": "target",
+      "title": "AT後1周期目：等価80ptを参考に、初回だけ確認",
+      "meaning": "掲載元の暫定計算では、AT後1周期目は等価80ptからが参考目安（80pt時点は期待収支＋620円、出玉率106.8%）。周期内ptを見て、初回のアーカイブモード終了でAT非当選ならやめる条件です。80Gではありません。金額と出玉率は別指標で、収支勝率やAT獲得中央値を表しません。",
+      "url": "https://chonborista.com/slot/daito-slot/268864/",
+      "asof": "2026-11-17確認（計算項目11/12更新）",
+      "evidence_kind": "published_estimate_and_editorial"
+    },
+    {
+      "machine": "vivy",
+      "kind": "voice",
+      "placement": "target",
+      "title": "初回周期スルー後：等価・液晶380Gが参考目安",
+      "meaning": "1周期目が非当選で終了した台は、掲載元では等価・液晶380Gから次のATまでが目安。初回周期80pt狙いとは終了条件が異なります。5.6枚交換へそのまま適用せず、別条件の表を確認。周期pt表はG数天井を含めない計算なので、G数表と数値を足し合わせません。",
+      "url": "https://chonborista.com/slot/daito-slot/268864/",
+      "asof": "2026-11-17確認（計算項目11/12更新）",
+      "evidence_kind": "published_estimate_and_editorial"
+    },
+    {
+      "machine": "vivy",
+      "kind": "voice",
+      "placement": "target",
+      "title": "計算の前提と、ポイント通過後の見直し",
+      "meaning": "元データは11/12時点の導入7日間・のべ3,446台の調査と解析値。設定1、31G/50枚、純増3.2枚/G、時速800G、AT後即やめの暫定計算です。掲載元の目安は等価106%基準で、元資料の104%超基準とは異なります。222pt・333ptの通過後に評価が下がる場合があり、ポイントが増えるほど有利とは限りません。",
+      "url": "https://chonborista.com/slot/daito-slot/268864/",
+      "asof": "2026-11-17確認（計算項目11/12更新）",
+      "evidence_kind": "published_estimate_and_editorial"
     }
   ]
 }
