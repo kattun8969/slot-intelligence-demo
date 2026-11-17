@@ -48,7 +48,7 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 .catalog-list .art-label{display:none}
 .catalog-empty{padding:20px;background:#f1f5f9;border-radius:9px}
 .industry-news{margin:0 0 14px}.industry-news-list{display:grid;gap:9px}.industry-news-item{border:1px solid var(--border);border-radius:9px;padding:11px 12px}.industry-news-item h3{font-size:15px;margin:5px 0}.industry-news-item p{margin:6px 0;font-size:13px}.industry-news-item .meta{font-size:12px}.industry-news-item .news-tag{display:inline-block;font-size:11px;font-weight:700;border-radius:5px;background:#edf3f8;padding:2px 6px}.industry-news-item a{font-size:13px}.industry-news-more{margin-top:8px}
-.site-changelog{margin:0 0 14px}.site-changelog h2{margin-bottom:5px}.site-changelog-scroll{max-height:152px;overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--border);border-radius:9px}.site-changelog-scroll a{display:block;padding:9px 12px;border-bottom:1px solid var(--border);text-decoration:none;font-size:13px}.site-changelog-scroll a:last-child{border-bottom:0}.site-changelog-scroll a:hover,.site-changelog-scroll a:focus-visible{background:#eef5fa}.site-changelog time{font-weight:700;color:var(--muted);margin-right:9px}
+.site-changelog{margin:0 0 14px}.site-changelog h2{margin-bottom:5px}.site-changelog-scroll{max-height:152px;overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--border);border-radius:9px}.site-changelog-scroll a{display:block;padding:9px 12px;border-bottom:1px solid var(--border);text-decoration:none;font-size:13px}.site-changelog-scroll a:last-child{border-bottom:0}.site-changelog-scroll a:hover,.site-changelog-scroll a:focus-visible{background:#eef5fa}.site-changelog-archive{margin:9px 0 0;text-align:right;font-size:13px}.site-changelog time{font-weight:700;color:var(--muted);margin-right:9px}
 @media(max-width:500px){.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-rail .machine-tile{min-width:165px}.catalog-list{grid-template-columns:1fr}.discovery{padding:14px}}
 .machine-art .cabinet-photo{width:100%;height:100%;object-fit:contain;display:block;position:absolute;inset:0;background:#f5f7fa}.machine-art.has-photo{background:#fff}.machine-art.has-photo .art-label{background:#0e456e;color:white}.catalog-research-fold{border:1px solid #cedde8;border-radius:11px;background:#fff;padding:12px}.catalog-research-fold>summary{cursor:pointer;font-weight:750;color:#155987}.catalog-research-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:7px;padding-top:13px}.catalog-research-list a{display:block;background:#eef4f8;border-radius:7px;padding:8px;font-size:13px;text-decoration:none}.catalog-research-list a:focus-visible{outline:3px solid #6ab0d9}</style>
 <!-- Rebuild with locally cached 2026 Hokuto Tensei 2 and Sengoku Otome 5 cabinet photos. -->
@@ -59,11 +59,9 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <main><section class="discovery" id="machine-search"><div class="catalog-search"><label for="catalog-query">機種名・略称で探す</label><input id="catalog-query" type="search" placeholder="例：真打吉宗、モンキー5、GGO" autocomplete="off"></div>
 </section>
 <section class="discovery" id="this-month-new"><div id="catalog-new-machines"></div></section>
-<section class="card site-changelog" aria-labelledby="site-updates-heading"><h2 id="site-updates-heading">更新履歴</h2><p class="meta">最近の機種情報・サイト更新。スクロールして過去の更新も確認できます。</p><div class="site-changelog-scroll" tabindex="0" aria-label="更新履歴一覧"><a href="./machines/index2.html#tips"><time datetime="2026-11-17">11/17</time>禁書目録2：狙い目条件と天井情報を更新</a><a href="./machines/mogumogu.html#tips"><time datetime="2026-11-17">11/17</time>モグモグ：周期狙いの条件を追加</a><a href="./machines/aobuta.html#performance"><time datetime="2026-11-17">11/17</time>青ブタ：参考出玉集計を追加</a><a href="./machines/kanokari.html#performance"><time datetime="2026-11-17">11/17</time>かのかり：参考出玉集計を追加</a><a href="./machines/lycoris.html#hints"><time datetime="2026-11-17">11/17</time>リコリス・リコイル：設定示唆を修正</a><a href="./machines/ggo.html#hints"><time datetime="2026-11-17">11/17</time>GGO：メーカー公表の示唆情報を追加</a></div></section>
+<section class="card site-changelog" aria-labelledby="site-updates-heading"><h2 id="site-updates-heading">更新履歴</h2><p class="meta">最近の機種情報・サイト更新。</p><div class="site-changelog-scroll" tabindex="0" aria-label="更新履歴一覧"><a href="./machines/index2.html#tips"><time datetime="2026-11-17">11/17</time>禁書目録2：狙い目条件と天井情報を更新</a><a href="./machines/mogumogu.html#tips"><time datetime="2026-11-17">11/17</time>モグモグ：周期狙いの条件を追加</a><a href="./machines/aobuta.html#performance"><time datetime="2026-11-17">11/17</time>青ブタ：参考出玉集計を追加</a><a href="./machines/kanokari.html#performance"><time datetime="2026-11-17">11/17</time>かのかり：参考出玉集計を追加</a></div><p class="site-changelog-archive"><a href="./updates.html">過去の更新一覧を見る</a></p></section>
 <section class="card industry-news" id="industry-news" aria-labelledby="industry-news-heading"><h2 id="industry-news-heading">スロット業界ニュース</h2><p class="meta">新台・増台、稼働貢献、検定通過、規制や営業ルールの動向を確認。立ち回りへの影響と出典をあわせて紹介します。</p><div id="industry-news-list" aria-live="polite"><p class="meta">確認済みニュースを準備中です。</p></div></section>
 <section class="discovery" id="find-machine">
-<p><a href="./hints.html">終了画面・示唆を見る</a></p>
-<p class="meta">実機画像が確認できた機種は写真を表示します。確認中の機種は仮表示です。画像は機種名・型式を照合して追加します。</p>
 <div id="catalog-groups"></div><p id="catalog-no-results" hidden class="catalog-empty">該当する機種がありません。機種名の一部で検索してください。</p>
 </section>
 <section class="card" id="entry"><h2>今の台をメモする</h2>
@@ -149,11 +147,11 @@ const DISCOVERY=[
 ];
 const FEATURED_IDS=["monkey5","tokyoghoul","seiya","ragnador","vivy","ggo","toaru2","mogumogu","sunbreak","world","aobuta","kanokari","lycoris","yoshimune","tensei2","juoh","otome5"];const PAGE_IDS={toaru2:"index2",sunbreak:"monhun",world:"worlddaistar"};for(const m of DISCOVERY){if(FEATURED_IDS.includes(m.id))m.group="popular";else if(m.group==="popular")m.group="other"}
 const CATALOG_GROUPS=[
-{key:"popular",heading:"注目されている機種",desc:"先行公開中の機種ページ17機種。カバネリは後日追加予定です。人気順のランキングではありません。",style:"rail"},
+{key:"popular",heading:"注目機種",desc:"",style:"rail"},
 {key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種。調査資料の追加機種も掲載",style:"grid"},
 
-{key:"other",heading:"ほかの機種も探す",desc:"継続稼働機種・調査中機種。古い機種だけを集めた一覧ではありません。",style:"list"},
-{key:"archive",heading:"note掲載・追加調査中の機種",desc:"保存された記事の見出しを収録。正式名・導入日・解析値は未照合です。詳細は未検証として表示します。",style:"list"}
+{key:"other",heading:"稼働貢献中機種",desc:"",style:"list"},
+{key:"archive",heading:"追加調査中の機種",desc:"",style:"list"}
 ];
 function normalizeMachine(text){return String(text||"").normalize("NFKC").toLowerCase().replace(/[\s・:：\-－_()（）]/g,"");}
 function makeMachineTile(m){
@@ -211,11 +209,11 @@ function renderDiscovery(){
     const link=document.createElement("a");link.href="./opportunities.html#machine="+encodeURIComponent(m.id);
     link.textContent=m.name;list.append(link);
    }
-   fold.append(summary,list);section.append(h,p,fold);root.append(section);continue;
+   fold.append(summary,list);section.append(h);if(group.desc)section.append(p);section.append(fold);root.append(section);continue;
   }
   const grid=document.createElement("div");grid.className="catalog-"+group.style;
   for(const m of records)grid.append(makeMachineTile(m));
-  section.append(h,p,grid);(group.key==="new"?newRoot:root).append(section);
+  section.append(h);if(group.desc)section.append(p);section.append(grid);(group.key==="new"?newRoot:root).append(section);
  }
  document.getElementById("catalog-no-results").hidden=total!==0;
 }
