@@ -366,6 +366,36 @@
       "url": "https://hisshobon.com/machineinfo/185654/",
       "asof": "2026-11-17本文確認（11/10公開・必勝本編集部調査）",
       "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "mogumogu",
+      "placement": "target",
+      "kind": "zone",
+      "title": "黒船襲来バトル失敗後：1周期目のCZを確認",
+      "meaning": "掲載元は、黒船襲来バトル失敗後の1周期目でモグモグ大戦に当選すると説明しています。この経路は制覇ロードへの移行ではなく、AT確定でもありません。編集部では直前の黒船失敗を確認でき、まだ初回周期のCZを消化していない台を拾い候補とします。CZの結果後は新しい状態・示唆で判断し直します。通常AT後や、その後すでにCZを消化した台へ同じ条件を使いません。開始pt・投資上限・金額期待値は調査中です。",
+      "url": "https://chonborista.com/slot/net-slot/263515/",
+      "asof": "2026-11-17本文確認（掲載元表示10/8・10/23）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "mogumogu",
+      "placement": "target",
+      "kind": "zone",
+      "title": "AT終了後：武将参戦状況付きの引き戻し候補",
+      "meaning": "通常のAT終了後は1周期目到達で制覇ロードへ。掲載元の引き戻し期待度は設定1で約31%で、成功すると前ATで参戦した武将を引き継ぎます。編集部では前ATの参戦状況と、まだ初回の引き戻しを確認していないことを合わせて見る方針です。31%はこのゾーンの引き戻し期待度であり、収支勝率や全設定共通値ではありません。前の参戦状況を確認できない場合は、1周期目という理由だけで追う判断をしません。",
+      "url": "https://chonborista.com/slot/net-slot/263515/",
+      "asof": "2026-11-17本文確認（掲載元表示10/8・10/23）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "mogumogu",
+      "placement": "target",
+      "kind": "ceiling",
+      "title": "CZ天井とスルー天井：到達先を区別",
+      "meaning": "通常の699G＋αまたは最大6周期はCZへの到達条件です。モグモグ大戦の7連続失敗後は、次の8回目CZでAT当選と説明されています。設定変更時はCZまで299G＋αまたは最大3周期、3失敗後の4回目CZでATへ短縮。『3スルー』と『3回目CZ』を混同しません。実G・周期・pt・対象CZの連続失敗回数を別々に確認し、通常の朝一表示だけで設定変更と決めない方針です。",
+      "url": "https://chonborista.com/slot/net-slot/263515/",
+      "asof": "2026-11-17本文確認（掲載元表示10/8・10/23）",
+      "evidence_kind": "published_analysis_and_editorial"
     }
   ]
 }
