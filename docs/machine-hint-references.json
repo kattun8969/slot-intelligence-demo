@@ -1,5 +1,5 @@
 {
-  "provenance": "hints.html収集済み記録の直接統合。今回の再調査ではない。",
+  "provenance": "hints.html収集済み記録と個別再調査の統合。出典・確認時点・解析/考察の区分は各行を参照。",
   "guides": [
     {
       "machine": "yoshimune",
@@ -191,7 +191,25 @@
       "machine": "ragnador",
       "kind": "voice",
       "title": "赤いCZ強化カケジク：参戦条件まで確認",
-      "meaning": "赤帯のCZ強化カケジクを持った状態でCZに入ると妖主オトモ参戦濃厚!?とする解析。妖主参戦時のCZ勝利期待度は90%ですが、通常のCZ全体は約50%で、同じ条件ではありません。表示中にCZへ入ることが条件なので、赤帯を見ただけで次のCZまで無制限に追う根拠にはしません。",
+      "meaning": "右下の赤帯「CZ強化」が表示された状態でCZへ入ると妖主オトモ参戦濃厚!?とする解析。妖主参戦時のCZ勝利期待度90%は、CZ全体約50%とは別条件です。他の位置の赤いカケジクにこの90%を当てはめないでください。表示の消滅条件も下の項目で確認し、赤帯を見ただけで次のCZまで無制限には追いません。",
+      "url": "https://1geki.jp/slot/l_ragnador/51/",
+      "asof": "2026-11-17確認（11/13更新）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "ragnador",
+      "kind": "voice",
+      "title": "カケジクの寿命：消えたら判断を見直す",
+      "meaning": "獲得時は10Gの保証があり、その後はハズレ時の抽選で消滅します。保証中の同じカケジク獲得では10G加算。右下のCZ強化と左下のAT報酬強化は、フェイクを含む前兆中には消えません。編集部方針：対応する前兆の結果と現在の表示を確認し、消滅後はカケジク所持を前提にした判断を引き継がず、現在G数・CZ回数・敵示唆で選び直します。",
+      "url": "https://1geki.jp/slot/l_ragnador/43/",
+      "asof": "2026-11-17確認（11/13更新）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "ragnador",
+      "kind": "voice",
+      "title": "CZ終了時：サブ液晶タッチで次の相手を確認",
+      "meaning": "CZ終了画面でサブ液晶をタッチすると次回CZ相手を示すボイスが出ます。イヅナは基本、白虎は白虎以上、玄武は玄武以上、朱雀は朱雀濃厚!?とする解析。発展失敗の次Gに見るアイキャッチとは確認の場面が異なります。設定確定の情報ではなく、次のCZを検討するための材料として記録します。",
       "url": "https://1geki.jp/slot/l_ragnador/51/",
       "asof": "2026-11-17確認（11/13更新）",
       "evidence_kind": "published_analysis_and_editorial"
