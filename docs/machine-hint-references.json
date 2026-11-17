@@ -302,6 +302,35 @@
       "url": "https://chonborista.com/slot/orinpia-slot/261018/",
       "asof": "2026-11-17本文確認（既存解析の編集部整理）",
       "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "kanokari",
+      "kind": "setting",
+      "title": "リザルト設定示唆：通常へ戻る終了画面だけ",
+      "meaning": "設定示唆の対象は、ストックなしのかのかりBONUS終了時、または1GレンCHANCE終了時に通常・引き戻し状態へ移る画面です。通常へ移らないときの固定画面は判別に数えません。対象画面では枠色を確認し、紫は設定4以上、銀は5以上、金は6濃厚とする解析。表示場面も一緒に記録します。",
+      "url": "https://www.dechau.com/news/single.php?area=undefined&id=25549",
+      "asof": "2026-11-17本文確認（公開9/7・改訂日未表示）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "kanokari",
+      "kind": "zone",
+      "placement": "target",
+      "title": "REG連続狙い：天井回数の次のボーナスを確認",
+      "meaning": "REG連続天井は3〜6回の選択回数に達した次のボーナスが裏かのかりBONUS濃厚という仕様です。3回選択ならREGが3回続いた後の4回目が対象で、3回目のREGが裏へ変わる意味ではありません。編集部ではREG回数だけで着席を即決せず、ボーナス種別と連続履歴を確認します。引き戻しを挟んだ回数の扱い・金額期待値・追う上限は調査中です。",
+      "url": "https://www.dechau.com/news/single.php?area=undefined&id=25549",
+      "asof": "2026-11-17本文確認（公開9/7・改訂日未表示）",
+      "evidence_kind": "published_analysis_and_editorial"
+    },
+    {
+      "machine": "kanokari",
+      "kind": "zone",
+      "placement": "target",
+      "title": "BIG後500Gゾーン：等価420Gの参考条件",
+      "meaning": "掲載元の実戦データを用いた計算では、BIG後・5枚等価の500Gゾーン狙いを420Gからの参考目安としています。非前兆を想定して着席から45Gの当選を除外し、545G以内の当選を追い、非当選なら545Gで終了する計算です。ボーナス当選時は75G以内の当選を追う前提。REG後や設定変更後、閉店間際にそのまま使いません。実際のやめ時はユメカノや前兆などの状態も確認します。 50枚31G・平均純増3.0枚/G・800G/時、着席時の内部/有利区間は平均状態を想定し、掲載元は107%ラインを目安にしています。",
+      "url": "https://note.com/g1slotapple/n/nc40995928398",
+      "asof": "2026-11-17本文確認（最終更新10/1、9/7〜27集計）",
+      "evidence_kind": "published_estimate_and_editorial"
     }
   ]
 }

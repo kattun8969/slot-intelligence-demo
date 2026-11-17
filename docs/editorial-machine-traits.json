@@ -9,7 +9,8 @@
     "volatility": "一撃性・安定性・収支分布。標準偏差や分位点がない場合は定性的な暫定評価のみ",
     "editorial_assessment": "編集部の立ち回り考察。判断根拠・反例・確度・更新日を保持する",
     "published_specs": "設定別AT初当たり・機械割等の公開スペック。勝率とは別",
-    "reference_metrics": "全設定混合集計などの参考指標。設定別勝率と混同しない。推定設定群のプラス台割合はobserved_positive_day_rateとして区別し、設定別勝率を埋めない"
+    "reference_metrics": "全設定混合集計などの参考指標。設定別勝率と混同しない。推定設定群のプラス台割合はobserved_positive_day_rateとして区別し、設定別勝率を埋めない",
+    "reported_payout_distributions": "掲載元の獲得枚数集計。AT/ST/ボーナス1回の区切りが未確認の参考値をpayout_per_entryと分離して表示する"
   },
   "records": [
     {
@@ -148,6 +149,40 @@
         "sources": [
           "https://chonborista.com/slot/sammy-slot/261631/"
         ]
+      }
+    },
+    {
+      "machine_id": "kanokari",
+      "machine_name": "Lパチスロ 彼女、お借りします",
+      "verified_on": "2026-11-17",
+      "setting_win_rates": [],
+      "payout_per_entry": [],
+      "published_specs": [],
+      "reference_metrics": [],
+      "reported_payout_distributions": [
+        {
+          "label": "参考：掲載元の獲得枚数集計",
+          "mean_medals": 662.4,
+          "median_medals": 372,
+          "sample_size": 31024,
+          "over_1000_count": 4564,
+          "over_1000_rate_pct": 14.71,
+          "entry_scope_confirmed": false,
+          "scope": "獲得枚数を区切る条件とREGを含むかは確認中。AT/ST1回の平均・中央値とは未確定です。",
+          "period": "記事の集計期間は2026-09-07〜09-27。分布欄の個別除外条件は未確認",
+          "source_type": "公開実戦データ集計（掲載元の参考値）",
+          "source_url": "https://note.com/g1slotapple/n/nc40995928398",
+          "verified_on": "2026-11-17",
+          "note": "初当たり期待枚数、機械割、設定別勝率、現在のG数からの期待値とは別。集計区切り確定まではモンキーの全AT集計と直接比較しません。"
+        }
+      ],
+      "editorial_assessment": {
+        "summary": "掲載元の獲得枚数分布は平均が中央値を上回ります。集計単位は確認中のため参考値として掲載し、AT/ST1回の集計とは区別します。",
+        "labels": [],
+        "sources": [
+          "https://note.com/g1slotapple/n/nc40995928398"
+        ],
+        "updated_at": "2026-11-17"
       }
     }
   ],
