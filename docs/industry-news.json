@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "updated_at": null,
+  "items": [],
+  "fields": {
+    "id": "unique news identifier",
+    "category": "稼働貢献終了 | 新台・増台 | 検定通過 | 規制・制度 | その他",
+    "title": "verified factual headline",
+    "published_at": "YYYY-MM-DD official publication date",
+    "status": "verified only; drafts are hidden",
+    "summary": "brief factual summary",
+    "impact": "grounded practical implications or explicitly no confirmed impact",
+    "source_url": "direct original source HTTPS URL",
+    "source_name": "original source publisher",
+    "verified_at": "YYYY-MM-DD date verified"
+  }
+}
