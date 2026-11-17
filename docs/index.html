@@ -148,7 +148,7 @@ const FEATURED_IDS=["monkey5","tokyoghoul","seiya","ragnador","vivy","ggo","toar
 const CATALOG_GROUPS=[
 {key:"popular",heading:"注目されている機種",desc:"先行公開中の機種ページ17機種。カバネリは後日追加予定です。人気順のランキングではありません。",style:"rail"},
 {key:"new",heading:"今月の新台",desc:"2026年11月導入の確認済み機種。調査資料の追加機種も掲載",style:"grid"},
-{key:"recent",heading:"最近導入された台",desc:"2026年9〜10月導入のピックアップ",style:"grid"},
+
 {key:"other",heading:"ほかの機種も探す",desc:"継続稼働機種・調査中機種。古い機種だけを集めた一覧ではありません。",style:"list"},
 {key:"archive",heading:"note掲載・追加調査中の機種",desc:"保存された記事の見出しを収録。正式名・導入日・解析値は未照合です。詳細は未検証として表示します。",style:"list"}
 ];
@@ -194,7 +194,7 @@ function renderDiscovery(){
  const root=document.getElementById("catalog-groups");root.replaceChildren();
  let total=0;
  for(const group of CATALOG_GROUPS){
-  const records=DISCOVERY.filter(m=>m.group===group.key&&[m.name,...m.aliases].some(n=>normalizeMachine(n).includes(q)));
+  const records=DISCOVERY.filter(m=>(group.key==="new" ? (m.date||"").startsWith("2026-11-") : (group.key==="other" ? (m.group==="other"||m.group==="recent") : m.group===group.key))&&[m.name,...m.aliases].some(n=>normalizeMachine(n).includes(q)));
   total+=records.length;if(!records.length)continue;
   const section=document.createElement("section");section.className="catalog-section";
   const h=document.createElement("h3");h.textContent=group.heading+"（"+records.length+"）";
