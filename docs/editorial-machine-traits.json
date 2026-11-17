@@ -184,6 +184,40 @@
         ],
         "updated_at": "2026-11-17"
       }
+    },
+    {
+      "machine_id": "aobuta",
+      "machine_name": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
+      "verified_on": "2026-11-17",
+      "setting_win_rates": [],
+      "payout_per_entry": [],
+      "published_specs": [],
+      "reference_metrics": [],
+      "reported_payout_distributions": [
+        {
+          "label": "参考：掲載元の獲得枚数集計",
+          "mean_medals": 497.7,
+          "median_medals": 182,
+          "sample_size": 77723,
+          "over_1000_count": 9178,
+          "over_1000_rate_pct": 11.81,
+          "entry_scope_confirmed": false,
+          "scope": "掲載元の獲得枚数分布。ボーナスとSTを区切る条件は確認中で、ST1回の平均・中央値とは未確定です。",
+          "period": "記事の集計期間は2026-09-07〜09-30。分布欄の個別除外条件は未確認",
+          "source_type": "公開実戦データ集計（掲載元の参考値）",
+          "source_url": "https://note.com/g1slotapple/n/nf24fd9743229",
+          "verified_on": "2026-11-17",
+          "note": "初当たり期待枚数515.4枚等とは別欄の集計です。現在G数の期待値、設定別勝率とは別。集計区切り確定前に他機種の全AT集計と直接比較しません。"
+        }
+      ],
+      "editorial_assessment": {
+        "summary": "掲載元の獲得枚数分布では平均497.7枚に対し中央値182枚。大きな獲得が平均を押し上げる分布と読めますが、集計単位は確認中の参考値です。",
+        "labels": [],
+        "sources": [
+          "https://note.com/g1slotapple/n/nf24fd9743229"
+        ],
+        "updated_at": "2026-11-17"
+      }
     }
   ],
   "editorial_labels": [
