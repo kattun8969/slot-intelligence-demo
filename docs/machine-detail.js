@@ -22,11 +22,11 @@ const hintTexts=c.tips.filter(t=>/示唆|アイキャッチ|終了画面|トロ�
 
 // Keep source-backed candidate points beside practical counter notes.
 const practicalGuide=el('div');practicalGuide.id='practical-guide';$('tips').before(practicalGuide);
-practicalGuide.append(el('p','具体的な開始条件は現在調査中です。以下は確認事項です。','muted'));
+practicalGuide.append(el('p',c.tips.some(t=>/[0-9]+G[〜～]/.test(t))?'下記の出典付き狙い目条件を確認してください。':'具体的な開始条件は現在調査中です。以下は確認事項です。','muted'));
 function referenceCandidates(points){return (Array.isArray(points)?points:[]).filter(p=>Array.isArray(p)&&p.length===2&&Number.isInteger(p[0])&&p[0]>=0&&Number.isFinite(p[1])&&p[1]>=1000).slice().sort((a,b)=>a[0]-b[0]).slice(0,3)}
 function renderPractical(r){
  practicalGuide.replaceChildren();
- if(!r){practicalGuide.append(el('p','具体的な開始条件は現在調査中です。G数だけで追わず、下の示唆・狙い目を確認してください。','muted'));return}
+ if(!r){practicalGuide.append(el('p',c.tips.some(t=>/[0-9]+G[〜～]/.test(t))?'G数別の金額期待値は調査中です。下の出典付き狙い目条件を確認してください。':'具体的な開始条件は現在調査中です。G数だけで追わず、下の示唆・狙い目を確認してください。','muted'));return}
  const card=el('div');card.className='target-card';card.append(el('strong','この条件で探す参考地点'));
  card.append(el('p',r.label+'／'+(r.price||'交換条件は出典で確認')));
  const candidates=referenceCandidates(r.points);
