@@ -4,6 +4,9 @@ on:
     paths:
       - 'docs/haishio-re-first-look.html'
       - 'docs/machine-detail.js'
+      - 'docs/machine-hint-references.json'
+      - 'docs/machine-target-references.json'
+      - 'tests/test_hint_reference_integrity.py'
       - 'docs/machines/**'
       - 'docs/editorial-machine-traits.json'
       - 'docs/index.html'
@@ -41,6 +44,9 @@ on:
     paths:
       - 'docs/haishio-re-first-look.html'
       - 'docs/machine-detail.js'
+      - 'docs/machine-hint-references.json'
+      - 'docs/machine-target-references.json'
+      - 'tests/test_hint_reference_integrity.py'
       - 'docs/machines/**'
       - 'docs/editorial-machine-traits.json'
       - 'docs/index.html'
