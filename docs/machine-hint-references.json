@@ -316,11 +316,17 @@
       "machine": "kanokari",
       "kind": "zone",
       "placement": "target",
-      "title": "REG連続狙い：天井回数の次のボーナスを確認",
-      "meaning": "REG連続天井は3〜6回の選択回数に達した次のボーナスが裏かのかりBONUS濃厚という仕様です。3回選択ならREGが3回続いた後の4回目が対象で、3回目のREGが裏へ変わる意味ではありません。編集部ではREG回数だけで着席を即決せず、ボーナス種別と連続履歴を確認します。引き戻しを挟んだ回数の扱い・金額期待値・追う上限は調査中です。",
-      "url": "https://www.dechau.com/news/single.php?area=undefined&id=25549",
-      "asof": "2026-11-17本文確認（公開9/7・改訂日未表示）",
-      "evidence_kind": "published_analysis_and_editorial"
+      "title": "REG単発狙い：引き戻し失敗まで確認して数える",
+      "meaning": "数えるのは「REG消化→引き戻しチャンス失敗」を確認した単発の連続回数です。データカウンターにREGと出ただけでは1回に数えません。この単発が選択天井の3〜6回に達すると次回ボーナスが裏かのかりBONUS濃厚。3回選択ならREG単発3回後の4回目が対象です。引き戻し成功時はBIG以上とする解析で、REG単発の継続として扱いません。内部回数がリセットされる正確な抽選時点は未確認です。単発3連続以降は掲載元も参考候補の表現であり、現在G数・履歴を併せて判断。金額期待値・追う上限は調査中です。",
+      "url": "https://hisshobon.com/machineinfo/185934/",
+      "asof": "2026-11-17本文確認（掲載日11/13）",
+      "evidence_kind": "published_analysis_and_editorial",
+      "related_sources": [
+        {
+          "label": "天井回数の次回恩恵を確認した解析",
+          "url": "https://www.dechau.com/news/single.php?area=undefined&id=25549"
+        }
+      ]
     },
     {
       "machine": "kanokari",
