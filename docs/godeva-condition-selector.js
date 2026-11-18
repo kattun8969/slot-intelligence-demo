@@ -1,0 +1,1 @@
+'use strict';document.addEventListener('DOMContentLoaded',()=>{const sel=document.getElementById('godeva-condition');if(!sel)return;const panels=[...document.querySelectorAll('[data-godeva-case]')];const update=()=>{for(const panel of panels)panel.hidden=panel.dataset.godevaCase!==sel.value;};sel.addEventListener('change',update);update();});
