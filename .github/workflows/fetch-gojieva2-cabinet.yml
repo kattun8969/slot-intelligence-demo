@@ -1,0 +1,63 @@
+name: Fetch GojiEva2 cabinet image
+on:
+  push:
+    branches: [feat/gojieva2-cabinet-20261118]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/gojieva2-cabinet-20261118
+      - name: Find actual cabinet photo and save locally
+        run: |
+          python3 - <<'PY'
+          import urllib.request, re, html, os
+          from html.parser import HTMLParser
+          url='https://1geki.jp/slot/l_goji_eva2/'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          page=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','replace')
+          class Images(HTMLParser):
+              def __init__(self):super().__init__();self.items=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag!='img':return
+                  a=dict(attrs)
+                  self.items.append((a.get('alt',''),a.get('data-src') or a.get('src') or '',a.get('data-original') or ''))
+          p=Images();p.feed(page)
+          choices=[(alt,src or fallback) for alt,src,fallback in p.items if ('筐体' in alt or '機種画像' in alt) and ('ゴジ' in alt or 'エヴァ' in alt)]
+          print('candidates',choices)
+          if not choices:raise SystemExit('No verified cabinet image found; refusing unrelated image')
+          from urllib.parse import urljoin
+          src=urljoin(url,choices[0][1])
+          data=urllib.request.urlopen(urllib.request.Request(src,headers={'User-Agent':'Mozilla/5.0','Referer':url}),timeout=30).read()
+          if data.startswith(b'\xff\xd8'):ext='jpg'
+          elif data.startswith(b'RIFF') and data[8:12]==b'WEBP':ext='webp'
+          elif data.startswith(b'\x89PNG'):ext='png'
+          else:raise SystemExit('Not an image')
+          os.makedirs('docs/assets/machines',exist_ok=True)
+          open('docs/assets/machines/godzilla-evangelion-2.'+ext,'wb').write(data)
+          print('saved',src,len(data),ext)
+          open('/tmp/gojieva-image-ext','w').write(ext)
+          PY
+      - name: Update machine image config and commit
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          ext=Path('/tmp/gojieva-image-ext').read_text()
+          p=Path('docs/machine-detail.js')
+          s=p.read_text()
+          key='"godzilla-evangelion-2":'
+          if key not in s:
+              anchor='const C={'
+              assert anchor in s
+              s=s.replace(anchor,anchor+'"godzilla-evangelion-2":{"name":"ゴジラ対エヴァンゲリオン2","image":"../assets/machines/godzilla-evangelion-2.'+ext+'"},',1)
+          p.write_text(s)
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/assets/machines/godzilla-evangelion-2.* docs/machine-detail.js
+          git commit -m "Add verified GojiEva2 cabinet image" || exit 0
+          git push
