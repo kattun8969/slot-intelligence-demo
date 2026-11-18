@@ -1,0 +1,1 @@
+'use strict';document.addEventListener('DOMContentLoaded',()=>{const sel=document.getElementById('godeva-ev-type');if(!sel)return;const panels=[...document.querySelectorAll('[data-godeva-ev]')];const update=()=>{for(const p of panels)p.hidden=p.dataset.godevaEv!==sel.value;};sel.addEventListener('change',update);update();});
