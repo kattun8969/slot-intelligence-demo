@@ -38,10 +38,12 @@ def _validate(record: dict[str, Any]) -> dict[str, Any]:
         raise EventStreamError("observed_at must have timezone")
     if isinstance(record["event_order"], bool) or not isinstance(record["event_order"], int) or record["event_order"] < 0:
         raise EventStreamError("event_order must be nonnegative integer")
-    if isinstance(record["counter_value"], bool) or not isinstance(record["counter_value"], int) or record["counter_value"] < 0:
-        raise EventStreamError("counter_value must be nonnegative integer")
+    if isinstance(record["counter_value"], bool) or not isinstance(record["counter_value"], int):
+        raise EventStreamError("counter_value must be integer")
     if record["event_type"] not in KNOWN_EVENTS or record["counter_type"] not in COUNTERS:
         raise EventStreamError("unknown event or counter")
+    if record["counter_value"] < 0 and record["counter_type"] not in {"daily_difference_medals", "section_difference_medals"}:
+        raise EventStreamError("negative value requires signed-difference counter")
     if record["review_status"] not in {"verified", "unmapped", "ambiguous"}:
         raise EventStreamError("invalid review status")
     if not isinstance(record["source_url"], str) or not record["source_url"].startswith("https://"):
@@ -72,7 +74,7 @@ def audit_event_stream(rows: list[dict[str, Any]]) -> dict[str, Any]:
         for a, b in zip(ordered, ordered[1:]):
             if a["event_order"] >= b["event_order"]:
                 flags.add("non_monotonic_event_order")
-            if a["counter_type"] == b["counter_type"] and a["counter_origin"] == b["counter_origin"] and b["counter_value"] < a["counter_value"]:
+            if a["counter_type"] == b["counter_type"] and a["counter_type"] not in {"daily_difference_medals", "section_difference_medals"} and a["counter_origin"] == b["counter_origin"] and b["counter_value"] < a["counter_value"]:
                 flags.add("counter_decreased_without_verified_boundary")
             if datetime.fromisoformat(b["observed_at"]) - datetime.fromisoformat(a["observed_at"]) > __import__("datetime").timedelta(hours=24):
                 flags.add("long_observation_gap")
