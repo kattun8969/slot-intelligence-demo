@@ -1,0 +1,1 @@
+'use strict';document.addEventListener('DOMContentLoaded',()=>{const selector=document.getElementById('garo-ev-condition');if(!selector)return;const cases=[...document.querySelectorAll('[data-ev-case]')];function update(){for(const el of cases)el.hidden=el.dataset.evCase!==selector.value;}selector.addEventListener('change',update);update();});
