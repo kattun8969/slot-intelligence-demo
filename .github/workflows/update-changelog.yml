@@ -1,32 +1,56 @@
-name: Propose machine changelog updates
+name: Sync TOP content after updates
 on:
   push:
     branches: [main]
     paths:
       - 'docs/machines/**'
+      - 'docs/changelog.js'
+      - 'docs/industry-news.json'
+      - 'scripts/update_changelog.py'
+      - 'scripts/sync_top_content.py'
+  pull_request:
+    paths:
+      - 'scripts/sync_top_content.py'
+      - 'scripts/update_changelog.py'
+      - '.github/workflows/update-changelog.yml'
   workflow_dispatch:
 permissions:
   contents: write
-  pull-requests: write
 jobs:
-  changelog:
+  sync-top:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 130
+          fetch-depth: 0
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Generate changelog from merged machine commits
+      - name: Update machine changelog from merged commits
         run: python scripts/update_changelog.py
-      - name: Propose reviewable changelog update
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: automation/machine-changelog
-          delete-branch: true
-          commit-message: 'docs: sync machine changelog from merged commits'
-          title: 'docs: sync TOP machine changelog'
-          body: 'Automatically generated from merged machine-page changes. Review links and descriptions before merging; Pages is not considered verified by this workflow.'
-          add-paths: docs/changelog.js
+      - name: Generate static TOP and archive
+        run: python scripts/sync_top_content.py
+      - name: Validate static output
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          top=Path("docs/index.html").read_text()
+          archive=Path("docs/updates.html").read_text()
+          assert '<div class="site-changelog-scroll" id="site-changelog-items"' in top
+          assert '<div class="industry-news-list"' in top
+          assert '<a class="changelog-entry"' in archive
+          print("Static TOP and archive validated")
+          PY
+      - name: Commit and push generated HTML and changelog
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/changelog.js docs/index.html docs/updates.html
+          if git diff --cached --quiet; then
+            echo "No changes to publish"
+          else
+            git commit -m "docs: auto-sync TOP news and machine history"
+            git push origin HEAD:main
+          fi
