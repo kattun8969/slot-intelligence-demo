@@ -69,7 +69,7 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <a href="./machines/godzilla-evangelion-2.html"><time datetime="2026-11-18">11/18</time>ゴジエヴァ2：ボーナス間・AT間期待値表を追加</a>
 <a href="./machines/godzilla-evangelion-2.html"><time datetime="2026-11-18">11/18</time>ゴジエヴァ2：PAPIMO実績を追加</a>
 </div><p class="site-changelog-archive"><a href="./updates.html">過去の更新一覧を見る</a></p></section>
-<section class="card industry-news" id="industry-news" aria-labelledby="industry-news-heading"><h2 id="industry-news-heading">スロット業界ニュース</h2><p class="meta">新台・増台、稼働貢献、検定通過、規制や営業ルールの動向を確認。立ち回りへの影響と出典をあわせて紹介します。</p><div id="industry-news-list" aria-live="polite"><p class="meta">確認済みニュースを準備中です。</p></div></section>
+<section class="card industry-news" id="industry-news" aria-labelledby="industry-news-heading"><h2 id="industry-news-heading">スロット業界ニュース</h2><p class="meta">新台・増台、稼働貢献、検定通過、規制や営業ルールの動向を確認。立ち回りへの影響と出典をあわせて紹介します。</p><div id="industry-news-list" aria-live="polite"><div class="industry-news-list"><article class="industry-news-item"><span class="news-tag">新台・増台</span><time class="meta" datetime="2026-11-19">2026-11-19 公表</time><h3>サンセイR&amp;Dが「e牙狼13 ハガネを継ぐ者」を発表</h3><p>サンセイR&amp;Dが製品情報を公開。全国導入開始予定は2026年12月21日。</p><p>立ち回りへの影響：パチンコ新機種の発表であり、スロットの狙い目条件への直接的な影響は確認されていません。</p><a href="https://www.sansei-rd.com/search/koushin.html" target="_blank" rel="noopener noreferrer">一次情報・確認元を見る</a></article></div></div></section>
 <section class="discovery" id="find-machine">
 <div id="catalog-groups"></div><p id="catalog-no-results" hidden class="catalog-empty">該当する機種がありません。機種名の一部で検索してください。</p>
 </section>
@@ -468,23 +468,5 @@ $("export-all").addEventListener("click",()=>{download({schema:1,kind:"offline_e
 $("clear-all").addEventListener("click",()=>{if(confirm("この端末に保存したメモを削除しますか？")){writeNotes([]);renderNotes();$("status").textContent="この端末のメモを削除しました"}});
 rebuild();renderNotes();
 </script>
-<div style="position:fixed;right:12px;bottom:12px;z-index:100;background:#fff;padding:12px;border:2px solid #124f88;border-radius:10px"><a href="./features/community-judgment/">みんなの期待値｜狙い目判断・投稿</a></div><script>
-(function(){
-'use strict';
-const root=document.getElementById('industry-news-list');
-const make=(tag,content,cls)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(content!==undefined)e.textContent=content;return e};
-fetch('./industry-news.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('取得できません');return r.json()}).then(data=>{
- const entries=Array.isArray(data.items)?data.items.filter(x=>x&&x.status==='verified'&&x.title&&x.summary&&x.source_url&&/^https:\/\//.test(x.source_url)&&x.published_at):[];
- entries.sort((a,b)=>String(b.published_at).localeCompare(String(a.published_at)));root.replaceChildren();
- if(!entries.length){root.append(make('p','出典と事実確認が完了したニュースから掲載します。','meta'));return}
- const list=make('div',undefined,'industry-news-list');for(const item of entries.slice(0,5)){
- const article=make('article',undefined,'industry-news-item');article.append(make('span',item.category||'業界ニュース','news-tag'));
- const date=make('time',String(item.published_at).slice(0,10)+' 公表','meta');date.dateTime=String(item.published_at).slice(0,10);article.append(date);
- article.append(make('h3',item.title));article.append(make('p',item.summary));
- if(item.impact)article.append(make('p','立ち回りへの影響：'+item.impact));
- const a=make('a','一次情報・確認元を見る');a.href=item.source_url;a.target='_blank';a.rel='noopener noreferrer';article.append(a);list.append(article)
- }root.append(list)
-}).catch(()=>{root.replaceChildren(make('p','ニュースを取得できませんでした。時間をおいて再度お試しください。','meta'))});
-})();
-</script>
-<script src="./changelog.js"></script><script>if(window.renderSlotChangelog)window.renderSlotChangelog({target:"site-changelog-items",perPage:8});</script></body></html>
+<div style="position:fixed;right:12px;bottom:12px;z-index:100;background:#fff;padding:12px;border:2px solid #124f88;border-radius:10px"><a href="./features/community-judgment/">みんなの期待値｜狙い目判断・投稿</a></div>
+</body></html>
