@@ -1,0 +1,32 @@
+name: Propose machine changelog updates
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/machines/**'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 130
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate changelog from merged machine commits
+        run: python scripts/update_changelog.py
+      - name: Propose reviewable changelog update
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: automation/machine-changelog
+          delete-branch: true
+          commit-message: 'docs: sync machine changelog from merged commits'
+          title: 'docs: sync TOP machine changelog'
+          body: 'Automatically generated from merged machine-page changes. Review links and descriptions before merging; Pages is not considered verified by this workflow.'
+          add-paths: docs/changelog.js
