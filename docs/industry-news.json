@@ -1,7 +1,32 @@
 {
   "schema_version": 1,
-  "updated_at": null,
-  "items": [],
+  "updated_at": "2026-11-19",
+  "items": [
+    {
+      "id": "2026-11-18-new-machine-schedule",
+      "category": "新台・増台",
+      "title": "12月7日導入予定機種など、新台スケジュールが更新",
+      "published_at": "2026-11-18",
+      "status": "verified",
+      "summary": "業界メディアの11月18日更新版に、12月7日導入予定の機種が掲載された。11月2日導入のスマスロ『聖闘士星矢 黄金十二宮』『ゴジラ対エヴァンゲリオン2』『牙狼 闇を照らす者』『Vivy』、11月16日導入の『ハイハイシオサイRe』も一覧で確認できる。",
+      "impact": "掲載日は導入予定の目安。地域や店舗で入替日は異なるため、実際の設置状況は店舗告知を確認する。",
+      "source_url": "https://web-greenbelt.jp/post-119838/",
+      "source_name": "グリーンべると",
+      "verified_at": "2026-11-19"
+    },
+    {
+      "id": "2026-11-16-advertising-guidance-casebook-7",
+      "category": "規制・制度",
+      "title": "ホール4団体が広告宣伝の是正勧告事例集・第7集を公表",
+      "published_at": "2026-11-16",
+      "status": "verified",
+      "summary": "全日遊連、日遊協、MIRAI、余暇進の4団体が、2026年1〜9月の是正勧告から13事例を整理した第7集を発出。設定状況を示唆する告知、要件を満たさない『おすすめ』表示、来店取材を利用した告知、複数台の遊技結果を合算した表示などが取り上げられた。",
+      "impact": "ホールの告知や取材情報は広告表現と実際の設定・結果を区別して読む必要がある。今回の発表を新しい法律の制定とは扱わない。",
+      "source_url": "https://p-johojima.jp/news/post-76130/",
+      "source_name": "情報島",
+      "verified_at": "2026-11-19"
+    }
+  ],
   "fields": {
     "id": "unique news identifier",
     "category": "稼働貢献終了 | 新台・増台 | 検定通過 | 規制・制度 | その他",
