@@ -3,6 +3,30 @@
   "updated_at": "2026-11-19",
   "items": [
     {
+      "id": "20261119-assault-lily-release",
+      "category": "新台・増台",
+      "title": "パチスロ新台「Lアサルトリリィ」の発売と機種情報が発表",
+      "published_at": "2026-11-19",
+      "status": "verified",
+      "summary": "フィールズがスパイキー製「Lアサルトリリィ」（製造元：七匠）の発売と機種情報を発表。",
+      "impact": "導入前の新台情報。ゲーム数別期待値や具体的な狙い目条件は本発表だけでは確定できません。",
+      "source_url": "https://yugi-nippon.com/category/pachinko-new-machine/",
+      "source_name": "遊技日本・新台ニュース（11月19日掲載）",
+      "verified_at": "2026-11-19"
+    },
+    {
+      "id": "20261106-sanyo-umislo",
+      "category": "新台・増台",
+      "title": "サンスリーが新BT機「LB海スロ」を発表",
+      "published_at": "2026-11-06",
+      "status": "verified",
+      "summary": "三洋販売・サンスリーが新機種「LB海スロ」を発表。トップ導入予定日は2027年2月8日。",
+      "impact": "BT機の新台予定。設定別の実戦成績や狙い目条件は導入後のデータを待って評価します。",
+      "source_url": "https://www.sanyobussan.co.jp/information/pdf/sanyo_press_release_20261106_1.pdf",
+      "source_name": "三洋販売・サンスリー公式プレスリリース",
+      "verified_at": "2026-11-19"
+    },
+    {
       "id": "20261119-sansei-garo13",
       "category": "新台・増台",
       "title": "サンセイR&Dが「e牙狼13 ハガネを継ぐ者」を発表",
