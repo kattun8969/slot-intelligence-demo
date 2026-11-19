@@ -59,7 +59,16 @@ button{border:0;border-radius:10px;padding:12px 17px;background:var(--blue);colo
 <main><section class="discovery" id="machine-search"><div class="catalog-search"><label for="catalog-query">機種名・略称で探す</label><input id="catalog-query" type="search" placeholder="例：真打吉宗、モンキー5、GGO" autocomplete="off"></div>
 </section>
 <section class="discovery" id="this-month-new"><div id="catalog-new-machines"></div></section>
-<section class="card site-changelog" aria-labelledby="site-updates-heading"><h2 id="site-updates-heading">更新履歴</h2><p class="meta">最近の機種情報・サイト更新。</p><div class="site-changelog-scroll" id="site-changelog-items" tabindex="0" aria-label="更新履歴一覧"></div><p class="site-changelog-archive"><a href="./updates.html">過去の更新一覧を見る</a></p></section>
+<section class="card site-changelog" aria-labelledby="site-updates-heading"><h2 id="site-updates-heading">更新履歴</h2><p class="meta">最近の機種情報・サイト更新。</p><div class="site-changelog-scroll" id="site-changelog-items" tabindex="0" aria-label="更新履歴一覧">
+<a href="./machines/vivy.html"><time datetime="2026-11-19">11/19</time>Vivy：PAPIMO指標のスマホ表示を改善</a>
+<a href="./machines/vivy.html"><time datetime="2026-11-19">11/19</time>Vivy：期待値表の狭い画面表示を改善</a>
+<a href="./machines/vivy.html"><time datetime="2026-11-19">11/19</time>Vivy：PAPIMO集計期間の表記を明確化</a>
+<a href="./machines/godzilla-evangelion-2.html"><time datetime="2026-11-19">11/19</time>ゴジエヴァ2：PAPIMO集計条件を明確化</a>
+<a href="./machines/godzilla-evangelion-2.html"><time datetime="2026-11-18">11/18</time>ゴジエヴァ2：条件選択プルダウンの不具合を修正</a>
+<a href="./machines/godzilla-evangelion-2.html"><time datetime="2026-11-18">11/18</time>ゴジエヴァ2：期待値3条件を狙う条件に統合</a>
+<a href="./machines/godzilla-evangelion-2.html"><time datetime="2026-11-18">11/18</time>ゴジエヴァ2：ボーナス間・AT間期待値表を追加</a>
+<a href="./machines/godzilla-evangelion-2.html"><time datetime="2026-11-18">11/18</time>ゴジエヴァ2：PAPIMO実績を追加</a>
+</div><p class="site-changelog-archive"><a href="./updates.html">過去の更新一覧を見る</a></p></section>
 <section class="card industry-news" id="industry-news" aria-labelledby="industry-news-heading"><h2 id="industry-news-heading">スロット業界ニュース</h2><p class="meta">新台・増台、稼働貢献、検定通過、規制や営業ルールの動向を確認。立ち回りへの影響と出典をあわせて紹介します。</p><div id="industry-news-list" aria-live="polite"><p class="meta">確認済みニュースを準備中です。</p></div></section>
 <section class="discovery" id="find-machine">
 <div id="catalog-groups"></div><p id="catalog-no-results" hidden class="catalog-empty">該当する機種がありません。機種名の一部で検索してください。</p>
@@ -478,4 +487,4 @@ fetch('./industry-news.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('
 }).catch(()=>{root.replaceChildren(make('p','ニュースを取得できませんでした。時間をおいて再度お試しください。','meta'))});
 })();
 </script>
-<script src="./changelog.js"></script><script>renderSlotChangelog({target:"site-changelog-items",perPage:8});</script></body></html>
+<script src="./changelog.js"></script><script>if(window.renderSlotChangelog)window.renderSlotChangelog({target:"site-changelog-items",perPage:8});</script></body></html>

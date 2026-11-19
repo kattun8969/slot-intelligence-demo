@@ -1,7 +1,20 @@
 {
   "schema_version": 1,
-  "updated_at": null,
-  "items": [],
+  "updated_at": "2026-11-19",
+  "items": [
+    {
+      "id": "20261119-sansei-garo13",
+      "category": "新台・増台",
+      "title": "サンセイR&Dが「e牙狼13 ハガネを継ぐ者」を発表",
+      "published_at": "2026-11-19",
+      "status": "verified",
+      "summary": "サンセイR&Dが製品情報を公開。全国導入開始予定は2026年12月21日。",
+      "impact": "パチンコ新機種の発表であり、スロットの狙い目条件への直接的な影響は確認されていません。",
+      "source_url": "https://www.sansei-rd.com/search/koushin.html",
+      "source_name": "サンセイR&D公式お知らせ",
+      "verified_at": "2026-11-19"
+    }
+  ],
   "fields": {
     "id": "unique news identifier",
     "category": "稼働貢献終了 | 新台・増台 | 検定通過 | 規制・制度 | その他",
