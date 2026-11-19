@@ -36,22 +36,7 @@ def news_item(item):
             f'<h3>{e(item["title"])}</h3><p>{e(item["summary"])}</p>{impact}'
             f'<a href="{e(item["source_url"])}" target="_blank" rel="noopener noreferrer">一次情報・確認元を見る</a></article>')
 
-def replace_section(source, start, end, replacement):
-    a = source.find(start)
-    if a < 0:
-        raise SystemExit(f"Missing section start: {start}")
-    b = source.find(end, a + len(start))
-    if b < 0:
-        raise SystemExit(f"Missing section end: {end}")
-    return source[:a + len(start)] + "\n" + replacement + "\n" + source[b:]
-
 top = index_path.read_text(encoding="utf-8")
-top = replace_section(top,
-    '<div class="site-changelog-scroll" id="site-changelog-items"',
-    '</div><p class="site-changelog-archive">',
-    "\n".join(history_link(x) for x in entries[:8]) + "\n")
-# The history start marker ends inside its opening tag; preserve its attributes and >.
-# Replace only the content after the opening >.
 top = re.sub(r'(<div class="site-changelog-scroll" id="site-changelog-items"[^>]*>)[\\s\\S]*?(</div><p class="site-changelog-archive">)',
     lambda m: m.group(1) + "\n" + "\n".join(history_link(x) for x in entries[:8]) + "\n" + m.group(2),
     top, count=1)
