@@ -3,18 +3,6 @@
   "updated_at": "2026-11-19",
   "items": [
     {
-      "id": "20261119-bellco-lb-digislo",
-      "category": "新台・増台",
-      "title": "ベルコ販売が新機種「LBデジスロ」を発表",
-      "published_at": "2026-11-19",
-      "status": "verified",
-      "summary": "日電協の新機種情報で、ベルコ販売による「LBデジスロ」の発表が11月19日付で掲載されました。",
-      "impact": "詳細スペック・導入日・狙い目は今後の発表を確認します。",
-      "source_url": "https://www.nichidenkyo.or.jp/newcomer/list",
-      "source_name": "日本電動式遊技機工業協同組合（日電協）",
-      "verified_at": "2026-11-19"
-    },
-    {
       "id": "20261119-sansei-garo13",
       "category": "新台・増台",
       "title": "サンセイR&Dが「e牙狼13 ハガネを継ぐ者」を発表",
@@ -24,18 +12,6 @@
       "impact": "パチンコ新機種の発表であり、スロットの狙い目条件への直接的な影響は確認されていません。",
       "source_url": "https://www.sansei-rd.com/search/koushin.html",
       "source_name": "サンセイR&D公式お知らせ",
-      "verified_at": "2026-11-19"
-    },
-    {
-      "id": "20261116-universal-gettermouse",
-      "category": "新台・増台",
-      "title": "ユニバーサルが「スマスロ ゲッターマウス ブラザーズ」を発表",
-      "published_at": "2026-11-16",
-      "status": "verified",
-      "summary": "ユニバーサルエンターテインメントがメーシー製スロット新機種の発売を発表。ボーナス確率と演出モードについて紹介しています。",
-      "impact": "導入時期・天井狙いなどの実戦条件は公式発表で確認できた範囲に限り、続報を待ちます。",
-      "source_url": "https://www.universal-777.co.jp/news/",
-      "source_name": "ユニバーサルエンターテインメント公式ニュース",
       "verified_at": "2026-11-19"
     }
   ],
