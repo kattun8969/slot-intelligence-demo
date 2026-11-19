@@ -6,6 +6,27 @@
   "note": "公開情報のタイトル・メーカー名・更新見出しを自動収集。狙い目、当選確率、期待値、設定差、優遇・冷遇を自動推定しません。記事本文は転載しません。",
   "machines": [
     {
+      "id": "7496",
+      "name": "スマスロモンキーターンRED",
+      "maker": "山佐ネクスト",
+      "url": "https://pachiseven.jp/machines/7496",
+      "first_seen": "2026-11-19"
+    },
+    {
+      "id": "7504",
+      "name": "押忍！番長番付",
+      "maker": "パオン・ディーピー / 大都技研",
+      "url": "https://pachiseven.jp/machines/7504",
+      "first_seen": "2026-11-19"
+    },
+    {
+      "id": "7471",
+      "name": "スマスロ 快盗天使ツインエンジェル2",
+      "maker": "ロデオ / サミー",
+      "url": "https://pachiseven.jp/machines/7471",
+      "first_seen": "2026-11-19"
+    },
+    {
       "id": "7463",
       "name": "スマート沖スロ ハイハイシオサイRe",
       "maker": "パイオニア",
@@ -123,30 +144,99 @@
       "maker": "SANKYO",
       "url": "https://pachiseven.jp/machines/7438",
       "first_seen": "2026-11-15"
-    },
-    {
-      "id": "7431",
-      "name": "モグモグ風林火山 大海戦の巻",
-      "maker": "オーゼキ / ネット",
-      "url": "https://pachiseven.jp/machines/7431",
-      "first_seen": "2026-11-15"
-    },
-    {
-      "id": "7420",
-      "name": "スマスロ タコスロ",
-      "maker": "ユニバーサルブロス / ユニバーサルエンターテインメント",
-      "url": "https://pachiseven.jp/machines/7420",
-      "first_seen": "2026-11-15"
-    },
-    {
-      "id": "7419",
-      "name": "スマスロリコリス・リコイル",
-      "maker": "銀座 / サミー",
-      "url": "https://pachiseven.jp/machines/7419",
-      "first_seen": "2026-11-15"
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-18",
+      "headline": "押忍！番長番付 の「通常時の抽選」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7504"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "押忍！番長番付 の「轟チャンスの基本仕様」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7504"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "押忍！番長番付 の「漢磨きバトルの基本仕様」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7504"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "押忍！番長番付 の「漢磨きチャレンジの基本仕様」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7504"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "押忍！番長番付 の「天井機能」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7504"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "押忍！番長番付 の「基本スペック」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7504"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「終了画面のボイス」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「月蝕変異発動率」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「月蝕変異中のボーナス抽選」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「怪獣索敵ゾーン中の裏々プッシュ」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「怪獣索敵ゾーン中の抽選」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「ロングフリーズ」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「メニュー画面の示唆」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「ゲーム数上乗せ抽選」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「インパクトバトル中の抽選」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "Ｌパチスロ ゴジラ対エヴァンゲリオン ２ の「G覚醒アタック中の上乗せ抽選」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7493"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "L牙狼 闇を照らす者 の「陰我消滅ノ刻中の上乗せ演出」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7490"
+    },
+    {
+      "date": "2026-11-18",
+      "headline": "L牙狼 闇を照らす者 の「究極魔戒RUSHの基本仕様」などをアップしました。",
+      "url": "https://pachiseven.jp/machines/7490"
+    },
     {
       "date": "2026-11-13",
       "headline": "スマート沖スロ ハイハイシオサイRe：天井機能の解析更新",
