@@ -10,7 +10,7 @@ DOCS = Path("docs")
 index_path = DOCS / "index.html"
 archive_path = DOCS / "updates.html"
 changelog = (DOCS / "changelog.js").read_text(encoding="utf-8")
-match = re.search(r"window\\.SLOT_CHANGELOG=(\\[.*?\\]);", changelog, re.S)
+match = re.search(r"window\.SLOT_CHANGELOG=(\[.*?\]);", changelog, re.S)
 if not match:
     raise SystemExit("Cannot locate SLOT_CHANGELOG")
 entries = json.loads(match.group(1))
@@ -37,11 +37,11 @@ def news_item(item):
             f'<a href="{e(item["source_url"])}" target="_blank" rel="noopener noreferrer">一次情報・確認元を見る</a></article>')
 
 top = index_path.read_text(encoding="utf-8")
-top = re.sub(r'(<div class="site-changelog-scroll" id="site-changelog-items"[^>]*>)[\\s\\S]*?(</div><p class="site-changelog-archive">)',
+top = re.sub(r'(<div class="site-changelog-scroll" id="site-changelog-items"[^>]*>)[\s\S]*?(</div><p class="site-changelog-archive">)',
     lambda m: m.group(1) + "\n" + "\n".join(history_link(x) for x in entries[:8]) + "\n" + m.group(2),
     top, count=1)
 news_html = "\n".join(news_item(x) for x in verified[:5]) or '<p class="meta">確認済みニュースを準備中です。</p>'
-top = re.sub(r'(<div id="industry-news-list"[^>]*>)[\\s\\S]*?(</div></section>\\s*<section class="discovery" id="find-machine">)',
+top = re.sub(r'(<div id="industry-news-list"[^>]*>)[\s\S]*?(</div></section>\s*<section class="discovery" id="find-machine">)',
     lambda m: m.group(1) + '<div class="industry-news-list" tabindex="0" aria-label="業界ニュース一覧（スクロールできます）">' + news_html + '</div>' + m.group(2),
     top, count=1)
 if not all(x in top for x in ("site-changelog-items", "industry-news-list")):
@@ -50,7 +50,7 @@ if top != index_path.read_text(encoding="utf-8"):
     index_path.write_text(top, encoding="utf-8")
 
 archive = archive_path.read_text(encoding="utf-8")
-archive = re.sub(r'(<div id="changelog-archive-items">)[\\s\\S]*?(</div><nav id="changelog-pagination")',
+archive = re.sub(r'(<div id="changelog-archive-items">)[\s\S]*?(</div><nav id="changelog-pagination")',
     lambda m: m.group(1) + "\n" + "\n".join(history_link(x, True) for x in entries[:20]) + "\n" + m.group(2),
     archive, count=1)
 if archive != archive_path.read_text(encoding="utf-8"):
