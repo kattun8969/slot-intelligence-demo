@@ -39,46 +39,9 @@ on:
       - 'tests/test_pdf_targeting_guides.py'
       - 'tests/test_public_navigation.py'
       - '.github/workflows/check-public-navigation.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'docs/haishio-re-first-look.html'
-      - 'docs/machine-detail.js'
-      - 'docs/machine-hint-references.json'
-      - 'docs/machine-target-references.json'
-      - 'tests/test_hint_reference_integrity.py'
-      - 'docs/machines/**'
-      - 'docs/editorial-machine-traits.json'
-      - 'docs/index.html'
-      - 'docs/opportunities.html'
-      - 'docs/field-reports.json'
-      - 'docs/targeting-categories.json'
-      - 'docs/public-target-lines.json'
-      - 'docs/machine-image-sources.json'
-      - 'tests/test_numeric_first_images.py'
-      - 'tests/test_actionable_cycle_lines.py'
-      - 'docs/note-machine-backlog.json'
-      - 'tests/test_global_note_catalog.py'
-      - 'docs/shop-inventory.json'
-      - 'docs/shop-note-extras.json'
-      - 'docs/strategy-cards.html'
-      - 'docs/alternatives.html'
-      - 'docs/public-ev-lookup.html'
-      - 'docs/public-ev-reference.json'
-      - 'docs/practical-picks.json'
-      - 'scripts/audit_hall_counter_csv.py'
-      - 'tests/test_public_ev_lookup.py'
-      - 'docs/auto-machine-updates.html'
-      - 'docs/auto-machine-discovery.json'
-      - 'scripts/collect_machine_updates.py'
-      - 'tests/test_machine_discovery.py'
-      - '.github/workflows/auto-machine-discovery.yml'
-      - 'tests/test_shop_filtered_guides.py'
-      - 'docs/hints.html'
-      - 'docs/hall-compare.html'
-      - 'tests/test_pdf_targeting_guides.py'
-      - 'tests/test_public_navigation.py'
-      - '.github/workflows/check-public-navigation.yml'
+concurrency:
+  group: navigation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
