@@ -1,7 +1,31 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-19",
+  "updated_at": "2026-11-21",
   "items": [
+    {
+      "id": "20261119-fafner-exodus-bt",
+      "category": "新台・増台",
+      "title": "SANKYOが「蒼穹のファフナー EXODUS BT ver.」を発表",
+      "published_at": "2026-11-19",
+      "status": "verified",
+      "summary": "SANKYOの新作パチスロとして発表。2027年2月の導入予定で、同社初のBT機と報じられています。",
+      "impact": "具体的なスペックや狙い目は未公表。導入予定は変更される可能性があります。",
+      "source_url": "https://p-johojima.jp/new_machine/post-76624/",
+      "source_name": "パチンコ・パチスロ情報島＋（メーカー発表の報道）",
+      "verified_at": "2026-11-21"
+    },
+    {
+      "id": "20261118-dekahana-test",
+      "category": "検定通過",
+      "title": "パイオニア「LBデカハナ」の型式試験適合を発表",
+      "published_at": "2026-11-18",
+      "status": "verified",
+      "summary": "パイオニアが公式Xで新BTタイプ「LBデカハナ」の型式試験適合を告知しました。",
+      "impact": "発売日、導入日、出玉性能は未発表。適合は導入決定や販売開始を意味しません。",
+      "source_url": "https://p-johojima.jp/new_machine/post-76603/",
+      "source_name": "情報島＋（パイオニア公式X投稿を引用）",
+      "verified_at": "2026-11-21"
+    },
     {
       "id": "20261119-assault-lily-release",
       "category": "新台・増台",
