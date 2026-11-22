@@ -9,6 +9,7 @@
 - 公開判断：[publication-policy.md](publication-policy.md)
 - 完成見本の版管理：[design-reference.md](design-reference.md)
 - 案件・提出物・不足・期限：GitHub Issues。連絡だけで完了扱いしない。
+- 過去提出済みの期待値資料・Driveへの移行状況：[expectation-source-registry.md](expectation-source-registry.md)。原本は非公開保管、公開できる独自編集データと分離。
 - HTML/ZIP/スマホPDFの非公開見本：ChatGPTプロジェクト「みんなの期待値｜サイト運営」の「リコリコ完成見本 v1」。ファイル自体はPublic GitHubへ転載しない。
 - **旧GitHub Pagesへの変更・デプロイ・マージは禁止**。GitHubはドキュメント、Issue、WordPress用素材の管理に限る。
 
