@@ -1,10 +1,8 @@
 name: Deploy public trial to GitHub Pages
+# GitHub Pages automatic push deployments disabled for WordPress-only operation.
+# Manual dispatch is retained for deliberate maintenance only; do not run
+# without explicit owner authorization.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'docs/**'
-      - '.github/workflows/pages.yml'
   workflow_dispatch:
 permissions:
   contents: read
