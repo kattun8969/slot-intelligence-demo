@@ -1,6 +1,8 @@
 # 機種ページの制作・公開基準
 
-WordPress本番のリコリコを完成基準とする。HTML/ZIP/スマホPDFはChatGPTプロジェクト「みんなの期待値｜サイト運営」の「リコリコ完成見本 v1」を参照し、実際の機能・公開内容は本番を正本とする。\n\n担当役割・新スレッドへの引き継ぎは [team-operations.md](team-operations.md)、公開・承認ルールは [publication-policy.md](publication-policy.md)、見本の版管理は [design-reference.md](design-reference.md) を参照。
+WordPress本番のリコリコを完成基準とする。HTML/ZIP/スマホPDFはChatGPTプロジェクト「みんなの期待値｜サイト運営」の「リコリコ完成見本 v1」を参照し、実際の機能・公開内容は本番を正本とする。
+
+担当役割・新スレッドへの引き継ぎは [team-operations.md](team-operations.md)、公開・承認ルールは [publication-policy.md](publication-policy.md)、見本の版管理は [design-reference.md](design-reference.md) を参照。
 https://kajiplus.info/slot-machines/lycoris-recoil/
 
 ## ページの順序
