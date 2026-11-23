@@ -44,7 +44,20 @@ jobs:
                   with urllib.request.urlopen(req, timeout=25) as resp:
                       return resp.status, json.load(resp)
               except urllib.error.HTTPError as e:
-                  # Deliberately suppress response body: it may contain private data.
+                  # Only print the machine-readable WP error code, never full response or credentials.
+                  # It distinguishes stripped Authorization headers from invalid app passwords.
+                  try:
+                      payload = json.loads(e.read(8192).decode("utf-8"))
+                      code = payload.get("code", "") if isinstance(payload, dict) else ""
+                      if not isinstance(code, str) or not code.replace("_", "").replace("-", "").isalnum():
+                          code = "unavailable"
+                  except (ValueError, UnicodeError, OSError):
+                      code = "unavailable"
+                  print("WP REST error code:", code)
+                  if e.code == 401 and code == "rest_not_logged_in":
+                      print("Diagnostic: WordPress did not identify an authenticated user. Check proxy/server Authorization header forwarding.")
+                  elif e.code == 401 and code in ("incorrect_password", "invalid_username", "application_passwords_disabled", "application_passwords_disabled_for_user"):
+                      print("Diagnostic: WordPress rejected the supplied credentials or application passwords are disabled.")
                   sys.exit("WordPress REST error: HTTP " + str(e.code) + " on " + method + " " + path.split("?")[0])
               except Exception as e:
                   sys.exit("Connection failed: " + type(e).__name__)
