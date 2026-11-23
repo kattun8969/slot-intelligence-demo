@@ -139,10 +139,13 @@ jobs:
               print(f"Existing reference machine edit-context read: HTTP {code}")
               _, home = request("/", public=True)
               top = normalize(" ".join(Article(home).text))
-              if KEYWORD in top or SOURCE.casefold() in home.casefold():
-                  raise SystemExit("Possible existing coverage on the public homepage; review before writing")
-
               existing = candidates()
+              if KEYWORD in top or SOURCE.casefold() in home.casefold():
+                  published_anchor = 'id="news-' + PAYLOAD["slug"] + '"'
+                  if home.count(published_anchor) != 1 or len(existing) != 1:
+                      raise SystemExit("Possible existing coverage on the public homepage; review before writing")
+                  verify(existing[0])
+                  print("Public homepage already has the expected anchor; verifying the existing draft only")
               if len(existing) > 1:
                   raise SystemExit("Multiple matching news records; review before writing")
               if existing:
@@ -214,7 +217,7 @@ jobs:
                     articleOverflow: news?.scrollWidth > news?.clientWidth,
                     headingVisible: Boolean(heading?.getBoundingClientRect().width),
                     links: news?.querySelectorAll('a').length,
-                    anchor: Boolean(document.querySelector('.mh-updates')) || Boolean(document.querySelector('.mh-update a[href="/#' + id + '"]')),
+                    anchor: Boolean(document.querySelector('.mh-update a[href="/#' + id + '"]')),
                     history: document.querySelectorAll('.mh-update').length,
                     scrollable: region && getComputedStyle(region).overflowY === 'auto',
                     existingNews: Boolean(region?.querySelector('section.minna-content'))
