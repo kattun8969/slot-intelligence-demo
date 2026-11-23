@@ -1,0 +1,79 @@
+name: WordPress API draft-only smoke test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wp-api-draft-smoke-test
+  cancel-in-progress: false
+
+jobs:
+  draft-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      WP_BASE_URL: ${{ secrets.WP_BASE_URL }}
+      WP_USERNAME: ${{ secrets.WP_USERNAME }}
+      WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+    steps:
+      - name: Validate credentials and save/retrieve a draft (never publish)
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, sys, urllib.error, urllib.parse, urllib.request
+
+          base = os.environ.get("WP_BASE_URL", "").rstrip("/")
+          user = os.environ.get("WP_USERNAME", "")
+          password = os.environ.get("WP_APP_PASSWORD", "")
+          if not (base.startswith("https://") and user and password):
+              sys.exit("Missing WP_BASE_URL, WP_USERNAME, or WP_APP_PASSWORD secret, or URL is not HTTPS")
+          if urllib.parse.urlparse(base).hostname != "kajiplus.info":
+              sys.exit("Refusing to send credentials: unexpected WordPress host")
+          auth = base64.b64encode((user + ":" + password).encode()).decode()
+          headers = {"Authorization": "Basic " + auth, "Accept": "application/json"}
+
+          def request(path, method="GET", data=None):
+              h = dict(headers)
+              if data is not None:
+                  h["Content-Type"] = "application/json"
+              req = urllib.request.Request(base + path, data=json.dumps(data).encode() if data is not None else None, headers=h, method=method)
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as resp:
+                      return resp.status, json.load(resp)
+              except urllib.error.HTTPError as e:
+                  # Deliberately suppress response body: it may contain private data.
+                  sys.exit("WordPress REST error: HTTP " + str(e.code) + " on " + method + " " + path.split("?")[0])
+              except Exception as e:
+                  sys.exit("Connection failed: " + type(e).__name__)
+
+          status, me = request("/wp-json/wp/v2/users/me?context=edit")
+          if not me.get("id"):
+              sys.exit("Authentication succeeded but user identity was not returned")
+          print("Authentication: OK")
+
+          slug = "minna-api-connectivity-" + os.environ["GITHUB_RUN_ID"]
+          query = urllib.parse.urlencode({"slug":slug,"status":"draft","per_page":10})
+          _, existing = request("/wp-json/wp/v2/posts?" + query)
+          if existing:
+              post = existing[0]
+              print("Existing draft reused; ID:", post["id"])
+          else:
+              payload = {
+                  "title": "【接続テスト】WordPress REST API 下書き保存確認",
+                  "slug": slug,
+                  "status": "draft",
+                  "content": "<p>②編集者のAPI接続テスト用下書きです。公開しないでください。</p>"
+              }
+              created_status, post = request("/wp-json/wp/v2/posts", "POST", payload)
+              if created_status != 201 or post.get("status") != "draft":
+                  sys.exit("Draft creation did not return expected status")
+              print("New draft saved; ID:", post["id"])
+          _, reread = request("/wp-json/wp/v2/posts/" + str(post["id"]) + "?context=edit")
+          if reread.get("status") != "draft" or reread.get("slug") != slug:
+              sys.exit("Draft re-fetch verification failed")
+          print("Draft re-fetch: OK; status: draft; ID:", reread["id"])
+          print("This workflow never publishes and never edits existing posts.")
+          PY
