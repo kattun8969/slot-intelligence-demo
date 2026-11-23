@@ -2,16 +2,20 @@ name: WordPress API draft-only smoke test
 
 on:
   workflow_dispatch:
+  push:
+    branches: [editor/wp-news-262]
+    paths: ['.github/workflows/wp-api-draft-smoke-test.yml']
 
 permissions:
   contents: read
 
 concurrency:
-  group: wp-api-draft-smoke-test
+  group: kajiplus-wordpress-news-draft
   cancel-in-progress: false
 
 jobs:
   draft-only:
+    if: github.ref == 'refs/heads/editor/wp-news-262'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -19,74 +23,155 @@ jobs:
       WP_USERNAME: ${{ secrets.WP_USERNAME }}
       WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
     steps:
-      - name: Validate credentials and save/retrieve a draft (never publish)
+      - name: Check WordPress permissions, deduplicate, and verify draft for issue 262
         shell: bash
         run: |
           python3 - <<'PY'
-          import base64, json, os, sys, urllib.error, urllib.parse, urllib.request
+          import base64
+          from html.parser import HTMLParser
+          import json
+          import os
+          import re
+          import unicodedata
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          BASE = "https://kajiplus.info"
+          API = "/wp-json/wp/v2"
+          NEWS = f"{API}/minna_news_edit"
+          MACHINES = f"{API}/minna_machine"
+          KEYWORD = "ゼーガペイン"
+          SOURCE = "xp5id8Tdfas"
+          CAPABILITIES = ("create_posts", "edit_posts", "edit_others_posts", "edit_published_posts", "publish_posts")
+          PAYLOAD = {"title":"スマスロゼーガペインETRの製品PV公開、12月7日導入予定","slug":"zegapain-etr-pv-20261120","status":"draft","content":"<!-- wp:paragraph -->\n<p>山佐PR情報局は11月20日、山佐ネクストの新台「スマスロゼーガペインETR」の製品PVを公開しました。ホール導入は12月7日予定です。</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>PVでは、ボーナスにつながる「ゼーガシステム」や、7揃いでATゲーム数を上乗せする「セブンインパクト」などが紹介されています。</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p><a href=\"https://www.youtube.com/watch?v=xp5id8Tdfas\" target=\"_blank\" rel=\"noopener noreferrer\">山佐PR情報局の製品PV</a> ／ <a href=\"https://yamasa-next.co.jp/slot/zgmhm3/\" target=\"_blank\" rel=\"noopener noreferrer\">メーカーの機種ページ</a></p>\n<!-- /wp:paragraph -->"}
+
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, new_url):
+                  return None
+
+          class Article(HTMLParser):
+              def __init__(self, value):
+                  super().__init__()
+                  self.text = []
+                  self.links = []
+                  self.feed(value)
+
+              def handle_data(self, value):
+                  self.text.append(value)
+
+              def handle_starttag(self, tag, attrs):
+                  if tag == "a":
+                      self.links.append(dict(attrs).get("href"))
+
+              def signature(self):
+                  return (" ".join(" ".join(self.text).split()), self.links)
+
+          def normalize(value):
+              return re.sub(r"\s+", "", unicodedata.normalize("NFKC", value)).casefold()
+
+          def endpoint(path, **params):
+              return path + "?" + urllib.parse.urlencode(params)
+
+          def request(path, method="GET", payload=None, public=False, allowed=()):
+              headers = {"Accept": "text/html" if public else "application/json"}
+              if not public:
+                  headers["Authorization"] = authorization
+              body = None
+              if payload is not None:
+                  headers["Content-Type"] = "application/json"
+                  body = json.dumps(payload).encode()
+              try:
+                  req = urllib.request.Request(BASE + path, data=body, headers=headers, method=method)
+                  with opener.open(req, timeout=25) as response:
+                      data = response.read()
+                      if public:
+                          return response.status, data.decode("utf-8")
+                      return response.status, json.loads(data)
+              except urllib.error.HTTPError as exc:
+                  print(f"{method} {path.split('?')[0]}: HTTP {exc.code}")
+                  if exc.code in allowed:
+                      return exc.code, None
+                  raise SystemExit("WordPress request halted") from None
+              except (OSError, ValueError):
+                  raise SystemExit("WordPress response could not be verified") from None
+
+          def candidates():
+              matches = {}
+              for query in ({"slug": PAYLOAD["slug"]}, {"search": KEYWORD}, {"search": SOURCE}):
+                  _, posts = request(endpoint(NEWS, context="edit", status="any", per_page=100, **query))
+                  if not isinstance(posts, list) or len(posts) >= 100:
+                      raise SystemExit("WordPress duplicate search did not return a bounded result")
+                  matches.update({post["id"]: post for post in posts})
+              return list(matches.values())
+
+          def verify(post):
+              if (
+                  post["status"] != "draft"
+                  or post["slug"] != PAYLOAD["slug"]
+                  or post["title"]["raw"] != PAYLOAD["title"]
+                  or Article(post["content"]["raw"]).signature() != Article(PAYLOAD["content"]).signature()
+              ):
+                  raise SystemExit("Saved draft differs from issue 262 or has been edited manually")
+
+          def main():
+              _, me = request(endpoint(API + "/users/me", context="edit", _fields="id,capabilities"))
+              if not me.get("id"):
+                  raise SystemExit("WordPress identity could not be verified")
+              effective = me.get("capabilities") or {}
+              print("GitHub Secrets authentication: OK")
+              rules = {}
+              for route, name in ((NEWS, "minna_news_edit"), (MACHINES, "minna_machine")):
+                  _, options = request(route, "OPTIONS")
+                  if not {"GET", "POST"}.issubset(options.get("methods", [])):
+                      raise SystemExit("Expected WordPress route methods were not found")
+                  code, schema = request(endpoint(API + "/types/" + name, context="edit"), allowed=(401, 403))
+                  if code == 200 and schema.get("capabilities"):
+                      rules[name] = schema["capabilities"]
+                      detail = ", ".join(f"{key}={bool(effective.get(rules[name].get(key)))}" for key in CAPABILITIES)
+                      print(f"{name}: GET/POST registered; publicly viewable={schema.get('viewable')}; {detail}")
+                  else:
+                      print(f"{name}: GET/POST registered; capability mapping unavailable")
+                  code, _ = request(endpoint(route, context="edit", per_page=1, _fields="id"), allowed=(401, 403))
+                  print(f"{name} edit-context collection: HTTP {code}")
+
+              code, _ = request(endpoint(MACHINES + "/16", context="edit", _fields="id"), allowed=(401, 403, 404))
+              print(f"Existing reference machine edit-context read: HTTP {code}")
+              _, home = request("/", public=True)
+              top = normalize(" ".join(Article(home).text))
+              if KEYWORD in top or SOURCE.casefold() in home.casefold():
+                  raise SystemExit("Possible existing coverage on the public homepage; review before writing")
+
+              existing = candidates()
+              if len(existing) > 1:
+                  raise SystemExit("Multiple matching news records; review before writing")
+              if existing:
+                  verify(existing[0])
+                  post_id = existing[0]["id"]
+                  print(f"Matching draft reused; ID: {post_id}")
+              else:
+                  status, created = request(NEWS, "POST", PAYLOAD)
+                  if status != 201 or created.get("status") != "draft" or not created.get("id"):
+                      raise SystemExit("Draft creation response was unexpected; check WordPress before retrying")
+                  post_id = created["id"]
+                  print(f"News draft saved; ID: {post_id}")
+
+              _, reread = request(endpoint(NEWS + f"/{post_id}", context="edit"))
+              verify(reread)
+              if [post["id"] for post in candidates()] != [post_id]:
+                  raise SystemExit("Duplicate verification changed after the draft was saved")
+              print(f"Draft re-fetch and duplicate check: OK; status: draft; ID: {post_id}")
+              print("Preview and any publication require editor review in WordPress.")
 
           base = os.environ.get("WP_BASE_URL", "").rstrip("/")
-          user = os.environ.get("WP_USERNAME", "")
+          username = os.environ.get("WP_USERNAME", "")
           password = os.environ.get("WP_APP_PASSWORD", "")
-          if not (base.startswith("https://") and user and password):
-              sys.exit("Missing WP_BASE_URL, WP_USERNAME, or WP_APP_PASSWORD secret, or URL is not HTTPS")
-          if urllib.parse.urlparse(base).hostname != "kajiplus.info":
-              sys.exit("Refusing to send credentials: unexpected WordPress host")
-          auth = base64.b64encode((user + ":" + password).encode()).decode()
-          headers = {"Authorization": "Basic " + auth, "Accept": "application/json"}
-
-          def request(path, method="GET", data=None):
-              h = dict(headers)
-              if data is not None:
-                  h["Content-Type"] = "application/json"
-              req = urllib.request.Request(base + path, data=json.dumps(data).encode() if data is not None else None, headers=h, method=method)
-              try:
-                  with urllib.request.urlopen(req, timeout=25) as resp:
-                      return resp.status, json.load(resp)
-              except urllib.error.HTTPError as e:
-                  # Only print the machine-readable WP error code, never full response or credentials.
-                  # It distinguishes stripped Authorization headers from invalid app passwords.
-                  try:
-                      payload = json.loads(e.read(8192).decode("utf-8"))
-                      code = payload.get("code", "") if isinstance(payload, dict) else ""
-                      if not isinstance(code, str) or not code.replace("_", "").replace("-", "").isalnum():
-                          code = "unavailable"
-                  except (ValueError, UnicodeError, OSError):
-                      code = "unavailable"
-                  print("WP REST error code:", code)
-                  if e.code == 401 and code == "rest_not_logged_in":
-                      print("Diagnostic: WordPress did not identify an authenticated user. Check proxy/server Authorization header forwarding.")
-                  elif e.code == 401 and code in ("incorrect_password", "invalid_username", "application_passwords_disabled", "application_passwords_disabled_for_user"):
-                      print("Diagnostic: WordPress rejected the supplied credentials or application passwords are disabled.")
-                  sys.exit("WordPress REST error: HTTP " + str(e.code) + " on " + method + " " + path.split("?")[0])
-              except Exception as e:
-                  sys.exit("Connection failed: " + type(e).__name__)
-
-          status, me = request("/wp-json/wp/v2/users/me?context=edit")
-          if not me.get("id"):
-              sys.exit("Authentication succeeded but user identity was not returned")
-          print("Authentication: OK")
-
-          slug = "minna-api-connectivity-" + os.environ["GITHUB_RUN_ID"]
-          query = urllib.parse.urlencode({"slug":slug,"status":"draft","per_page":10})
-          _, existing = request("/wp-json/wp/v2/posts?" + query)
-          if existing:
-              post = existing[0]
-              print("Existing draft reused; ID:", post["id"])
-          else:
-              payload = {
-                  "title": "【接続テスト】WordPress REST API 下書き保存確認",
-                  "slug": slug,
-                  "status": "draft",
-                  "content": "<p>②編集者のAPI接続テスト用下書きです。公開しないでください。</p>"
-              }
-              created_status, post = request("/wp-json/wp/v2/posts", "POST", payload)
-              if created_status != 201 or post.get("status") != "draft":
-                  sys.exit("Draft creation did not return expected status")
-              print("New draft saved; ID:", post["id"])
-          _, reread = request("/wp-json/wp/v2/posts/" + str(post["id"]) + "?context=edit")
-          if reread.get("status") != "draft" or reread.get("slug") != slug:
-              sys.exit("Draft re-fetch verification failed")
-          print("Draft re-fetch: OK; status: draft; ID:", reread["id"])
-          print("This workflow never publishes and never edits existing posts.")
+          if base != BASE or not username or not password:
+              raise SystemExit("WordPress Secrets are missing or the destination does not match")
+          authorization = "Basic " + base64.b64encode(f"{username}:{password}".encode()).decode()
+          opener = urllib.request.build_opener(NoRedirect())
+          try:
+              main()
+          except (KeyError, TypeError, AttributeError):
+              raise SystemExit("WordPress response schema was unexpected; check the draft before retrying") from None
           PY
