@@ -18,12 +18,12 @@ jobs:
     if: github.ref == 'refs/heads/editor/wp-news-262'
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      WP_BASE_URL: ${{ secrets.WP_BASE_URL }}
-      WP_USERNAME: ${{ secrets.WP_USERNAME }}
-      WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
     steps:
       - name: Check WordPress permissions, deduplicate, and verify draft for issue 262
+        env:
+          WP_BASE_URL: ${{ secrets.WP_BASE_URL }}
+          WP_USERNAME: ${{ secrets.WP_USERNAME }}
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
         shell: bash
         run: |
           python3 - <<'PY'
@@ -175,3 +175,61 @@ jobs:
           except (KeyError, TypeError, AttributeError):
               raise SystemExit("WordPress response schema was unexpected; check the draft before retrying") from None
           PY
+      - name: Check the proposed homepage at 320 and 375 pixels
+        shell: bash
+        run: |
+          npm install --prefix "$RUNNER_TEMP/minna-layout" --no-audit --no-fund playwright@1.58.2
+          cd "$RUNNER_TEMP/minna-layout"
+          node <<'JS'
+          const assert = require('node:assert/strict')
+          const { chromium } = require('playwright')
+          const site = 'https://kajiplus.info/'
+          const articleId = "news-zegapain-etr-pv-20261120"
+          const article = "<article id=\"news-zegapain-etr-pv-20261120\"><h3>スマスロゼーガペインETRの製品PV公開、12月7日導入予定</h3><p><time datetime=\"2026-11-20\">2026年11月20日PV公開</time></p><p>山佐PR情報局は11月20日、山佐ネクストの新台「スマスロゼーガペインETR」の製品PVを公開しました。ホール導入は12月7日予定です。</p><p>PVでは、ボーナスにつながる「ゼーガシステム」や、7揃いでATゲーム数を上乗せする「セブンインパクト」などが紹介されています。</p><p><a href=\"https://www.youtube.com/watch?v=xp5id8Tdfas\" target=\"_blank\" rel=\"noopener noreferrer\">山佐PR情報局の製品PV</a> ／ <a href=\"https://yamasa-next.co.jp/slot/zgmhm3/\" target=\"_blank\" rel=\"noopener noreferrer\">メーカーの機種ページ</a></p></article>\n"
+          const row = "<div class=\"mh-update\"><time datetime=\"2026-11-23\">11/23</time><strong>ゼーガペインETR</strong><a href=\"/#news-zegapain-etr-pv-20261120\">製品PVと導入予定を掲載</a></div>"
+          const marker = '<article id="news-gojieva2-20261120">'
+          async function check() {
+            const response = await fetch(site, {redirect: 'error'})
+            assert.equal(response.status, 200)
+            const current = await response.text()
+            assert.equal(current.split(marker).length, 2)
+            const rows = [...current.matchAll(/<div class="mh-update">[\s\S]*?<\/div>/g)].map(match => match[0])
+            assert.equal(rows.length, 8)
+            const proposed = current.includes('id="' + articleId + '"')
+              ? current
+              : current.replace(marker, article + marker).replace(rows[0], row + rows[0]).replace(rows[7], '')
+            const browser = await chromium.launch({channel: 'chrome', headless: true})
+            try {
+              for (const width of [320, 375]) {
+                const page = await browser.newPage({viewport: {width, height: 850}})
+                await page.route(site, route => route.fulfill({contentType: 'text/html; charset=utf-8', body: proposed}))
+                await page.goto(site, {waitUntil: 'load'})
+                const metrics = await page.evaluate(id => {
+                  const news = document.getElementById(id)
+                  const region = document.getElementById('minna-news-list')
+                  const heading = news?.querySelector('h3')
+                  return {
+                    width: window.innerWidth,
+                    pageOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+                    articleOverflow: news?.scrollWidth > news?.clientWidth,
+                    headingVisible: Boolean(heading?.getBoundingClientRect().width),
+                    links: news?.querySelectorAll('a').length,
+                    anchor: Boolean(document.querySelector('.mh-updates')) || Boolean(document.querySelector('.mh-update a[href="/#' + id + '"]')),
+                    history: document.querySelectorAll('.mh-update').length,
+                    scrollable: region && getComputedStyle(region).overflowY === 'auto',
+                    existingNews: Boolean(region?.querySelector('section.minna-content'))
+                  }
+                }, articleId)
+                assert.deepEqual(metrics, {width, pageOverflow: false, articleOverflow: false, headingVisible: true, links: 2, anchor: true, history: 8, scrollable: true, existingNews: true})
+                console.log('Homepage mobile preview OK at ' + width + 'px')
+                await page.close()
+              }
+            } finally {
+              await browser.close()
+            }
+          }
+          check().catch(error => {
+            console.error(error.message)
+            process.exitCode = 1
+          })
+          JS
