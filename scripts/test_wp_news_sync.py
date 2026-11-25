@@ -1,6 +1,8 @@
 """Offline safety tests for WordPress news draft staging."""
 import importlib.util
 import json
+import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -78,6 +80,48 @@ class NewsDraftValidationTests(unittest.TestCase):
         self.article["slug"] = "not-a-news-slug"
         with self.assertRaises(ValueError):
             wp.read_article(self.write())
+
+    def test_duplicate_slug_never_posts(self):
+        filename = self.write()
+        with patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
+                patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
+                                        "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
+                patch.object(wp, "request", side_effect=[
+                    (200, {"id": 1}), (200, [{"id": 100, "status": "publish"}])
+                ]) as mock_request:
+            wp.main()
+        self.assertEqual(mock_request.call_count, 2)
+        self.assertFalse(any(call.kwargs.get("method") == "POST" or
+                             (len(call.args) >= 4 and call.args[3] == "POST")
+                             for call in mock_request.call_args_list))
+
+    def test_creates_draft_only_and_verifies_it(self):
+        filename = self.write()
+        with patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
+                patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
+                                        "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
+                patch.object(wp, "request", side_effect=[
+                    (200, {"id": 1}), (200, []),
+                    (201, {"id": 100, "status": "draft"}),
+                    (200, {"id": 100, "status": "draft", "slug": self.article["slug"]}),
+                ]) as mock_request:
+            wp.main()
+        self.assertEqual(mock_request.call_count, 4)
+        post_call = mock_request.call_args_list[2]
+        self.assertEqual(post_call.args[3], "POST")
+        self.assertEqual(post_call.args[4]["status"], "draft")
+
+    def test_non_draft_response_is_not_accepted(self):
+        filename = self.write()
+        with patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
+                patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
+                                        "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
+                patch.object(wp, "request", side_effect=[
+                    (200, {"id": 1}), (200, []),
+                    (201, {"id": 100, "status": "publish"}),
+                ]):
+            with self.assertRaises(RuntimeError):
+                wp.main()
 
     def test_rejects_path_traversal(self):
         with self.assertRaises(ValueError):
