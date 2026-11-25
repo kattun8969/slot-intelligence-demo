@@ -17,6 +17,8 @@ concurrency:
 
 jobs:
   stage-reviewed-news:
+    # Disabled until ② verifies GitHub Environment protection and explicitly enables it.
+    if: ${{ vars.WP_EDITOR_DRAFT_STAGING_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment: wordpress-editor
