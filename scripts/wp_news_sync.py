@@ -24,6 +24,30 @@ SLUG = re.compile(r"^news-[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE = re.compile(r"^20\d\d-\d\d-\d\d$")
 
 
+ALLOWED_TAGS = {"p", "strong", "em", "ul", "ol", "li", "blockquote", "br", "a", "small", "h2", "h3"}
+
+
+class SafeNewsHTML(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        if tag not in ALLOWED_TAGS:
+            raise ValueError("Unsupported HTML tag in news")
+        for name, value in attrs:
+            if tag != "a" or name not in ("href", "target", "rel"):
+                raise ValueError("Unsupported HTML attribute in news")
+            if name == "href" and (not value or urlparse(value).scheme != "https"):
+                raise ValueError("News links must use HTTPS")
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+
+    def handle_endtag(self, tag):
+        if tag not in ALLOWED_TAGS:
+            raise ValueError("Unsupported HTML closing tag in news")
+
+    def handle_comment(self, data):
+        raise ValueError("HTML comments are not supported in news")
+
+
 def read_article(filename):
     path = (ROOT / filename).resolve()
     if not path.is_relative_to(QUEUE) or path.suffix != ".json":
