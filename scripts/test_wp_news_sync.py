@@ -54,6 +54,21 @@ class NewsDraftValidationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             wp.read_article(self.write())
 
+    def test_rejects_event_handler_html(self):
+        self.article["content_html"] = '<p onclick="alert(1)">本文</p>'
+        with self.assertRaises(ValueError):
+            wp.read_article(self.write())
+
+    def test_rejects_javascript_link(self):
+        self.article["content_html"] = '<a href="javascript:alert(1)">本文</a>'
+        with self.assertRaises(ValueError):
+            wp.read_article(self.write())
+
+    def test_rejects_invalid_calendar_date(self):
+        self.article["announced_on"] = "2026-02-30"
+        with self.assertRaises(ValueError):
+            wp.read_article(self.write())
+
     def test_rejects_http_source(self):
         self.article["source_url"] = "http://example.org/press"
         with self.assertRaises(ValueError):
