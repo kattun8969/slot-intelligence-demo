@@ -27,5 +27,7 @@ jobs:
       NEWS_FILE: ${{ inputs.article_path }}
     steps:
       - uses: actions/checkout@v4
+      - name: Run offline validation tests
+        run: python3 -m unittest discover -s scripts -p 'test_wp_news_sync.py' -v
       - name: Validate reviewed JSON and create WordPress draft only
         run: python3 scripts/wp_news_sync.py --file "$NEWS_FILE"
