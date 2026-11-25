@@ -5,7 +5,8 @@
 - WordPress REST APIの既存GitHub Secrets `WP_BASE_URL`, `WP_USERNAME`, `WP_APP_PASSWORD` を利用する。秘匿値をリポジトリに書かない。
 - ②編集者が事前確認したJSONを `wordpress-queue/news/<英数字ファイル名>.json` に登録する（記事の本文は独自執筆、公開可能な出典のみ）。
 - GitHub Actions `WordPress news draft staging (editor reviewed)` の `Run workflow` を手動で実行し、`article_path` に対象JSONを指定。WP通常投稿（posts）の**下書きだけ**を作成する。公開済み記事や既存下書きはslug衝突で変更しない。
-- `environment: wordpress-editor` を指定。Environment保護者/承認ルールが必要ならGitHub側で設定してから運用する。環境がない場合でも通常のSecretsだけで下書き作成が可能な場合があるため、保護設定を明示的に確認する。
+- `environment: wordpress-editor` を指定。②はリポジトリ Settings → Environments → `wordpress-editor` で必要な承認者（Required reviewers）とブランチ制限を設定し、意図した保護ルールが有効なことを確認する。環境名だけでは承認保護にならない。
+- **フェイルクローズ：** リポジトリ/環境の変数 `WP_EDITOR_DRAFT_STAGING_ENABLED` が文字列 `true` に設定されるまで、下書き登録ジョブはスキップする。②が環境保護と認証経路を確認するまで有効化しない。これは下書き登録だけの許可であり、公開権限を与えない。
 - WP側で下書きを確認し、②だけが最終公開判断・操作。320px/375pxの表示、見出し、出典、重複、リンクを確認する。失敗時は成功と報告しない。
 
 ### 入稿用JSON例（実記事ではない。サンプルをそのまま実行しない）
@@ -45,3 +46,9 @@
 - このPRは下書き専用。自動公開・既存ページ上書き・GitHub Pages変更は含まない。
 - 作業完了は②が実URLで表示/動作を確認した時点。PR作成や下書きは「公開済み」ではない。
 - 関連：#250、#256、#292、docs/publication-policy.md、docs/wordpress-machine-page-standard.md
+
+## 2026-11-26 セキュリティ／テスト状況
+- JSONの `editor_reviewed:true` は入力チェックであり、**②の真正な承認を証明しない**。運用にはEnvironment承認者・ブランチ制限・編集権限を組み合わせる。
+- ②未承認の閃乱カグラ候補は `editor_reviewed:false` として格納し、登録不可。
+- GitHub Actions PR検証にはオンラインWordPress認証情報を渡さない。オフラインテストは12項目（不正日付・危険HTML・重複時POST禁止・下書き以外のレスポンス拒否を含む）。このテスト結果の成功ログは未確認。
+- WordPress本番の投稿タイプが通常投稿 `posts` と異なるニュース専用タイプの場合、②がAPI投稿先を確認するまで実運用しない。
