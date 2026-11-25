@@ -4,6 +4,9 @@
 Never publishes, modifies existing posts, or touches custom machine post types.
 """
 import argparse
+from datetime import date
+from html import escape
+from html.parser import HTMLParser
 import base64
 import json
 import os
@@ -36,11 +39,14 @@ def read_article(filename):
     for k in ("source_checked_at", "announced_on"):
         if not DATE.fullmatch(article[k]):
             raise ValueError("Dates must use YYYY-MM-DD")
+        try:
+            date.fromisoformat(article[k])
+        except ValueError:
+            raise ValueError("Invalid calendar date") from None
     source = urlparse(article["source_url"])
     if source.scheme != "https" or not source.hostname:
         raise ValueError("An HTTPS source URL is required")
-    if "<script" in article["content_html"].lower():
-        raise ValueError("Script tags are not allowed")
+    SafeNewsHTML().feed(article["content_html"])
     if article.get("editor_reviewed") is not True:
         raise ValueError("Editor review flag is required before staging")
     return article
@@ -85,7 +91,7 @@ def main():
     html = article["content_html"].strip()
     html += ('<p><small>発表日：' + article["announced_on"] +
              '／出典確認日：' + article["source_checked_at"] +
-             '　出典：<a href="' + article["source_url"].replace("&", "&amp;").replace('"', "&quot;") +
+             '　出典：<a href="' + escape(article["source_url"], quote=True) +
              '" target="_blank" rel="noopener noreferrer">公式・一次情報</a></small></p>')
     payload = {"title": article["title"], "slug": article["slug"],
                "content": html, "status": "draft"}
