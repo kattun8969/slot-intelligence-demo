@@ -30,7 +30,7 @@
     return el;
   }
   function init(root, config) {
-    if (root.querySelector(".minna-at-investment")) return;
+    if (root.querySelector(".minna-at-investment, #ly-investment-estimate")) return;
     const scenario = selectInside(root, root.dataset.minnaScenarioSelector || "#ly-scenario");
     const current = selectInside(root, root.dataset.minnaCurrentSelector || "#ly-current");
     if (!scenario || !current) return;
@@ -43,7 +43,7 @@
     output.setAttribute("aria-live", "polite");
     section.appendChild(output);
     section.appendChild(makeText("small",
-      "期待収支とは別の指標です。途中の払出・持ちメダル・再プレイ等を反映した現金準備額ではありません。",
+      "期待収支とは別の指標です。80%到達予算はAT到達ゲーム数の分布に基づく投入相当額です。勝率・利益確率や、途中の払出・持ちメダル・再プレイを反映した現金準備額を表すものではありません。",
       "minna-at-investment__note"));
     const details = root.querySelector("details");
     if (details) root.insertBefore(section, details);
@@ -52,26 +52,31 @@
     function update() {
       output.replaceChildren();
       const id = String(scenario.value);
-      const model = scenarios[id];
+      const model = Object.prototype.hasOwnProperty.call(scenarios, id) ? scenarios[id] : null;
+      const isLycoris = root.id === "ly-calculator";
+      const option = scenario.selectedOptions?.[0];
+      const counter = isLycoris ? "data-counter G" : root.dataset.minnaCounter;
+      const endpoint = option?.dataset.minnaEndpoint || root.dataset.minnaEndpoint;
+      if ((isLycoris && (!["0", "1", "2"].includes(id) || !option?.textContent.includes("／ATまで"))) ||
+          (endpoint && endpoint !== "first AT") || (model && model.endpoint !== "first AT")) {
+        output.textContent = "この条件はAT初当たりまでの投資目安の対象外です。";
+        return;
+      }
+      if (!model || !model.byCurrentG ||
+          !["measured", "estimated"].includes(model.method) ||
+          typeof model.sourceUrl !== "string" || !/^https:\/\//.test(model.sourceUrl) ||
+          !/^20\d\d-\d\d-\d\d$/.test(model.checkedOn || "") ||
+          typeof model.counter !== "string" || !model.counter.trim() || (counter && model.counter !== counter) ||
+          typeof model.startingState !== "string" || !model.startingState.trim()) {
+        output.textContent = "投資目安データ確認中";
+        return;
+      }
       const g = Number(current.value);
       if (current.value === "" || !Number.isSafeInteger(g) || g < 0) {
         output.textContent = "現在のゲーム数を入力してください。";
         return;
       }
-      // No cross-purpose fallback: CZ/bonus/zone arrivals are not AT arrivals.
-      if (root.id === "ly-calculator" && !["0", "1", "2"].includes(id)) {
-        output.textContent = "この条件はAT初当たりまでの投資目安の対象外です。";
-        return;
-      }
-      if (!model || !model.byCurrentG || model.endpoint !== "first AT" ||
-          !["measured", "estimated"].includes(model.method) ||
-          typeof model.sourceUrl !== "string" || !/^https:\/\//.test(model.sourceUrl) ||
-          !/^20\d\d-\d\d-\d\d$/.test(model.checkedOn || "") ||
-          typeof model.startingState !== "string" || !model.startingState.trim()) {
-        output.textContent = "AT到達分布・投資目安データ確認中";
-        return;
-      }
-      const dist = model.byCurrentG[String(g)];
+      const dist = Object.prototype.hasOwnProperty.call(model.byCurrentG, String(g)) ? model.byCurrentG[String(g)] : null;
       const result = window.MinnaAtInvestment && window.MinnaAtInvestment.estimate({
         endpoint: model.endpoint, distribution: dist, coinBasePer50: model.coinBasePer50,
         spinsPerHour: model.spinsPerHour, loanCoinsPer1000: loanCoins(root)
