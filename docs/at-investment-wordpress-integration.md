@@ -5,8 +5,8 @@
 ## 配布するファイル
 - wordpress-plugin/minna-at-investment/minna-at-investment.php（WPプラグイン）
 - wordpress-plugin/minna-at-investment/assets/at-investment-core.js（共通計算）
-- wordpress-plugin/minna-at-investment/assets/investment-widget.js（汎用UI）
-- wordpress-plugin/minna-at-investment/assets/investment.css（320/375px対応）
+- wordpress-plugin/minna-at-investment/assets/ceiling-widget.js（汎用UI）
+- wordpress-plugin/minna-at-investment/assets/ceiling.css（320/375px対応）
 
 ## ②Workの実装手順
 1. WordPressの公開機種ページをバックアップ。リコリコの期待値/PAPIMO/投票/示唆/狙い目は改変しない。
@@ -55,3 +55,6 @@
 - 表示は条件別の天井時の残りG・投入相当枚数・貸出換算額・消化時間。既存期待収支は別表示。リコリコの下位AT後・非駆け抜けのみデータカウンター1000Gを想定上限とし、50枚31.8G、800G/時を仮定。
 - 機種・条件別設定には `ceilingG`（入力カウンター上の上限G）、`basis`（verified または assumed）、`endpoint`（first AT / first bonus / first ST / first CZ）、`counter`、`coinBasePer50`、`spinsPerHour` を使う。一般フォームの選択肢で `data-minna-endpoint` と `data-minna-counter` を指定し、モデルと一致させる。全機種へ同じ天井を適用しない。
 - 手持ち判定は端末内のみ。入力された今使える手持ちメダルと、現金の1,000円単位の貸出分を充当し、不足時には追加の現金または枚数を表示。前兆・払い出し・再プレイ制限によって実際の投資や時間は変動する。
+
+## 0.2.2 リコリコのサブ液晶対応
+リコリコの投資欄はサブ液晶のAT間Gを独立して入力。規定Gの上限は通常・非駆け抜け後850、AT駆け抜け後と設定変更後600、上位CZ失敗後250。前兆・CZの追加分は別途。期待収支は掲載表に従いホールのデータカウンターGを使用。
