@@ -93,6 +93,29 @@ def request(base, auth, path, method="GET", payload=None):
         raise RuntimeError("WordPress API connection failed") from None
 
 
+def verify_front_page_not_duplicate(base, auth, article):
+    """Fail closed unless the canonical WordPress front page was inspected.
+
+    Existing news is currently embedded in a static homepage, not just posts.
+    This prevents ordinary-post slug checks from silently duplicating it.
+    """
+    _, settings = request(base, auth, "/wp-json/wp/v2/settings")
+    if not isinstance(settings, dict) or settings.get("show_on_front") != "page":
+        raise RuntimeError("Cannot verify static WordPress home page; staging stopped")
+    page_id = settings.get("page_on_front")
+    if not isinstance(page_id, int) or page_id <= 0:
+        raise RuntimeError("Home page ID unavailable; staging stopped")
+    _, page = request(base, auth, "/wp-json/wp/v2/pages/" + str(page_id) + "?context=edit")
+    content = page.get("content") if isinstance(page, dict) else None
+    raw = content.get("raw") if isinstance(content, dict) else None
+    if not isinstance(raw, str) or not raw.strip():
+        raise RuntimeError("Home page source HTML unavailable; staging stopped")
+    if article["slug"] in raw or article["title"].strip() in raw:
+        print("Skipped: matching story is already present in the WordPress home page")
+        return False
+    return True
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", required=True)
@@ -111,6 +134,8 @@ def main():
     _, existing = request(base, auth, "/wp-json/wp/v2/posts?" + qs)
     if existing:
         print("Skipped: matching WordPress slug already exists (no overwrite)")
+        return
+    if not verify_front_page_not_duplicate(base, auth, article):
         return
     html = article["content_html"].strip()
     html += ('<p><small>発表日：' + article["announced_on"] +
