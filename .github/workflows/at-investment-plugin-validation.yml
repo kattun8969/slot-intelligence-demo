@@ -1,0 +1,24 @@
+name: WP AT investment plugin validation
+on:
+  pull_request:
+    paths:
+      - 'wordpress-plugin/minna-at-investment/**'
+      - 'wordpress-assets/at-investment-core.js'
+      - 'scripts/test_at_investment_core.cjs'
+      - '.github/workflows/at-investment-plugin-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: php -l wordpress-plugin/minna-at-investment/minna-at-investment.php
+      - run: node --check wordpress-plugin/minna-at-investment/assets/at-investment-core.js
+      - run: node --check wordpress-plugin/minna-at-investment/assets/investment-widget.js
+      - run: node scripts/test_at_investment_core.cjs
+      - run: cmp wordpress-assets/at-investment-core.js wordpress-plugin/minna-at-investment/assets/at-investment-core.js
