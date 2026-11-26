@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Create a standard WordPress news draft from an editor-reviewed JSON file.
 
-Never publishes, modifies existing posts, or touches custom machine post types.
+Never publishes, modifies existing posts, or writes to custom post types.
 """
 import argparse
 from datetime import date
@@ -116,6 +116,33 @@ def verify_front_page_not_duplicate(base, auth, article):
     return True
 
 
+
+def verify_manual_news_not_duplicate(base, auth, article):
+    """Check the live site's manual-news collection before writing a draft."""
+    endpoint = "/wp-json/wp/v2/minna_news_edit?"
+    common = {"status": "any", "context": "edit", "_fields": "id,slug,title"}
+
+    def lookup(**filters):
+        status, entries = request(base, auth, endpoint + urlencode({**common, **filters}))
+        if status != 200 or not isinstance(entries, list) or any(not isinstance(entry, dict) for entry in entries):
+            raise RuntimeError("Cannot verify existing manual news; staging stopped")
+        return entries
+
+    if lookup(slug=article["slug"], per_page=1):
+        print("Skipped: matching slug already exists in manual news")
+        return False
+    title = article["title"].strip()
+    matches = lookup(search=title, per_page=100)
+    if any(not isinstance(entry.get("title"), dict) or not isinstance(entry["title"].get("raw"), str) for entry in matches):
+        raise RuntimeError("Cannot verify manual-news titles; staging stopped")
+    if any(entry["title"]["raw"].strip() == title for entry in matches):
+        print("Skipped: matching title already exists in manual news")
+        return False
+    if len(matches) >= 100:
+        raise RuntimeError("Manual-news search results exceed the verification limit")
+    return True
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", required=True)
@@ -136,6 +163,8 @@ def main():
         print("Skipped: matching WordPress slug already exists (no overwrite)")
         return
     if not verify_front_page_not_duplicate(base, auth, article):
+        return
+    if not verify_manual_news_not_duplicate(base, auth, article):
         return
     html = article["content_html"].strip()
     html += ('<p><small>発表日：' + article["announced_on"] +
