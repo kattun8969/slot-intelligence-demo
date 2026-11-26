@@ -7,3 +7,8 @@
 .minna-at-investment__note{display:block;color:#546575;line-height:1.6;margin-top:8px;font-size:11px}
 .minna-at-investment a{display:inline-block;margin-top:8px;text-underline-offset:3px;overflow-wrap:anywhere}
 @media(max-width:359px){.minna-at-investment{padding:9px}.minna-at-investment__cell{padding:6px}.minna-at-investment__cell b{font-size:14px}}
+.minna-at-investment__budget{margin:10px 0 0;padding:8px;border:1px solid #e1e8ef;border-radius:7px}
+.minna-at-investment__budget summary{cursor:pointer;font-weight:700}
+.minna-at-investment__budget label{margin-top:7px}
+.minna-at-investment__budget input{display:block;width:100%;max-width:100%;box-sizing:border-box}
+.minna-at-investment__budget-result{font-weight:700;margin:8px 0 0}
