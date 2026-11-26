@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const ctx={};vm.runInNewContext(fs.readFileSync('wordpress-assets/at-investment-core.js','utf8'),ctx);
+const e=ctx.MinnaAtInvestment.estimate;
+const data={endpoint:'first AT',distribution:[[100,0.2],[200,0.5],[300,0.3]],coinBasePer50:35,spinsPerHour:700,loanCoinsPer1000:46};
+const ok=e(data);
+assert.ok(ok);assert.equal(ok.average.remainingG,210);assert.equal(ok.p80.remainingG,300);
+assert.ok(Math.abs(ok.average.inputCoins-300)<1e-7);
+assert.equal(e({...data,endpoint:'first CZ'}),null);
+assert.equal(e({...data,distribution:[[100,0.2],[300,0.2]]}),null);
+assert.equal(e({...data,coinBasePer50:0}),null);
+assert.equal(e({...data,distribution:[[300,0.3],[100,0.7]]}),null);
+console.log('AT investment core tests passed');
