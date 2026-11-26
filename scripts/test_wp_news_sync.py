@@ -83,7 +83,8 @@ class NewsDraftValidationTests(unittest.TestCase):
 
     def test_duplicate_slug_never_posts(self):
         filename = self.write()
-        with patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
+        with patch.object(wp, "verify_front_page_not_duplicate", return_value=True), \
+                patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
                 patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
                                         "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
                 patch.object(wp, "request", side_effect=[
@@ -97,7 +98,8 @@ class NewsDraftValidationTests(unittest.TestCase):
 
     def test_creates_draft_only_and_verifies_it(self):
         filename = self.write()
-        with patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
+        with patch.object(wp, "verify_front_page_not_duplicate", return_value=True), \
+                patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
                 patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
                                         "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
                 patch.object(wp, "request", side_effect=[
@@ -113,7 +115,8 @@ class NewsDraftValidationTests(unittest.TestCase):
 
     def test_non_draft_response_is_not_accepted(self):
         filename = self.write()
-        with patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
+        with patch.object(wp, "verify_front_page_not_duplicate", return_value=True), \
+                patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
                 patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
                                         "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
                 patch.object(wp, "request", side_effect=[
@@ -127,6 +130,27 @@ class NewsDraftValidationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             wp.read_article("../../secrets.json")
 
+
+
+    def test_front_page_duplicate_slug_prevents_staging(self):
+        story = dict(self.article)
+        with patch.object(wp, "request", side_effect=[
+                (200, {"show_on_front": "page", "page_on_front": 12}),
+                (200, {"content": {"raw": '<section id="news-test-story-20261126">Published</section>'}}),
+                ]):
+            self.assertFalse(wp.verify_front_page_not_duplicate("https://kajiplus.info", "fake", story))
+
+    def test_front_page_unavailable_fails_closed(self):
+        with patch.object(wp, "request", return_value=(200, {"show_on_front": "posts"})):
+            with self.assertRaises(RuntimeError):
+                wp.verify_front_page_not_duplicate("https://kajiplus.info", "fake", self.article)
+
+    def test_front_page_clean_allows_draft_staging(self):
+        with patch.object(wp, "request", side_effect=[
+                (200, {"show_on_front": "page", "page_on_front": 12}),
+                (200, {"content": {"raw": '<p>Other existing news</p>'}}),
+                ]):
+            self.assertTrue(wp.verify_front_page_not_duplicate("https://kajiplus.info", "fake", self.article))
 
 if __name__ == "__main__":
     unittest.main()
