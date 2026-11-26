@@ -84,6 +84,7 @@ class NewsDraftValidationTests(unittest.TestCase):
     def test_duplicate_slug_never_posts(self):
         filename = self.write()
         with patch.object(wp, "verify_front_page_not_duplicate", return_value=True), \
+                patch.object(wp, "verify_manual_news_not_duplicate", return_value=True), \
                 patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
                 patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
                                         "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
@@ -99,6 +100,7 @@ class NewsDraftValidationTests(unittest.TestCase):
     def test_creates_draft_only_and_verifies_it(self):
         filename = self.write()
         with patch.object(wp, "verify_front_page_not_duplicate", return_value=True), \
+                patch.object(wp, "verify_manual_news_not_duplicate", return_value=True), \
                 patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
                 patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
                                         "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
@@ -116,6 +118,7 @@ class NewsDraftValidationTests(unittest.TestCase):
     def test_non_draft_response_is_not_accepted(self):
         filename = self.write()
         with patch.object(wp, "verify_front_page_not_duplicate", return_value=True), \
+                patch.object(wp, "verify_manual_news_not_duplicate", return_value=True), \
                 patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
                 patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info",
                                         "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
@@ -131,6 +134,31 @@ class NewsDraftValidationTests(unittest.TestCase):
             wp.read_article("../../secrets.json")
 
 
+
+    def test_manual_news_duplicate_slug_prevents_staging(self):
+        with patch.object(wp, "request", return_value=(200, [{"id": 7}])) as mocked:
+            self.assertFalse(wp.verify_manual_news_not_duplicate("https://kajiplus.info", "fake", self.article))
+        self.assertIn("minna_news_edit?", mocked.call_args.args[2])
+        self.assertIn("status=any", mocked.call_args.args[2])
+
+    def test_manual_news_duplicate_title_prevents_staging(self):
+        with patch.object(wp, "request", side_effect=[(200, []), (200, [{"title": {"raw": self.article["title"]}}])]):
+            self.assertFalse(wp.verify_manual_news_not_duplicate("https://kajiplus.info", "fake", self.article))
+
+    def test_manual_news_unavailable_fails_closed(self):
+        with patch.object(wp, "request", return_value=(200, {"code": "rest_forbidden"})):
+            with self.assertRaises(RuntimeError):
+                wp.verify_manual_news_not_duplicate("https://kajiplus.info", "fake", self.article)
+
+    def test_main_never_posts_when_manual_news_has_match(self):
+        filename = self.write()
+        with patch.object(wp, "verify_front_page_not_duplicate", return_value=True), \
+                patch.object(sys, "argv", ["wp_news_sync.py", "--file", filename]), \
+                patch.dict(os.environ, {"WP_BASE_URL": "https://kajiplus.info", "WP_USERNAME": "test", "WP_APP_PASSWORD": "fake"}), \
+                patch.object(wp, "request", side_effect=[(200, {"id": 1}), (200, []), (200, [{"id": 7}])]) as mocked:
+            wp.main()
+        self.assertEqual(mocked.call_count, 3)
+        self.assertTrue(all(len(call.args) == 3 for call in mocked.call_args_list))
 
     def test_front_page_duplicate_slug_prevents_staging(self):
         story = dict(self.article)
