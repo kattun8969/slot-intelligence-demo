@@ -2,7 +2,7 @@
 /**
  * Plugin Name: みんなの期待値 天井までの投資目安
  * Description: 条件別の天井まで回した場合の投入相当枚数・金額・時間を表示します。
- * Version: 0.2.0
+ * Version: 0.2.2
  * Requires PHP: 7.4
  */
 defined('ABSPATH') || exit;
@@ -53,22 +53,19 @@ add_action('wp_enqueue_scripts', function () {
     if (!$is_machine) return;
 
     $url = plugin_dir_url(__FILE__);
-    wp_enqueue_style('minna-at-investment', $url . 'assets/investment.css', array(), '0.2.0');
-    wp_enqueue_script('minna-at-investment-core', $url . 'assets/at-investment-core.js', array(), '0.2.0', true);
-    wp_enqueue_script('minna-at-investment-widget', $url . 'assets/investment-widget.js', array('minna-at-investment-core'), '0.2.0', true);
+    wp_enqueue_style('minna-at-investment', $url . 'assets/ceiling.css', array(), '0.2.2');
+    wp_enqueue_script('minna-at-investment-core', $url . 'assets/at-investment-core.js', array(), '0.2.2', true);
+    wp_enqueue_script('minna-at-investment-widget', $url . 'assets/ceiling-widget.js', array('minna-at-investment-core'), '0.2.2', true);
     $raw = get_post_meta($post->ID, '_minna_at_models_json', true);
     $decoded = is_string($raw) ? json_decode($raw, true) : null;
     $config = (is_array($decoded) && ($decoded['approved'] ?? false) === true && isset($decoded['scenarios']) &&
         is_array($decoded['scenarios'])) ? $decoded : array('approved' => false, 'scenarios' => array());
-    if ($post->post_name === 'lycoris-recoil' && !isset($config['scenarios'][0]['ceilingG'])) {
-        $config['approved'] = true;
-        $config['scenarios'][0] = array(
-            'endpoint' => 'first AT',
-            'counter' => 'data-counter G',
-            'ceilingG' => 1000,
-            'basis' => 'assumed',
-            'coinBasePer50' => 31.8,
-            'spinsPerHour' => 800,
+    if ($post->post_name === 'lycoris-recoil') {
+        $config['lycorisLcd'] = array(
+            'normal' => array('label' => '通常・AT非駆け抜け後', 'ceilingG' => 850),
+            'sweep' => array('label' => 'AT駆け抜け後', 'ceilingG' => 600),
+            'reset' => array('label' => '設定変更後（確認済み）', 'ceilingG' => 600),
+            'upper-cz' => array('label' => '上位CZ失敗後', 'ceilingG' => 250),
         );
     }
     wp_add_inline_script('minna-at-investment-widget',
