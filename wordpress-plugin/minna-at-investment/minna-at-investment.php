@@ -2,7 +2,7 @@
 /**
  * Plugin Name: みんなの期待値 AT投資目安
  * Description: 期待値チェックの下にAT到達までの投入相当額・時間を表示します（検証済みモデルがある場合のみ）。
- * Version: 0.1.0
+ * Version: 0.1.1
  * Requires PHP: 7.4
  */
 defined('ABSPATH') || exit;
@@ -38,8 +38,8 @@ add_action('save_post', function ($post_id) {
     if (json_last_error() !== JSON_ERROR_NONE || !is_array($decoded) || !isset($decoded['scenarios']) ||
         !is_array($decoded['scenarios'])) return;
     // Do not accept unapproved models into the front-end.
-    if (empty($decoded['approved'])) return;
-    update_post_meta($post_id, '_minna_at_models_json', wp_json_encode($decoded, JSON_UNESCAPED_UNICODE));
+    if (($decoded['approved'] ?? false) !== true) return;
+    update_post_meta($post_id, '_minna_at_models_json', wp_slash(wp_json_encode($decoded, JSON_UNESCAPED_UNICODE)));
 });
 
 add_action('wp_enqueue_scripts', function () {
@@ -53,12 +53,12 @@ add_action('wp_enqueue_scripts', function () {
     if (!$is_machine) return;
 
     $url = plugin_dir_url(__FILE__);
-    wp_enqueue_style('minna-at-investment', $url . 'assets/investment.css', array(), '0.1.0');
-    wp_enqueue_script('minna-at-investment-core', $url . 'assets/at-investment-core.js', array(), '0.1.0', true);
-    wp_enqueue_script('minna-at-investment-widget', $url . 'assets/investment-widget.js', array('minna-at-investment-core'), '0.1.0', true);
+    wp_enqueue_style('minna-at-investment', $url . 'assets/investment.css', array(), '0.1.1');
+    wp_enqueue_script('minna-at-investment-core', $url . 'assets/at-investment-core.js', array(), '0.1.1', true);
+    wp_enqueue_script('minna-at-investment-widget', $url . 'assets/investment-widget.js', array('minna-at-investment-core'), '0.1.1', true);
     $raw = get_post_meta($post->ID, '_minna_at_models_json', true);
     $decoded = is_string($raw) ? json_decode($raw, true) : null;
-    $config = (is_array($decoded) && !empty($decoded['approved']) && isset($decoded['scenarios']) &&
+    $config = (is_array($decoded) && ($decoded['approved'] ?? false) === true && isset($decoded['scenarios']) &&
         is_array($decoded['scenarios'])) ? $decoded : array('approved' => false, 'scenarios' => array());
     wp_add_inline_script('minna-at-investment-widget',
         'window.MINNA_AT_INVESTMENT_CONFIG = ' .
