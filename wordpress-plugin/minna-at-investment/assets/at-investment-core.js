@@ -31,5 +31,31 @@
     return {average:amounts(averageG),p80:amounts(p80G),
       caveat:"投入相当額であり、途中の払出・持ちメダル・再プレイ等を反映した現金準備額ではありません。"};
   }
-  root.MinnaAtInvestment = Object.freeze({estimate});
+  function estimateCeiling(input) {
+    const {currentG, ceilingG, coinBasePer50, spinsPerHour, loanCoinsPer1000} = input;
+    if (!Number.isSafeInteger(currentG) || !Number.isSafeInteger(ceilingG) ||
+        currentG < 0 || ceilingG <= 0 || currentG >= ceilingG ||
+        ![coinBasePer50, spinsPerHour].every(n => Number.isFinite(n) && n > 0)) return null;
+    const remainingG = ceilingG - currentG;
+    const inputCoins = remainingG * 50 / coinBasePer50;
+    return {
+      remainingG,
+      inputCoins,
+      equivalentYen: Number.isFinite(loanCoinsPer1000) && loanCoinsPer1000 > 0
+        ? inputCoins * 1000 / loanCoinsPer1000
+        : null,
+      minutes: remainingG * 60 / spinsPerHour
+    };
+  }
+  function assessBudget(inputCoins, availableCoins, availableYen, loanCoinsPer1000) {
+    if (![inputCoins, availableCoins, availableYen].every(n => Number.isFinite(n) && n >= 0) ||
+        !Number.isFinite(loanCoinsPer1000) || loanCoinsPer1000 <= 0) return null;
+    const cashLoanUnits = Math.floor(availableYen / 1000);
+    const missingCoins = Math.max(0, Math.ceil(inputCoins - availableCoins - cashLoanUnits * loanCoinsPer1000));
+    return {
+      missingCoins,
+      extraYen: missingCoins === 0 ? 0 : (cashLoanUnits + Math.ceil(missingCoins / loanCoinsPer1000)) * 1000 - availableYen
+    };
+  }
+  root.MinnaAtInvestment = Object.freeze({estimate, estimateCeiling, assessBudget});
 })(typeof window!=="undefined" ? window : globalThis);
