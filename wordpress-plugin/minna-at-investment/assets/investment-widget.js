@@ -1,27 +1,24 @@
-/* WordPress front-end adapter. ① submits model data; ② reviews and activates.
- * Targets Lycoris existing form or future data-minna-ev-tool forms. */
+/* Ceiling budget adapter for WordPress machine pages. */
 (function () {
   "use strict";
+  const endpoints = new Map([
+    ["first AT", "AT"], ["first bonus", "ボーナス"], ["first ST", "ST"], ["first CZ", "CZ"]
+  ]);
+
   function selectInside(root, selector) {
     try { return selector ? root.querySelector(selector) : null; } catch (_) { return null; }
   }
+
   function loanCoins(root) {
-    const explicit = selectInside(root, "[data-minna-loan-coins]");
-    if (explicit) {
-      const n = Number(explicit.value);
-      return Number.isFinite(n) && n > 0 ? n : null;
-    }
-    const selects = Array.from(root.querySelectorAll("select"));
-    const rate = selects.find(el => Array.from(el.options || []).some(o => o.value === "50/50"));
-    if (!rate) return null;
-    if (rate.value === "custom") {
-      const custom = selectInside(root, ".ly-custom input[type='number']");
-      const n = custom ? Number(custom.value) : NaN;
-      return Number.isFinite(n) && n > 0 ? n : null;
-    }
-    const n = Number(String(rate.value).split("/")[0]);
-    return Number.isFinite(n) && n > 0 ? n : null;
+    const explicit = root.querySelector("[data-minna-loan-coins]");
+    if (explicit) return Number(explicit.value);
+    const select = Array.from(root.querySelectorAll("select")).find(el =>
+      Array.from(el.options).some(option => option.value === "50/50"));
+    if (!select) return null;
+    if (select.value === "custom") return root.querySelector(".ly-custom input[type=number]")?.valueAsNumber;
+    return Number(select.value.split("/")[0]);
   }
+
   const format = (value, unit) => Math.ceil(value).toLocaleString("ja-JP") + unit;
   function makeText(tag, value, className) {
     const el = document.createElement(tag);
@@ -29,93 +26,136 @@
     if (className) el.className = className;
     return el;
   }
-  function init(root, config) {
+
+  function init(root, scenarios) {
     if (root.querySelector(".minna-at-investment, #ly-investment-estimate")) return;
+    const isLycoris = root.id === "ly-calculator";
     const scenario = selectInside(root, root.dataset.minnaScenarioSelector || "#ly-scenario");
     const current = selectInside(root, root.dataset.minnaCurrentSelector || "#ly-current");
     if (!scenario || !current) return;
+
     const section = document.createElement("section");
     section.className = "minna-at-investment";
-    section.setAttribute("aria-label", "ATまでの投入相当額と所要時間");
-    section.appendChild(makeText("strong", "ATまでの平均投資・80%到達目安"));
-    const output = makeText("div", "投資目安データ確認中", "minna-at-investment__body");
+    const heading = makeText("strong", "天井までの投資・時間の目安");
+    const output = makeText("div", "", "minna-at-investment__body");
     output.setAttribute("role", "status");
-    output.setAttribute("aria-live", "polite");
-    section.appendChild(output);
-    section.appendChild(makeText("small",
-      "期待収支とは別の指標です。80%到達予算はAT到達ゲーム数の分布に基づく投入相当額です。勝率・利益確率や、途中の払出・持ちメダル・再プレイを反映した現金準備額を表すものではありません。",
-      "minna-at-investment__note"));
+    const budget = document.createElement("details");
+    budget.className = "minna-at-investment__budget";
+    budget.appendChild(makeText("summary", "手持ち資金で足りるか確認"));
+    function budgetField(labelText) {
+      const label = makeText("label", labelText);
+      const field = document.createElement("input");
+      field.type = "number";
+      field.inputMode = "numeric";
+      field.min = "0";
+      field.step = "1";
+      label.appendChild(field);
+      budget.appendChild(label);
+      return field;
+    }
+    const cash = budgetField("使える現金（円）");
+    const coins = budgetField("使えるメダル・再プレイ枚数");
+    const budgetResult = makeText("p", "", "minna-at-investment__budget-result");
+    budgetResult.setAttribute("role", "status");
+    budget.appendChild(budgetResult);
+    budget.appendChild(makeText("small", "現金は1,000円単位の貸出で計算。再プレイは店の上限内で今使える枚数を入力してください。", "minna-at-investment__note"));
+    section.append(heading, output, budget);
     const details = root.querySelector("details");
-    if (details) root.insertBefore(section, details);
-    else root.appendChild(section);
-    const scenarios = config && config.approved === true && config.scenarios ? config.scenarios : {};
+    root.insertBefore(section, details);
+
     function update() {
       output.replaceChildren();
-      const id = String(scenario.value);
+      budget.hidden = true;
+      heading.textContent = "天井までの投資・時間の目安";
+      const id = scenario.value;
       const model = Object.prototype.hasOwnProperty.call(scenarios, id) ? scenarios[id] : null;
-      const isLycoris = root.id === "ly-calculator";
       const option = scenario.selectedOptions?.[0];
-      const counter = isLycoris ? "data-counter G" : root.dataset.minnaCounter;
-      const endpoint = option?.dataset.minnaEndpoint || root.dataset.minnaEndpoint;
-      if ((isLycoris && (!["0", "1", "2"].includes(id) || !option?.textContent.includes("／ATまで"))) ||
-          (endpoint && endpoint !== "first AT") || (model && model.endpoint !== "first AT")) {
-        output.textContent = "この条件はAT初当たりまでの投資目安の対象外です。";
+      const endpoint = isLycoris && option?.textContent.includes("／ATまで")
+        ? "first AT" : option?.dataset.minnaEndpoint || root.dataset.minnaEndpoint;
+      const counter = isLycoris ? "data-counter G" : option?.dataset.minnaCounter || root.dataset.minnaCounter;
+      if (!model || !Number.isSafeInteger(model.ceilingG) || !counter || model.counter !== counter ||
+          endpoint !== model.endpoint || !endpoints.has(endpoint) || !["verified", "assumed"].includes(model.basis)) {
+        output.textContent = "この条件の天井時の投資目安は確認中です。";
         return;
       }
-      if (!model || !model.byCurrentG ||
-          !["measured", "estimated"].includes(model.method) ||
-          typeof model.sourceUrl !== "string" || !/^https:\/\//.test(model.sourceUrl) ||
-          !/^20\d\d-\d\d-\d\d$/.test(model.checkedOn || "") ||
-          typeof model.counter !== "string" || !model.counter.trim() || (counter && model.counter !== counter) ||
-          typeof model.startingState !== "string" || !model.startingState.trim()) {
-        output.textContent = "投資目安データ確認中";
-        return;
-      }
-      const g = Number(current.value);
-      if (current.value === "" || !Number.isSafeInteger(g) || g < 0) {
+
+      const target = endpoints.get(endpoint);
+      heading.textContent = target + "までの最大投資目安";
+      const assumed = model.basis === "assumed";
+      const limit = format(model.ceilingG, "G");
+      const basis = (assumed ? "想定上限 " : "対象天井 ") + limit +
+        (counter === "data-counter G" ? "（データカウンター）" : "");
+      if (!Number.isSafeInteger(current.valueAsNumber) || current.valueAsNumber < 0) {
         output.textContent = "現在のゲーム数を入力してください。";
+      } else if (current.valueAsNumber >= model.ceilingG) {
+        output.textContent = basis + "以上です。台の状態とカウンターを確認してください。";
         return;
+      } else {
+        const result = window.MinnaAtInvestment?.estimateCeiling({
+          currentG: current.valueAsNumber, ceilingG: model.ceilingG,
+          coinBasePer50: model.coinBasePer50, spinsPerHour: model.spinsPerHour,
+          loanCoinsPer1000: loanCoins(root)
+        });
+        if (!result) {
+          output.textContent = "この条件の天井時の投資目安は確認中です。";
+          return;
+        }
+
+        const grid = document.createElement("div");
+        grid.className = "minna-at-investment__grid";
+        [
+          ["当たらず天井まで", format(result.remainingG, "G")],
+          ["投入相当枚数", "約" + format(result.inputCoins, "枚")],
+          ["貸出換算額", result.equivalentYen === null ? "貸出枚数を設定" : "約" + format(result.equivalentYen, "円")],
+          ["消化時間", "約" + format(result.minutes, "分")]
+        ].forEach(([label, value]) => {
+          const cell = document.createElement("div");
+          cell.className = "minna-at-investment__cell";
+          cell.append(makeText("small", label), makeText("b", value));
+          grid.appendChild(cell);
+        });
+        output.appendChild(grid);
+
+        budget.hidden = false;
+        const ready = cash.value !== "" || coins.value !== "";
+        const availableYen = cash.value === "" ? 0 : cash.valueAsNumber;
+        const availableCoins = coins.value === "" ? 0 : coins.valueAsNumber;
+        const assess = window.MinnaAtInvestment.assessBudget;
+        if (!ready) {
+          budgetResult.textContent = "使える金額や枚数を入力すると、想定天井までに足りるか表示します。";
+        } else if (![availableYen, availableCoins].every(n => Number.isSafeInteger(n) && n >= 0) ||
+            cash.validity.badInput || coins.validity.badInput) {
+          budgetResult.textContent = "現金とメダルは0以上の整数で入力してください。";
+        } else if (availableCoins >= Math.ceil(result.inputCoins)) {
+          budgetResult.textContent = "想定天井まで、手持ちメダルの範囲内です。";
+        } else if (result.equivalentYen === null) {
+          budgetResult.textContent = "手持ちメダルだけでは約" +
+            format(result.inputCoins - availableCoins, "枚") + "不足。現金も含めるには貸出枚数を設定してください。";
+        } else {
+          const remaining = assess(result.inputCoins, availableCoins, availableYen, loanCoins(root));
+          budgetResult.textContent = remaining.missingCoins > 0
+            ? "想定天井まで、あと約" + format(remaining.extraYen, "円") + "、または約" +
+              format(remaining.missingCoins, "枚") + "不足する目安です。"
+            : "想定天井まで、入力した手持ち資金の範囲内です。";
+        }
       }
-      const dist = Object.prototype.hasOwnProperty.call(model.byCurrentG, String(g)) ? model.byCurrentG[String(g)] : null;
-      const result = window.MinnaAtInvestment && window.MinnaAtInvestment.estimate({
-        endpoint: model.endpoint, distribution: dist, coinBasePer50: model.coinBasePer50,
-        spinsPerHour: model.spinsPerHour, loanCoinsPer1000: loanCoins(root)
-      });
-      if (!result) { output.textContent = "この状態・現在G数の投資目安は確認中です。"; return; }
-      const grid = document.createElement("div");
-      grid.className = "minna-at-investment__grid";
-      [
-        ["平均投入枚数",format(result.average.inputCoins,"枚")],
-        ["平均投入相当額",format(result.average.equivalentYen,"円")],
-        ["平均所要時間",format(result.average.minutes,"分")],
-        ["80%到達時点の投入枚数",format(result.p80.inputCoins,"枚")],
-        ["80%到達時点の投入相当額",format(result.p80.equivalentYen,"円")],
-        ["80%到達時点の時間",format(result.p80.minutes,"分")]
-      ].forEach(([label,value]) => {
-        const cell = document.createElement("div");
-        cell.className = "minna-at-investment__cell";
-        cell.appendChild(makeText("small",label));
-        cell.appendChild(makeText("b",value));
-        grid.appendChild(cell);
-      });
-      output.appendChild(grid);
+
       output.appendChild(makeText("small",
-        "平均残り"+format(result.average.remainingG,"G")+"／80%点"+format(result.p80.remainingG,"G")+
-        "・"+(model.method==="measured"?"実測":"推定")+"／確認日："+model.checkedOn+
-        "。80%はAT到達ゲーム数の分位点であり勝率ではありません。",
+        basis + "。50枚で" + model.coinBasePer50 + "G、1時間" + model.spinsPerHour +
+        "Gで換算。途中の払い出しや前兆などで実際の投資・時間は変わります。" +
+        (assumed ? "想定値のため、実際の上限を保証するものではありません。" : ""),
         "minna-at-investment__note"));
-      const link = document.createElement("a");
-      link.href = model.sourceUrl; link.target = "_blank"; link.rel = "noopener noreferrer";
-      link.textContent = "投資目安の出典・算出条件";
-      output.appendChild(link);
     }
+
     root.addEventListener("input", update);
     root.addEventListener("change", update);
     update();
   }
+
   function start() {
-    const config = window.MINNA_AT_INVESTMENT_CONFIG || {approved:false,scenarios:{}};
-    document.querySelectorAll("#ly-calculator, [data-minna-ev-tool]").forEach(el => init(el,config));
+    const config = window.MINNA_AT_INVESTMENT_CONFIG;
+    const scenarios = config?.approved === true ? config.scenarios || {} : {};
+    document.querySelectorAll("#ly-calculator, [data-minna-ev-tool]").forEach(root => init(root, scenarios));
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
