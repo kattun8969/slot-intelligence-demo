@@ -9,16 +9,11 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-  pages: write
-  id-token: write
 concurrency:
   group: pages
   cancel-in-progress: false
 jobs:
   collect:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -46,17 +41,3 @@ jobs:
           git -c user.name='slot-research-bot' -c user.email='slot-research-bot@users.noreply.github.com' commit -m 'Auto-update public slot-machine discovery (metadata only)'
           git push origin HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
-      # GITHUB_TOKEN commits do not trigger another workflow, so deploy the new
-      # JSON explicitly instead of relying on the regular main-push Pages job.
-      - uses: actions/configure-pages@v5
-        if: steps.commit.outputs.changed == 'true'
-      - uses: actions/upload-pages-artifact@v3
-        if: steps.commit.outputs.changed == 'true'
-        with:
-          path: docs
-      - name: Wait for Pages artifact propagation
-        if: steps.commit.outputs.changed == 'true'
-        run: sleep 12
-      - id: deployment
-        uses: actions/deploy-pages@v4
-        if: steps.commit.outputs.changed == 'true'
