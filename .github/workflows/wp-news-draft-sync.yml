@@ -1,0 +1,35 @@
+name: WordPress news draft staging (editor reviewed)
+
+on:
+  workflow_dispatch:
+    inputs:
+      article_path:
+        description: 'Reviewed JSON file path under wordpress-queue/news/'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wp-news-draft-staging
+  cancel-in-progress: false
+
+jobs:
+  stage-reviewed-news:
+    # Disabled until ② verifies GitHub Environment protection and explicitly enables it.
+    if: ${{ vars.WP_EDITOR_DRAFT_STAGING_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: wordpress-editor
+    env:
+      WP_BASE_URL: ${{ secrets.WP_BASE_URL }}
+      WP_USERNAME: ${{ secrets.WP_USERNAME }}
+      WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+      NEWS_FILE: ${{ inputs.article_path }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run offline validation tests
+        run: python3 -m unittest discover -s scripts -p 'test_wp_news_sync.py' -v
+      - name: Validate reviewed JSON and create WordPress draft only
+        run: python3 scripts/wp_news_sync.py --file "$NEWS_FILE"

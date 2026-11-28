@@ -1,0 +1,191 @@
+#!/usr/bin/env python3
+"""Create a standard WordPress news draft from an editor-reviewed JSON file.
+
+Never publishes, modifies existing posts, or writes to custom post types.
+"""
+import argparse
+from datetime import date
+from html import escape
+from html.parser import HTMLParser
+import base64
+import json
+import os
+from pathlib import Path
+import re
+import sys
+from urllib.parse import urlencode, urlparse
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
+
+ROOT = Path(__file__).resolve().parent.parent
+QUEUE = (ROOT / "wordpress-queue" / "news").resolve()
+HOST = "kajiplus.info"
+SLUG = re.compile(r"^news-[a-z0-9]+(?:-[a-z0-9]+)*$")
+DATE = re.compile(r"^20\d\d-\d\d-\d\d$")
+
+
+ALLOWED_TAGS = {"p", "strong", "em", "ul", "ol", "li", "blockquote", "br", "a", "small", "h2", "h3"}
+
+
+class SafeNewsHTML(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        if tag not in ALLOWED_TAGS:
+            raise ValueError("Unsupported HTML tag in news")
+        for name, value in attrs:
+            if tag != "a" or name not in ("href", "target", "rel"):
+                raise ValueError("Unsupported HTML attribute in news")
+            if name == "href" and (not value or urlparse(value).scheme != "https"):
+                raise ValueError("News links must use HTTPS")
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+
+    def handle_endtag(self, tag):
+        if tag not in ALLOWED_TAGS:
+            raise ValueError("Unsupported HTML closing tag in news")
+
+    def handle_comment(self, data):
+        raise ValueError("HTML comments are not supported in news")
+
+
+def read_article(filename):
+    path = (ROOT / filename).resolve()
+    if not path.is_relative_to(QUEUE) or path.suffix != ".json":
+        raise ValueError("Article must be a JSON file in wordpress-queue/news/")
+    article = json.loads(path.read_text(encoding="utf-8"))
+    required = ("slug", "title", "content_html", "source_url", "source_checked_at", "announced_on")
+    if not isinstance(article, dict) or any(not isinstance(article.get(k), str) or not article[k].strip() for k in required):
+        raise ValueError("Missing required string fields in article")
+    if not SLUG.fullmatch(article["slug"]):
+        raise ValueError("Slug must use news- plus lowercase English letters, numbers and hyphens")
+    if len(article["title"]) > 140 or len(article["content_html"]) > 50000:
+        raise ValueError("Title or content exceeds limits")
+    for k in ("source_checked_at", "announced_on"):
+        if not DATE.fullmatch(article[k]):
+            raise ValueError("Dates must use YYYY-MM-DD")
+        try:
+            date.fromisoformat(article[k])
+        except ValueError:
+            raise ValueError("Invalid calendar date") from None
+    source = urlparse(article["source_url"])
+    if source.scheme != "https" or not source.hostname:
+        raise ValueError("An HTTPS source URL is required")
+    SafeNewsHTML().feed(article["content_html"])
+    if article.get("editor_reviewed") is not True:
+        raise ValueError("Editor review flag is required before staging")
+    return article
+
+
+def request(base, auth, path, method="GET", payload=None):
+    headers = {"Authorization": "Basic " + auth, "Accept": "application/json"}
+    data = None
+    if payload is not None:
+        headers["Content-Type"] = "application/json; charset=utf-8"
+        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    req = Request(base + path, data=data, headers=headers, method=method)
+    try:
+        with urlopen(req, timeout=25) as response:
+            return response.status, json.load(response)
+    except HTTPError as exc:
+        # Never print server error bodies, credentials or article text.
+        raise RuntimeError("WordPress API returned HTTP " + str(exc.code)) from None
+    except (URLError, TimeoutError):
+        raise RuntimeError("WordPress API connection failed") from None
+
+
+def verify_front_page_not_duplicate(base, auth, article):
+    """Fail closed unless the canonical WordPress front page was inspected.
+
+    Existing news is currently embedded in a static homepage, not just posts.
+    This prevents ordinary-post slug checks from silently duplicating it.
+    """
+    _, settings = request(base, auth, "/wp-json/wp/v2/settings")
+    if not isinstance(settings, dict) or settings.get("show_on_front") != "page":
+        raise RuntimeError("Cannot verify static WordPress home page; staging stopped")
+    page_id = settings.get("page_on_front")
+    if not isinstance(page_id, int) or page_id <= 0:
+        raise RuntimeError("Home page ID unavailable; staging stopped")
+    _, page = request(base, auth, "/wp-json/wp/v2/pages/" + str(page_id) + "?context=edit")
+    content = page.get("content") if isinstance(page, dict) else None
+    raw = content.get("raw") if isinstance(content, dict) else None
+    if not isinstance(raw, str) or not raw.strip():
+        raise RuntimeError("Home page source HTML unavailable; staging stopped")
+    if article["slug"] in raw or article["title"].strip() in raw:
+        print("Skipped: matching story is already present in the WordPress home page")
+        return False
+    return True
+
+
+
+def verify_manual_news_not_duplicate(base, auth, article):
+    """Check the live site's manual-news collection before writing a draft."""
+    endpoint = "/wp-json/wp/v2/minna_news_edit?"
+    common = {"status": "any", "context": "edit", "_fields": "id,slug,title"}
+
+    def lookup(**filters):
+        status, entries = request(base, auth, endpoint + urlencode({**common, **filters}))
+        if status != 200 or not isinstance(entries, list) or any(not isinstance(entry, dict) for entry in entries):
+            raise RuntimeError("Cannot verify existing manual news; staging stopped")
+        return entries
+
+    if lookup(slug=article["slug"], per_page=1):
+        print("Skipped: matching slug already exists in manual news")
+        return False
+    title = article["title"].strip()
+    matches = lookup(search=title, per_page=100)
+    if any(not isinstance(entry.get("title"), dict) or not isinstance(entry["title"].get("raw"), str) for entry in matches):
+        raise RuntimeError("Cannot verify manual-news titles; staging stopped")
+    if any(entry["title"]["raw"].strip() == title for entry in matches):
+        print("Skipped: matching title already exists in manual news")
+        return False
+    if len(matches) >= 100:
+        raise RuntimeError("Manual-news search results exceed the verification limit")
+    return True
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--file", required=True)
+    args = parser.parse_args()
+    article = read_article(args.file)
+    base = os.environ.get("WP_BASE_URL", "").rstrip("/")
+    user = os.environ.get("WP_USERNAME", "")
+    pw = os.environ.get("WP_APP_PASSWORD", "")
+    if not all((base, user, pw)) or urlparse(base).scheme != "https" or urlparse(base).hostname != HOST:
+        raise ValueError("WP configuration is missing or target host is not approved")
+    auth = base64.b64encode((user + ":" + pw).encode("utf-8")).decode("ascii")
+    _, me = request(base, auth, "/wp-json/wp/v2/users/me?context=edit")
+    if not isinstance(me, dict) or not me.get("id"):
+        raise RuntimeError("WordPress authentication failed")
+    qs = urlencode({"slug": article["slug"], "status": "any", "context": "edit", "per_page": 20})
+    _, existing = request(base, auth, "/wp-json/wp/v2/posts?" + qs)
+    if existing:
+        print("Skipped: matching WordPress slug already exists (no overwrite)")
+        return
+    if not verify_front_page_not_duplicate(base, auth, article):
+        return
+    if not verify_manual_news_not_duplicate(base, auth, article):
+        return
+    html = article["content_html"].strip()
+    html += ('<p><small>発表日：' + article["announced_on"] +
+             '／出典確認日：' + article["source_checked_at"] +
+             '　出典：<a href="' + escape(article["source_url"], quote=True) +
+             '" target="_blank" rel="noopener noreferrer">公式・一次情報</a></small></p>')
+    payload = {"title": article["title"], "slug": article["slug"],
+               "content": html, "status": "draft"}
+    status, post = request(base, auth, "/wp-json/wp/v2/posts", "POST", payload)
+    if status != 201 or post.get("status") != "draft" or not post.get("id"):
+        raise RuntimeError("Draft was not confirmed")
+    _, reread = request(base, auth, "/wp-json/wp/v2/posts/" + str(post["id"]) + "?context=edit")
+    if reread.get("status") != "draft" or reread.get("slug") != article["slug"]:
+        raise RuntimeError("WordPress draft verification failed")
+    print("Verified WordPress NEWS DRAFT ID:", post["id"], "(not published)")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as exc:
+        # Avoid output of raw article contents / authentication material.
+        print("News draft sync failed:", type(exc).__name__, str(exc)[:180], file=sys.stderr)
+        sys.exit(1)
